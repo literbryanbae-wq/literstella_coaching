@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개별 코칭 커리큘럼 설계서 | Liter Stella</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;--gold:#B8820A;--gold-lt:#F0C040;
+  --cream:#FAF7F2;--warm:#F2EDE4;--lg:#E6EDF5;--mid:#C8D6E8;
+  --gray:#6B7A8D;--lt:#8E9BAB;--red:#B03030;--green:#2A6A4A;
+  --ink:#1C1C2E;--rule:rgba(26,60,107,.12);
+}
+html{font-size:15px;}
+body{font-family:'Noto Sans KR',sans-serif;background:#E8E8E8;color:var(--ink);line-height:1.7;}
+
+/* PAGE */
+.page{width:210mm;min-height:297mm;background:var(--cream);margin:20px auto;box-shadow:0 4px 40px rgba(0,0,0,.18);position:relative;overflow:hidden;}
+.page+.page{margin-top:4px;}
+
+/* COVER */
+.cover{min-height:297mm;background:var(--navy);display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-70px;right:-70px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.02);border:70px solid rgba(255,255,255,.03);}
+.cover::after{content:'';position:absolute;bottom:-60px;left:-40px;width:300px;height:300px;border-radius:50%;background:rgba(42,138,138,.07);border:50px solid rgba(42,138,138,.04);}
+.cover-top{padding:44px 52px 0;display:flex;align-items:center;justify-content:space-between;}
+.cover-logo{font-family:'DM Serif Display',serif;color:rgba(255,255,255,.9);font-size:22px;letter-spacing:.02em;}
+.cover-logo span{display:block;font-family:'Noto Sans KR',sans-serif;font-size:9px;font-weight:300;color:rgba(255,255,255,.4);letter-spacing:.2em;margin-top:3px;}
+.cover-doc-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.18em;border:1px solid rgba(255,255,255,.14);padding:6px 14px;border-radius:20px;}
+.cover-main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 52px;}
+.cover-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.cover-eyebrow::before{content:'';display:block;width:28px;height:2px;background:var(--gold-lt);}
+.cover-eyebrow span{font-size:10px;font-weight:700;color:var(--gold-lt);letter-spacing:.18em;}
+.cover-title{font-family:'Noto Serif KR',serif;font-weight:700;color:#fff;line-height:1.2;}
+.cover-title .en{font-size:18px;color:rgba(255,255,255,.4);font-weight:300;display:block;margin-bottom:6px;font-style:italic;font-family:'DM Serif Display',serif;}
+.cover-title .ko{font-size:44px;display:block;}
+.cover-title .ko2{font-size:26px;display:block;color:rgba(255,255,255,.55);font-weight:400;margin-top:4px;}
+.cover-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.9;margin-top:22px;max-width:320px;}
+.cover-card{margin-top:48px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:26px 30px;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.cc-field label{display:block;font-size:9px;font-weight:700;color:rgba(255,255,255,.32);letter-spacing:.18em;margin-bottom:8px;}
+.cc-field input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.18);color:#fff;font-size:16px;font-family:'Noto Sans KR',sans-serif;font-weight:500;padding:4px 0 8px;outline:none;}
+.cc-field input::placeholder{color:rgba(255,255,255,.22);}
+.cover-bottom{padding:32px 52px;display:flex;align-items:flex-end;justify-content:space-between;}
+.cover-bottom-note{font-size:10px;color:rgba(255,255,255,.28);line-height:1.9;}
+.cover-seal{width:68px;height:68px;border-radius:50%;border:1.5px solid rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:.06em;text-align:center;line-height:1.6;}
+
+/* INNER PAGE */
+.inner-page{min-height:297mm;display:flex;flex-direction:column;}
+.pg-topbar{height:5px;background:linear-gradient(90deg,var(--navy),var(--teal));}
+.pg-header{padding:22px 48px 18px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;}
+.pg-logo{font-family:'DM Serif Display',serif;font-size:14px;color:var(--navy);opacity:.55;}
+.pg-meta{font-size:10px;color:var(--lt);text-align:right;line-height:1.7;}
+.pg-content{padding:32px 48px 40px;flex:1;}
+.pg-footer{padding:14px 48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;}
+.pg-footer-note{font-size:9px;color:var(--lt);letter-spacing:.06em;}
+.pg-num{font-size:10px;color:var(--lt);font-weight:700;}
+
+/* SECTION HEADER */
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.sec-n{width:30px;height:30px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.sec-t{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy);}
+.sec-s{font-size:11px;color:var(--gray);margin-top:2px;}
+.sec-rule{height:1px;background:linear-gradient(90deg,var(--rule),transparent);margin-bottom:22px;}
+
+/* FIELDS */
+.f{margin-bottom:18px;}
+.f:last-child{margin-bottom:0;}
+.fl{display:block;font-size:9px;font-weight:700;color:var(--gray);letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px;}
+.fr{color:var(--red);}
+.fi{width:100%;background:#fff;border:1.5px solid var(--lg);border-radius:8px;padding:10px 14px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;}
+.fi:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.07);}
+.ft{width:100%;background:#fff;border:1.5px solid var(--lg);border-radius:8px;padding:11px 14px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);outline:none;resize:vertical;line-height:1.75;transition:border-color .2s;}
+.ft:focus{border-color:var(--blue);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.fhint{font-size:11px;color:var(--lt);margin-top:4px;line-height:1.5;}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.chi{display:none;}
+.chl{display:inline-block;border:1.5px solid var(--lg);border-radius:18px;padding:5px 13px;font-size:12px;color:var(--gray);cursor:pointer;transition:all .15s;user-select:none;}
+.chl:hover{border-color:var(--mid);color:var(--navy);}
+.chi:checked+.chl{border-color:var(--navy);background:var(--navy);color:#fff;}
+.chi.t:checked+.chl{border-color:var(--teal);background:var(--teal);color:#fff;}
+.chi.g:checked+.chl{border-color:var(--green);background:var(--green);color:#fff;}
+.chi.go:checked+.chl{border-color:var(--gold);background:var(--gold);color:#fff;}
+
+/* EVAL TABLE */
+.et{width:100%;border-collapse:collapse;font-size:12.5px;border-radius:10px;overflow:hidden;}
+.et thead tr{background:var(--navy);}
+.et thead th{padding:9px 12px;font-size:9px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.08em;text-align:left;white-space:nowrap;}
+.et tbody tr{border-bottom:1px solid var(--rule);}
+.et tbody tr:last-child{border-bottom:none;}
+.et tbody tr:nth-child(even) td{background:#F8FAFE;}
+.et tbody td{padding:10px 12px;vertical-align:middle;}
+.et-wk{text-align:center;white-space:nowrap;}
+.et-wk .wk-num{font-size:11px;font-weight:700;color:var(--navy);}
+.et-wk .wk-ico{font-size:15px;display:block;margin-bottom:1px;}
+.et-wk .wk-sub{font-size:9px;color:var(--lt);}
+.et input{width:100%;border:1.5px solid var(--lg);border-radius:6px;padding:6px 9px;font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;background:#fff;transition:border-color .2s;}
+.et input:focus{border-color:var(--blue);}
+.et select{border:1.5px solid var(--lg);border-radius:6px;padding:6px 8px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;background:#fff;width:72px;text-align:center;transition:border-color .2s;}
+.et select:focus{border-color:var(--blue);}
+.et .score-td{text-align:center;vertical-align:middle;}
+
+/* SCORE BADGE */
+.sb-wrap{display:flex;gap:10px;flex-wrap:wrap;}
+.sbadge{background:#fff;border:1.5px solid var(--lg);border-radius:10px;padding:10px 18px;text-align:center;min-width:70px;}
+.sbadge-v{font-size:24px;font-weight:900;color:var(--navy);}
+.sbadge-l{font-size:9px;color:var(--lt);margin-top:2px;}
+
+/* CALLOUT */
+.co{border-radius:10px;padding:13px 16px;margin-bottom:14px;display:flex;gap:11px;align-items:flex-start;}
+.co.nb{background:#EBF3FB;border-left:3px solid var(--blue);}
+.co.tl{background:#EAF5F5;border-left:3px solid var(--teal);}
+.co.gd{background:#FBF4E8;border-left:3px solid var(--gold);}
+.co.gn{background:#EAF4EE;border-left:3px solid var(--green);}
+.co-ico{font-size:17px;flex-shrink:0;margin-top:1px;}
+.co-txt{font-size:13px;color:var(--ink);line-height:1.7;}
+.co-txt strong{color:var(--navy);}
+.co-txt textarea{width:100%;border:none;background:transparent;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);resize:none;outline:none;line-height:1.75;margin-top:6px;}
+
+/* ROADMAP */
+.rmflow{display:flex;flex-direction:column;gap:0;}
+.rmi{display:grid;grid-template-columns:48px 1fr;gap:0;position:relative;}
+.rmi:not(:last-child)::after{content:'';position:absolute;left:23px;top:48px;bottom:0;width:2px;background:linear-gradient(180deg,rgba(26,60,107,.25),var(--lg));z-index:0;}
+.rmi-icon{display:flex;flex-direction:column;align-items:center;padding-top:2px;z-index:1;}
+.rmi-circle{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 10px rgba(26,60,107,.2);flex-shrink:0;position:relative;z-index:1;}
+.rmi-body{background:#fff;border:1.5px solid var(--lg);border-radius:12px;padding:15px 17px;margin:0 0 12px 12px;}
+.rmi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+.rmi-head h4{font-size:13.5px;font-weight:700;color:var(--navy);}
+.rm-tag{font-size:9px;font-weight:700;padding:3px 9px;border-radius:15px;white-space:nowrap;}
+.rm-tag.c2{background:#EAF5F5;color:var(--teal);}
+.rm-tag.c3{background:#F0EBF8;color:#6A3FA0;}
+.rm-tag.gd{background:#FBF4E8;color:var(--gold);}
+.rm-gl{font-size:9px;color:var(--lt);letter-spacing:.08em;font-weight:600;margin-bottom:5px;margin-top:8px;}
+.rmi-body input{width:100%;border:1.5px solid var(--lg);border-radius:6px;padding:7px 10px;font-size:12.5px;font-family:'Noto Sans KR',sans-serif;outline:none;background:var(--cream);transition:border-color .2s;margin-bottom:4px;}
+.rmi-body input:last-child{margin-bottom:0;}
+.rmi-body input:focus{border-color:var(--blue);background:#fff;}
+.rmi-body.gold{border-color:rgba(184,130,10,.3);background:linear-gradient(135deg,#FBF4E8,#FDF9F2);}
+.rmi-body.gold input{border-color:rgba(184,130,10,.2);background:#fff;}
+
+/* DECLARATION CARD */
+.decl{background:linear-gradient(135deg,#1A3C6B,#1E4A80);border-radius:16px;padding:30px 32px;position:relative;overflow:hidden;margin:6px 0 14px;}
+.decl::before{content:'\201C';position:absolute;top:-16px;left:18px;font-family:'DM Serif Display',serif;font-size:130px;color:rgba(255,255,255,.055);line-height:1;}
+.decl-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.38);letter-spacing:.18em;margin-bottom:12px;}
+.decl-preview{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;color:#fff;line-height:1.7;min-height:40px;position:relative;z-index:1;}
+.decl-preview.empty{color:rgba(255,255,255,.22);font-size:14px;font-weight:300;font-style:italic;}
+.decl-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:11px 15px;font-family:'Noto Serif KR',serif;font-size:15px;color:#fff;outline:none;margin-top:14px;transition:border-color .2s;}
+.decl-input::placeholder{color:rgba(255,255,255,.28);}
+.decl-input:focus{border-color:rgba(255,255,255,.32);}
+
+/* LETTER */
+.letter{background:#fff;border:1.5px solid var(--lg);border-radius:14px;padding:26px 30px;position:relative;}
+.letter::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:14px 14px 0 0;}
+.letter-to{font-family:'Noto Serif KR',serif;font-size:16px;color:var(--navy);margin-bottom:18px;}
+.letter-to span{font-size:13px;color:var(--gray);font-weight:300;display:block;margin-bottom:3px;font-family:'Noto Sans KR',sans-serif;}
+.letter textarea{width:100%;border:1.5px solid var(--lg);border-radius:10px;padding:14px 16px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);resize:vertical;outline:none;line-height:1.85;background:var(--cream);min-height:180px;transition:border-color .2s;}
+.letter textarea:focus{border-color:var(--blue);background:#fff;}
+.letter-sign{margin-top:20px;text-align:right;}
+.letter-sign input{border:none;border-bottom:1.5px solid var(--rule);padding:4px 0 7px;font-family:'Noto Serif KR',serif;font-size:14px;color:var(--navy);outline:none;min-width:150px;text-align:right;background:transparent;}
+.letter-sign-note{font-size:10px;color:var(--lt);display:block;margin-top:5px;}
+
+/* SIGN ROW */
+.sign-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px;padding-top:20px;border-top:1px solid var(--rule);}
+.sign-item{text-align:center;}
+.sign-line{border-top:1.5px solid var(--mid);padding-top:9px;font-size:10px;color:var(--lt);margin-top:44px;}
+
+/* DIVIDER */
+.div{border:none;border-top:1px solid var(--rule);margin:20px 0;}
+
+/* BUTTONS */
+.no-print{position:fixed;bottom:24px;right:24px;z-index:99;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.btn-p{background:var(--navy);color:#fff;border:none;padding:13px 24px;border-radius:40px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 18px rgba(26,60,107,.35);display:flex;align-items:center;gap:7px;transition:all .2s;}
+.btn-p:hover{background:var(--blue);transform:translateY(-2px);}
+.btn-r{background:#fff;color:var(--gray);border:1.5px solid var(--lg);padding:10px 18px;border-radius:30px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.btn-r:hover{border-color:var(--red);color:var(--red);}
+
+@media print{
+  body{background:#fff;}
+  .page{margin:0;box-shadow:none;width:100%;}
+  .no-print{display:none;}
+  .inner-page{min-height:297mm;}
+  .page{page-break-after:always;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ COVER ════════ -->
+<div class="page">
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-logo">Liter Stella<span>TIME FOR ORIGINAL CLASSIC</span></div>
+    <div class="cover-doc-badge">COACHING DOCUMENT · CONFIDENTIAL</div>
+  </div>
+  <div class="cover-main">
+    <div class="cover-eyebrow"><span>코스 1 수료 후 개인 발급 · SPECIAL 3기</span></div>
+    <div class="cover-title">
+      <span class="en">Individual Coaching Curriculum</span>
+      <span class="ko">개별 코칭</span>
+      <span class="ko2">커리큘럼 설계서</span>
+    </div>
+    <p class="cover-desc">코스 1 이론 과정을 성실히 수료하신 것을 진심으로 축하합니다.<br>이 문서는 스텔라가 귀하만을 위해 직접 설계한 코스 2·3 맞춤 코칭 로드맵입니다.</p>
+    <div class="cover-card">
+      <div class="cc-field"><label>수강생 이름</label><input type="text" id="cn" placeholder="홍길동" oninput="syncAll()"></div>
+      <div class="cc-field"><label>기수</label><input type="text" value="SPECIAL 3기" readonly></div>
+      <div class="cc-field"><label>코스 3 선정 원서</label><input type="text" id="cb" placeholder="예) Anne of Green Gables" oninput="syncBook()"></div>
+      <div class="cc-field"><label>설계 완료일</label><input type="date" id="cd"></div>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-bottom-note">설계자: 스텔라 · Liter Stella<br>내부 코칭 문서 · 무단 배포 금지</div>
+    <div class="cover-seal">LITER<br>STELLA<br>SPECIAL</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 2: 코스 1 평가 ════════ -->
+<div class="page">
+<div class="inner-page">
+  <div class="pg-topbar"></div>
+  <div class="pg-header">
+    <div class="pg-logo">Liter Stella</div>
+    <div class="pg-meta">개별 코칭 커리큘럼 설계서<br><strong id="hn2" style="color:var(--navy);">수강생명</strong></div>
+  </div>
+  <div class="pg-content">
+
+    <div class="sec-head">
+      <div class="sec-n">1</div>
+      <div><div class="sec-t">코스 1 과제 평가 결과</div><div class="sec-s">5주 주차별 과제 평가 요약 · 이 결과가 개별 커리큘럼 설계의 기반이 됩니다</div></div>
+    </div>
+
+    <!-- 총점 -->
+    <div class="frow" style="margin-bottom:16px;align-items:flex-end;">
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">코스 1 총점 <span class="fr">*</span></label>
+        <div class="sb-wrap">
+          <div class="sbadge"><div class="sbadge-v" id="sv">—</div><div class="sbadge-l">/ 20점</div></div>
+          <div class="sbadge"><div class="sbadge-v" id="sg" style="font-size:20px;">—</div><div class="sbadge-l">등급</div></div>
+        </div>
+      </div>
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">수강 완료일</label>
+        <input type="date" class="fi" style="max-width:200px;">
+      </div>
+    </div>
+
+    <!-- 과제 평가 테이블 -->
+    <div class="f">
+      <label class="fl">주차별 과제 평가 <span class="fr">*</span></label>
+      <table class="et">
+        <thead>
+          <tr>
+            <th style="width:58px;text-align:center;">주차</th>
+            <th style="width:120px;">과제 유형</th>
+            <th>핵심 과제 내용</th>
+            <th>스텔라 평가 코멘트</th>
+            <th style="width:76px;text-align:center;">점수</th>
+          </tr>
+        </thead>
+        <tbody id="eval-body">
+          <tr>
+            <td class="et-wk"><span class="wk-ico">📖</span><div class="wk-num">1주차</div><div class="wk-sub">문학 이론</div></td>
+            <td><input type="text" placeholder="이론 적용 에세이"></td>
+            <td><input type="text" placeholder="예) 크라센 이론·총체적 교수법 적용, 작품 분석"></td>
+            <td><input type="text" placeholder="강점 · 보완 사항"></td>
+            <td class="score-td"><select class="et select" data-max="4" onchange="calcTotal()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--lt);margin-top:3px;">/ 4점</div></td>
+          </tr>
+          <tr>
+            <td class="et-wk"><span class="wk-ico">🏫</span><div class="wk-num">2주차</div><div class="wk-sub">교수법</div></td>
+            <td><input type="text" placeholder="원서 선정 + 커리큘럼 초안"></td>
+            <td><input type="text" placeholder="예) 대상 설정, 교수법 적용, 수업 흐름 설계"></td>
+            <td><input type="text" placeholder="강점 · 보완 사항"></td>
+            <td class="score-td"><select class="et select" data-max="4" onchange="calcTotal()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--lt);margin-top:3px;">/ 4점</div></td>
+          </tr>
+          <tr>
+            <td class="et-wk"><span class="wk-ico">🔍</span><div class="wk-num">3주차</div><div class="wk-sub">문법 분석</div></td>
+            <td><input type="text" placeholder="문법 워크샵 리포트 (택 1)"></td>
+            <td><input type="text" placeholder="예) 전치사·관계대명사·동사구 분석, 학습자 시점"></td>
+            <td><input type="text" placeholder="강점 · 보완 사항"></td>
+            <td class="score-td"><select class="et select" data-max="4" onchange="calcTotal()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--lt);margin-top:3px;">/ 4점</div></td>
+          </tr>
+          <tr>
+            <td class="et-wk"><span class="wk-ico">✏️</span><div class="wk-num">4주차</div><div class="wk-sub">문장 분석</div></td>
+            <td><input type="text" placeholder="원서 발췌 문장 분석 리포트"></td>
+            <td><input type="text" placeholder="예) 복문 구조 분석, 문화 맥락, 강독 포인트 선정"></td>
+            <td><input type="text" placeholder="강점 · 보완 사항"></td>
+            <td class="score-td"><select class="et select" data-max="4" onchange="calcTotal()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--lt);margin-top:3px;">/ 4점</div></td>
+          </tr>
+          <tr>
+            <td class="et-wk"><span class="wk-ico">📚</span><div class="wk-num">5주차</div><div class="wk-sub">서사 분석</div></td>
+            <td><input type="text" placeholder="작품 서사 흐름 분석 + 강독 적용"></td>
+            <td><input type="text" placeholder="예) 플롯·화자 시점, 서사 구조와 강독 연결 방식"></td>
+            <td><input type="text" placeholder="강점 · 보완 사항"></td>
+            <td class="score-td"><select class="et select" data-max="4" onchange="calcTotal()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--lt);margin-top:3px;">/ 4점</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 강점 / 보완 -->
+    <div class="frow" style="margin-top:10px;">
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">코스 1에서 발견한 강점 <span class="fr">*</span></label>
+        <div class="chips">
+          <input type="checkbox" class="chi" id="s1"><label class="chl" for="s1">스토리텔링 감각</label>
+          <input type="checkbox" class="chi" id="s2"><label class="chl" for="s2">문법 분석력</label>
+          <input type="checkbox" class="chi" id="s3"><label class="chl" for="s3">학습자 공감력</label>
+          <input type="checkbox" class="chi" id="s4"><label class="chl" for="s4">문학적 통찰</label>
+          <input type="checkbox" class="chi" id="s5"><label class="chl" for="s5">과제 성실성</label>
+          <input type="checkbox" class="chi" id="s6"><label class="chl" for="s6">독창적 관점</label>
+          <input type="checkbox" class="chi" id="s7"><label class="chl" for="s7">커리큘럼 설계력</label>
+          <input type="checkbox" class="chi" id="s8"><label class="chl" for="s8">이론 적용력</label>
+        </div>
+      </div>
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">코스 2·3에서 집중 보완할 영역</label>
+        <div class="chips">
+          <input type="checkbox" class="chi t" id="r1"><label class="chl" for="r1">문법 설명 밸런스</label>
+          <input type="checkbox" class="chi t" id="r2"><label class="chl" for="r2">스토리 몰입도</label>
+          <input type="checkbox" class="chi t" id="r3"><label class="chl" for="r3">발음·전달력</label>
+          <input type="checkbox" class="chi t" id="r4"><label class="chl" for="r4">카메라 자신감</label>
+          <input type="checkbox" class="chi t" id="r5"><label class="chl" for="r5">문화 맥락 설명</label>
+          <input type="checkbox" class="chi t" id="r6"><label class="chl" for="r6">강독 속도 조절</label>
+          <input type="checkbox" class="chi t" id="r7"><label class="chl" for="r7">이야기 구조 활용</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="div"></div>
+
+    <div class="f">
+      <label class="fl">코스 1 스텔라 종합 코멘트</label>
+      <textarea class="ft" rows="3" placeholder="코스 1을 마친 수강생에게 전하는 종합 평가. 어떤 강독가로 성장할 가능성을 보았는지, 코스 2·3에서 기대하는 바를 적어주세요."></textarea>
+    </div>
+
+  </div>
+  <div class="pg-footer">
+    <div class="pg-footer-note">LITER STELLA · SPECIAL 3기 · 개별 코칭 커리큘럼 설계서 · 내부 문서</div>
+    <div class="pg-num">P. 02</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 3: 코칭 방향 + 로드맵 ════════ -->
+<div class="page">
+<div class="inner-page">
+  <div class="pg-topbar"></div>
+  <div class="pg-header">
+    <div class="pg-logo">Liter Stella</div>
+    <div class="pg-meta">개별 코칭 커리큘럼 설계서<br><strong id="hn3" style="color:var(--navy);">수강생명</strong></div>
+  </div>
+  <div class="pg-content">
+
+    <div class="sec-head">
+      <div class="sec-n">2</div>
+      <div><div class="sec-t">개별 코칭 방향 설계</div><div class="sec-s">코스 1 평가를 바탕으로 스텔라가 설계한 이 수강생만의 코스 2·3 로드맵</div></div>
+    </div>
+
+    <!-- 기본 설정 -->
+    <div class="frow" style="margin-bottom:12px;">
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">강독 유형 진단 <span class="fr">*</span></label>
+        <div class="chips">
+          <input type="radio" class="chi" id="ty1" name="ty"><label class="chl" for="ty1">🌟 스토리텔러형</label>
+          <input type="radio" class="chi" id="ty2" name="ty"><label class="chl" for="ty2">🔍 분석가형</label>
+          <input type="radio" class="chi" id="ty3" name="ty"><label class="chl" for="ty3">💛 공감가형</label>
+          <input type="radio" class="chi" id="ty4" name="ty"><label class="chl" for="ty4">🧭 탐험가형</label>
+          <input type="radio" class="chi" id="ty5" name="ty"><label class="chl" for="ty5">✨ 복합형</label>
+        </div>
+      </div>
+      <div class="f" style="margin-bottom:0;">
+        <label class="fl">파트너 가능성 사전 진단</label>
+        <div class="chips">
+          <input type="radio" class="chi g" id="pp1" name="pp"><label class="chl" for="pp1">🟢 상 · 적극 검토</label>
+          <input type="radio" class="chi" id="pp2" name="pp"><label class="chl" for="pp2">🔵 중 · 가능성 있음</label>
+          <input type="radio" class="chi" id="pp3" name="pp"><label class="chl" for="pp3">⚪ 하 · 지켜볼 필요</label>
+        </div>
+      </div>
+    </div>
+    <div class="frow3" style="margin-bottom:12px;">
+      <div class="f" style="margin-bottom:0;"><label class="fl">코스 3 선정 원서</label><input type="text" class="fi" id="fb2" placeholder="원서명"></div>
+      <div class="f" style="margin-bottom:0;"><label class="fl">가르칠 주요 대상</label><input type="text" class="fi" placeholder="예) 원서 관심 있는 40대 엄마들"></div>
+      <div class="f" style="margin-bottom:0;"><label class="fl">예상 강독 채널</label><input type="text" class="fi" placeholder="예) 유튜브, 오프라인 북클럽"></div>
+    </div>
+
+    <div class="co nb">
+      <div class="co-ico">🎯</div>
+      <div class="co-txt">
+        <strong>이 수강생의 핵심 강독 방향 (스텔라 설계)</strong>
+        <textarea rows="2" placeholder="예) 공감형 스토리텔링 강독가. 감정 흐름을 살리면서 문법 포인트를 자연스럽게 녹여내는 강독 스타일 완성을 목표로 합니다."></textarea>
+      </div>
+    </div>
+
+    <div class="div" style="margin:14px 0;"></div>
+
+    <!-- 로드맵 -->
+    <div class="sec-head" style="margin-bottom:16px;">
+      <div class="sec-n" style="background:var(--teal);width:26px;height:26px;font-size:11px;">2-1</div>
+      <div><div class="sec-t" style="font-size:15px;">회차별 코칭 로드맵</div><div class="sec-s">코스 2 (그룹 3회) + 코스 3 (1:1 4회) 회차별 목표 및 집중 피드백 포인트</div></div>
+    </div>
+
+    <div class="rmflow">
+      <div class="rmi">
+        <div class="rmi-icon"><div class="rmi-circle" style="background:var(--teal);">👥</div></div>
+        <div class="rmi-body">
+          <div class="rmi-head"><h4>코스 2 · 그룹 강독 코칭 (Zoom 3회)</h4><span class="rm-tag c2">그룹 실습</span></div>
+          <div class="rm-gl">이 수강생을 위한 코스 2 집중 목표</div>
+          <input type="text" placeholder="예) 릴레이 강독에서 이야기 흡입력을 유지하면서 문법 설명을 자연스럽게 삽입하는 연습">
+          <div class="rm-gl">다른 수강생에게서 배울 포인트</div>
+          <input type="text" placeholder="예) 분석형 수강생의 문법 설명 방식과 비교하며 자신만의 밸런스 찾기">
+        </div>
+      </div>
+      <div class="rmi">
+        <div class="rmi-icon"><div class="rmi-circle" style="background:#5A3A9A;">📞</div></div>
+        <div class="rmi-body">
+          <div class="rmi-head"><h4>코스 3 · 1회차 — 방향 코칭 (상담)</h4><span class="rm-tag c3">1:1 상담</span></div>
+          <div class="rm-gl">이 회차에서 확정할 사항</div>
+          <input type="text" placeholder="예) 강독 챕터·분량 확정, 3가지 강독 포인트 함께 선정">
+          <div class="rm-gl">이 수강생에게 특별히 당부할 것</div>
+          <input type="text" placeholder="예) 설명보다 이야기를 먼저 살리는 것에 집중. 처음부터 완벽하지 않아도 됩니다.">
+        </div>
+      </div>
+      <div class="rmi">
+        <div class="rmi-icon"><div class="rmi-circle" style="background:#5A3A9A;">🎬</div></div>
+        <div class="rmi-body">
+          <div class="rmi-head"><h4>코스 3 · 2회차 — 1차 강독 영상 피드백</h4><span class="rm-tag c3">영상 피드백</span></div>
+          <div class="rm-gl">예상 피드백 포인트 (사전 설계)</div>
+          <input type="text" placeholder="예) 스토리 흐름 vs 문법 설명 비율 조정, 목소리 속도 의식적 늦추기">
+          <div class="rm-gl">이 수강생이 2회차에서 보여줄 예상 강점</div>
+          <input type="text" placeholder="예) 등장인물 감정 묘사가 탁월할 것 — 이 부분은 충분히 살려주기">
+        </div>
+      </div>
+      <div class="rmi">
+        <div class="rmi-icon"><div class="rmi-circle" style="background:#5A3A9A;">📈</div></div>
+        <div class="rmi-body">
+          <div class="rmi-head"><h4>코스 3 · 3회차 — 2차 강독 영상 피드백</h4><span class="rm-tag c3">개선 확인</span></div>
+          <div class="rm-gl">2회차 피드백 반영 후 기대되는 변화</div>
+          <input type="text" placeholder="예) 설명 비율이 줄고 이야기 흐름이 자연스러워질 것">
+          <div class="rm-gl">3회차에서 굳혀야 할 강독가 고유 스타일</div>
+          <input type="text" placeholder="예) 감정이입 → 문장 설명 → 이야기로 복귀하는 3단계 흐름 완성">
+        </div>
+      </div>
+      <div class="rmi">
+        <div class="rmi-icon"><div class="rmi-circle" style="background:var(--gold);">🌟</div></div>
+        <div class="rmi-body gold">
+          <div class="rmi-head"><h4>코스 3 · 4회차 — 졸업 작품 & 파트너 심사</h4><span class="rm-tag gd">졸업 · 파트너 심사</span></div>
+          <div class="rm-gl">졸업 작품 목표 분량 및 형태</div>
+          <input type="text" placeholder="예) 유튜브 20분 · 《앤》 1챕터 완독 강독 · 엄마표 영어 테마">
+          <div class="rm-gl">졸업 후 첫 번째 강독가 활동 제안</div>
+          <input type="text" placeholder="예) 리터스텔라 카페 업로드 + 오프라인 북클럽 1기 모집">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-footer">
+    <div class="pg-footer-note">LITER STELLA · SPECIAL 3기 · 개별 코칭 커리큘럼 설계서 · 내부 문서</div>
+    <div class="pg-num">P. 03</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 4: 강독가 선언 + 편지 ════════ -->
+<div class="page">
+<div class="inner-page">
+  <div class="pg-topbar"></div>
+  <div class="pg-header">
+    <div class="pg-logo">Liter Stella</div>
+    <div class="pg-meta">개별 코칭 커리큘럼 설계서<br><strong id="hn4" style="color:var(--navy);">수강생명</strong></div>
+  </div>
+  <div class="pg-content">
+
+    <div class="sec-head">
+      <div class="sec-n">3</div>
+      <div><div class="sec-t">강독가 선언</div><div class="sec-s">지원서에 기재하신 선언 문장을 이 설계서에 새깁니다 — 코칭 기간 내내 이 문장이 나침반이 됩니다</div></div>
+    </div>
+
+    <div class="decl">
+      <div class="decl-lbl">나의 강독가 선언 · <span id="dc-n">수강생명</span></div>
+      <div class="decl-preview empty" id="dp">&#8220; 지원서에 기재한 강독가 선언 문장이 여기에 새겨집니다 &#8221;</div>
+      <input type="text" class="decl-input" id="di" placeholder="지원서에 적은 강독가 선언 문장을 그대로 옮겨 적어주세요" oninput="updateDecl()">
+    </div>
+
+    <div class="f" style="margin-top:12px;">
+      <label class="fl">스텔라의 응원 한 마디 <span style="font-size:10px;color:var(--lt);font-weight:400;">(수강생이 저장해두고 싶을 만한 말)</span></label>
+      <textarea class="ft" rows="2" placeholder="예) 이 선언이 흔들릴 때, 다시 이 문장으로 돌아오세요. 이 문장 안에 이미 강독가가 있습니다."></textarea>
+    </div>
+
+    <div class="div"></div>
+
+    <div class="sec-head">
+      <div class="sec-n">4</div>
+      <div><div class="sec-t">스텔라의 편지</div><div class="sec-s">코스 2 시작 전 수강생에게 발송하는 개인 메시지 · 이메일 또는 채팅방으로 전달</div></div>
+    </div>
+
+    <div class="letter">
+      <div class="letter-to">
+        <span>To.</span>
+        <span id="ln">수강생명</span> 선생님께
+      </div>
+      <div>
+        <textarea placeholder="[수강생 이름] 선생님,&#10;&#10;코스 1을 성실히 마쳐주셔서 감사합니다. 선생님의 과제를 읽으면서...&#10;&#10;(구체적 강점 1~2가지 언급)&#10;&#10;코스 2·3에서 이런 방향으로 함께 작업했으면 합니다...&#10;&#10;(방향 제언 1~2가지)&#10;&#10;선생님의 강독가 선언 문장을 읽으며 저도 설레었습니다.&#10;그 문장이 현실이 되는 과정을 함께하겠습니다.&#10;&#10;스텔라 드림"></textarea>
+      </div>
+      <div class="letter-sign">
+        <input type="text" value="스텔라 (Liter Stella)">
+        <span class="letter-sign-note">날짜: ____년 ____월 ____일</span>
+      </div>
+    </div>
+
+    <div class="sign-row">
+      <div class="sign-item"><div class="sign-line">수강생 확인 서명</div></div>
+      <div class="sign-item"><div class="sign-line">스텔라 서명</div></div>
+      <div class="sign-item"><div class="sign-line">설계 완료일 / 발급일</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">
+    <div class="pg-footer-note">LITER STELLA · SPECIAL 3기 · 개별 코칭 커리큘럼 설계서 · 내부 문서</div>
+    <div class="pg-num">P. 04</div>
+  </div>
+</div>
+</div>
+
+<!-- BUTTONS -->
+<div class="no-print">
+  <button class="btn-p" onclick="window.print()">🖨️ 인쇄 · PDF 저장</button>
+  <button class="btn-r" onclick="resetAll()">↩ 초기화</button>
+</div>
+
+<script>
+function syncAll(){
+  const v=document.getElementById('cn').value||'수강생명';
+  ['hn2','hn3','hn4','ln','dc-n'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=v;});
+}
+function syncBook(){
+  const v=document.getElementById('cb').value;
+  const e=document.getElementById('fb2');
+  if(e&&!e.value)e.value=v;
+}
+function updateDecl(){
+  const v=document.getElementById('di').value.trim();
+  const e=document.getElementById('dp');
+  if(v){e.innerHTML='\u201c'+v+'\u201d';e.classList.remove('empty');}
+  else{e.innerHTML='\u201c 지원서에 기재한 강독가 선언 문장이 여기에 새겨집니다 \u201d';e.classList.add('empty');}
+}
+function calcTotal(){
+  let total=0,filled=0;
+  document.querySelectorAll('.et.select').forEach(s=>{const v=parseInt(s.value);if(!isNaN(v)){total+=v;filled++;}});
+  const sv=document.getElementById('sv'),sg=document.getElementById('sg');
+  if(filled>0){
+    sv.textContent=total;
+    const g=total>=18?'S':total>=16?'A':total>=12?'B':total>=8?'C':'D';
+    const c={S:'#2A6A4A',A:'#2E75B6',B:'#B8820A',C:'#B03030',D:'#8E9BAB'};
+    sg.textContent=g;sg.style.color=c[g];
+  } else {sv.textContent='—';sg.textContent='—';}
+}
+function resetAll(){
+  if(!confirm('모든 입력 내용을 초기화하겠습니까?'))return;
+  document.querySelectorAll('input[type=text],input[type=date],textarea').forEach(e=>{if(!e.readOnly)e.value='';});
+  document.querySelectorAll('.et.select').forEach(s=>s.value='');
+  document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(e=>e.checked=false);
+  syncAll();updateDecl();calcTotal();
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const t=new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type=date]').forEach(e=>e.value=t);
+});
+</script>
+</body>
+</html>
