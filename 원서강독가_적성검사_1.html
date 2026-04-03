@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원서 강독가 적성 검사 | 리터스텔라</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const db=firebase.firestore();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#1A1A2E; --navy:#1A3C6B; --blue:#2E75B6;
+  --teal:#2A8A8A; --gold:#C8922A; --cream:#FDF8F0;
+  --warm:#F5EFE0; --lg:#E8EFF8; --gray:#5A6A7A;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ── INTRO ── */
+#intro{background:linear-gradient(160deg,#0D2447 0%,#1A3C6B 50%,var(--teal) 100%);align-items:center;justify-content:center;text-align:center;padding:48px 24px;position:relative;overflow:hidden;}
+#intro::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,.04) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(200,146,42,.08) 0%,transparent 40%);}
+.intro-inner{max-width:560px;position:relative;z-index:1;}
+.intro-badge{display:inline-block;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);font-size:12px;letter-spacing:.12em;padding:7px 20px;border-radius:30px;margin-bottom:32px;font-weight:500;}
+.intro-title{font-family:'Noto Serif KR',serif;font-size:clamp(28px,6vw,48px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:16px;}
+.intro-title em{font-style:normal;color:#F0C040;}
+.intro-sub{font-size:15px;color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:12px;}
+.intro-time{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:13px;padding:6px 16px;border-radius:20px;margin-bottom:36px;}
+.book-icons{font-size:36px;letter-spacing:4px;margin-bottom:28px;}
+.start-btn{background:linear-gradient(135deg,var(--gold),#E8B040);color:#fff;border:none;font-size:18px;font-weight:700;padding:18px 52px;border-radius:50px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 8px 28px rgba(200,146,42,.4);transition:transform .2s,box-shadow .2s;}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(200,146,42,.5);}
+.intro-note{color:rgba(255,255,255,.4);font-size:12px;margin-top:16px;}
+
+/* ── QUIZ ── */
+#quiz{background:var(--cream);}
+.quiz-header{background:var(--navy);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.quiz-logo{font-family:'Noto Serif KR',serif;color:#fff;font-size:16px;font-weight:600;}
+.quiz-progress-wrap{flex:1;max-width:280px;margin:0 auto;}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:6px;}
+.progress-label span{font-size:12px;color:rgba(255,255,255,.55);}
+.progress-label strong{font-size:12px;color:#F0C040;}
+.progress-bar{height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .5s ease;}
+
+.quiz-body{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;}
+.quiz-card{max-width:600px;width:100%;}
+.q-num{display:inline-block;background:var(--navy);color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.1em;margin-bottom:20px;}
+.q-text{font-family:'Noto Serif KR',serif;font-size:clamp(18px,4vw,24px);font-weight:600;color:var(--navy);line-height:1.5;margin-bottom:32px;}
+.q-scene{background:var(--warm);border-left:4px solid var(--gold);padding:14px 18px;border-radius:0 10px 10px 0;font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:28px;font-style:italic;}
+.options{display:flex;flex-direction:column;gap:12px;}
+.option-btn{background:#fff;border:2px solid var(--lg);border-radius:14px;padding:18px 22px;cursor:pointer;text-align:left;font-family:'Noto Sans KR',sans-serif;font-size:15px;color:var(--ink);line-height:1.55;transition:all .2s;display:flex;align-items:flex-start;gap:14px;}
+.option-btn:hover{border-color:var(--blue);background:#F0F6FC;transform:translateX(4px);}
+.option-btn.selected{border-color:var(--navy);background:linear-gradient(135deg,#EBF3FB,#F5F8FC);color:var(--navy);}
+.option-btn.selected .opt-letter{background:var(--navy);color:#fff;}
+.opt-letter{width:28px;height:28px;border-radius:50%;border:2px solid var(--lg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray);flex-shrink:0;margin-top:1px;transition:all .2s;}
+.next-btn{margin-top:24px;width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;opacity:0;pointer-events:none;}
+.next-btn.show{opacity:1;pointer-events:all;}
+.next-btn:hover{background:var(--blue);}
+
+/* ── LOADING ── */
+#loading{background:var(--navy);align-items:center;justify-content:center;text-align:center;}
+.loading-inner{padding:48px 24px;}
+.loading-orb{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--gold));margin:0 auto 28px;animation:orb 2s ease-in-out infinite;}
+@keyframes orb{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(200,146,42,.4);}50%{transform:scale(1.1);box-shadow:0 0 0 20px rgba(200,146,42,0);}}
+.loading-text{color:#fff;font-size:18px;font-weight:600;margin-bottom:8px;}
+.loading-sub{color:rgba(255,255,255,.5);font-size:14px;}
+.loading-dots span{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin:12px 4px 0;animation:dot 1.4s infinite;}
+.loading-dots span:nth-child(2){animation-delay:.2s;}
+.loading-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dot{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+/* ── RESULT ── */
+#result{background:var(--cream);}
+.result-hero{padding:60px 24px 40px;text-align:center;background:linear-gradient(160deg,#0D2447,#1A3C6B 55%,var(--teal));}
+.result-badge{font-size:72px;margin-bottom:16px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3));}
+.result-type-label{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.75);font-size:12px;letter-spacing:.1em;padding:6px 16px;border-radius:20px;margin-bottom:12px;}
+.result-type-name{font-family:'Noto Serif KR',serif;font-size:clamp(24px,5vw,40px);font-weight:700;color:#fff;margin-bottom:8px;}
+.result-type-sub{font-size:16px;color:var(--gold);font-weight:600;margin-bottom:20px;}
+.result-body{max-width:640px;margin:0 auto;padding:40px 24px;}
+.result-desc-box{background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(26,60,107,.1);margin-bottom:24px;}
+.result-desc-title{font-size:14px;color:var(--teal);font-weight:700;letter-spacing:.08em;margin-bottom:12px;}
+.result-desc{font-size:16px;color:var(--gray);line-height:1.85;}
+.result-traits{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.trait{background:var(--lg);border-radius:12px;padding:16px;}
+.trait .trait-label{font-size:11px;color:var(--blue);font-weight:700;letter-spacing:.08em;margin-bottom:6px;}
+.trait p{font-size:14px;color:var(--navy);font-weight:600;}
+.result-scores{background:#fff;border-radius:20px;padding:28px;box-shadow:0 4px 24px rgba(26,60,107,.08);margin-bottom:24px;}
+.score-title{font-size:14px;color:var(--gray);font-weight:700;margin-bottom:20px;}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.score-row:last-child{margin-bottom:0;}
+.score-icon{font-size:18px;width:28px;text-align:center;flex-shrink:0;}
+.score-name{font-size:14px;color:var(--navy);font-weight:600;min-width:80px;}
+.score-bar-bg{flex:1;height:10px;background:var(--lg);border-radius:5px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:5px;transition:width 1.2s ease;}
+.score-val{font-size:13px;font-weight:700;color:var(--navy);min-width:36px;text-align:right;}
+.cta-box{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:20px;padding:32px;text-align:center;}
+.cta-box h3{font-size:20px;font-weight:900;color:#fff;margin-bottom:10px;line-height:1.4;}
+.cta-box p{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:24px;line-height:1.7;}
+.cta-box .cta-apply{display:inline-block;background:linear-gradient(135deg,var(--gold),#E8B040);color:#fff;font-size:16px;font-weight:700;padding:16px 40px;border-radius:50px;text-decoration:none;box-shadow:0 6px 20px rgba(200,146,42,.4);}
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+.share-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px;padding:8px 20px;border-radius:30px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background .2s;}
+.share-btn:hover{background:rgba(255,255,255,.2);}
+.retry-btn{background:transparent;border:none;color:rgba(255,255,255,.5);font-size:13px;cursor:pointer;margin-top:12px;font-family:'Noto Sans KR',sans-serif;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- ── INTRO ── -->
+<div class="screen active" id="intro">
+  <div class="intro-inner">
+    <div class="intro-badge">LITER STELLA × 원서 강독</div>
+    <div class="book-icons">📖 ✦ 📚</div>
+    <h1 class="intro-title">나는 어떤<br><em>원서 강독가</em>인가?</h1>
+    <p class="intro-sub">10개의 질문으로 나의 강독 유형을 진단합니다.<br>강독가로서의 강점, 발전 방향, 어울리는 수강생 유형까지 알 수 있습니다.</p>
+    <div class="intro-time">⏱ 소요 시간 약 3분 · 질문 10개</div>
+    <button class="start-btn" onclick="startQuiz()">지금 시작하기 →</button>
+    <p class="intro-note">리터스텔라 SPECIAL 코칭 지원 전 필수 확인</p>
+  </div>
+</div>
+
+<!-- ── QUIZ ── -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-logo">Liter Stella</div>
+    <div class="quiz-progress-wrap">
+      <div class="progress-label">
+        <span>원서 강독가 적성 검사</span>
+        <strong id="prog-label">1 / 10</strong>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:10%"></div></div>
+    </div>
+    <div style="width:80px;"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-card">
+      <div class="q-num" id="q-num">Q 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-scene" id="q-scene" style="display:none;"></div>
+      <div class="options" id="options"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">다음 질문 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── LOADING ── -->
+<div class="screen" id="loading">
+  <div class="loading-inner">
+    <div class="loading-orb"></div>
+    <div class="loading-text" id="loading-text">강독 유형 분석 중...</div>
+    <div class="loading-sub" id="loading-sub">당신의 답변을 살펴보고 있습니다</div>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ── RESULT ── -->
+<div class="screen" id="result">
+  <div class="result-hero">
+    <div class="result-badge" id="res-badge">📖</div>
+    <div class="result-type-label">나의 원서 강독 유형</div>
+    <div class="result-type-name" id="res-name">스토리텔러형</div>
+    <div class="result-type-sub" id="res-sub">이야기로 세상을 연결하는 강독가</div>
+  </div>
+  <div class="result-body">
+    <div class="result-desc-box">
+      <div class="result-desc-title">✦ 강독 유형 분석</div>
+      <div class="result-desc" id="res-desc"></div>
+      <div class="result-traits" id="res-traits"></div>
+    </div>
+    <div class="result-scores">
+      <div class="score-title">4가지 강독 역량 분포</div>
+      <div id="score-bars"></div>
+    </div>
+    <div class="cta-box">
+      <h3 id="res-cta-title">이 강점, 스텔라 코칭으로<br>완성해 보세요</h3>
+      <p id="res-cta-desc">SPECIAL 3기는 10명 지원, 5명만 선발합니다.<br>지원서 제출 후 스텔라가 직접 연락드립니다.</p>
+      <a href="#" class="cta-apply">SPECIAL 3기 지원서 제출하기 →</a>
+      <div class="share-row">
+        <button class="share-btn" onclick="copyResult()">📋 결과 복사</button>
+        <button class="share-btn" onclick="shareKakao()">💬 카카오 공유</button>
+      </div>
+      <button class="retry-btn" onclick="restartQuiz()">↩ 다시 검사하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "원서의 한 문장을 읽었을 때 나는 가장 먼저...",
+    scene: null,
+    opts: [
+      { letter:"A", text:"이 문장이 만드는 장면을 머릿속에 그린다", type:"S" },
+      { letter:"B", text:"문장 구조와 문법 포인트를 자연스럽게 분석한다", type:"A" },
+      { letter:"C", text:"이 문장이 독자에게 어떤 감정을 줄지 생각한다", type:"E" },
+      { letter:"D", text:"작가가 왜 이 표현을 선택했는지 궁금해진다", type:"X" }
+    ]
+  },
+  {
+    text: "수강생이 어려운 문장에서 멈추었을 때 나는...",
+    scene: "\"The silence was not the absence of sound, but the presence of something unspoken.\"",
+    opts: [
+      { letter:"A", text:"이 문장이 그리는 장면을 함께 상상하게 한다", type:"S" },
+      { letter:"B", text:"문장을 분해해서 구조적으로 이해시킨다", type:"A" },
+      { letter:"C", text:"'이 느낌, 경험한 적 있죠?' 하고 감정으로 연결한다", type:"E" },
+      { letter:"D", text:"비슷한 표현을 다른 문장에서 찾아 비교한다", type:"X" }
+    ]
+  },
+  {
+    text: "나의 강독 수업에서 수강생이 가장 많이 하는 말은...",
+    scene: null,
+    opts: [
+      { letter:"A", text:"\"마치 영화처럼 보이는 것 같아요\"", type:"S" },
+      { letter:"B", text:"\"이 문법이 왜 이렇게 쓰이는지 이제 알겠어요\"", type:"A" },
+      { letter:"C", text:"\"마음이 따뜻해지는 수업이에요\"", type:"E" },
+      { letter:"D", text:"\"이 책에 이런 의미가 있었군요!\"", type:"X" }
+    ]
+  },
+  {
+    text: "원서 강독 영상을 촬영할 때 내가 가장 신경 쓰는 것은...",
+    scene: null,
+    opts: [
+      { letter:"A", text:"시청자가 이야기 속으로 빠져드는 속도와 리듬", type:"S" },
+      { letter:"B", text:"문장 설명의 정확성과 명확한 전달", type:"A" },
+      { letter:"C", text:"화면 너머 사람과 연결되는 따뜻한 분위기", type:"E" },
+      { letter:"D", text:"이 책만의 특별한 관점과 새로운 해석", type:"X" }
+    ]
+  },
+  {
+    text: "어떤 수강생을 가르칠 때 가장 보람을 느끼나요?",
+    scene: null,
+    opts: [
+      { letter:"A", text:"이야기에 감동해서 책을 스스로 펼치기 시작한 학생", type:"S" },
+      { letter:"B", text:"문법과 어휘를 체계적으로 익히고 싶어하는 학생", type:"A" },
+      { letter:"C", text:"영어에 두려움이 있지만 따라오려는 의지가 있는 학생", type:"E" },
+      { letter:"D", text:"영어 원서의 세계를 처음 발견하는 호기심 많은 학생", type:"X" }
+    ]
+  },
+  {
+    text: "5년 뒤 나의 원서 강독가 활동을 상상한다면...",
+    scene: null,
+    opts: [
+      { letter:"A", text:"나만의 스토리텔링 스타일로 알려진 강독가", type:"S" },
+      { letter:"B", text:"원서 문법을 가장 잘 설명하는 강독가로 유명해진다", type:"A" },
+      { letter:"C", text:"수강생들이 '선생님 덕분에 영어가 좋아졌어요' 하는 강사", type:"E" },
+      { letter:"D", text:"다양한 원서를 발굴해서 소개하는 원서 큐레이터 강독가", type:"X" }
+    ]
+  },
+  {
+    text: "다음 중 강독 준비 시 내가 가장 즐기는 과정은?",
+    scene: null,
+    opts: [
+      { letter:"A", text:"소리 내어 읽으며 가장 아름다운 구절 찾기", type:"S" },
+      { letter:"B", text:"핵심 문법 포인트와 어휘 정리", type:"A" },
+      { letter:"C", text:"수강생 입장에서 어떻게 느낄지 상상하기", type:"E" },
+      { letter:"D", text:"작가의 의도와 숨겨진 상징 탐구하기", type:"X" }
+    ]
+  },
+  {
+    text: "원서를 처음 읽을 때 영어가 어렵게 느껴지는 이유는 뭘까요?",
+    scene: "이 질문에 대한 나만의 답을 선택해 보세요.",
+    opts: [
+      { letter:"A", text:"이야기의 흐름을 느끼지 못해서 — 감각이 필요하다", type:"S" },
+      { letter:"B", text:"문법과 구조를 모르기 때문 — 분석이 필요하다", type:"A" },
+      { letter:"C", text:"영어가 낯설고 두렵기 때문 — 심리적 연결이 필요하다", type:"E" },
+      { letter:"D", text:"배경 지식이 없어서 — 문화적 맥락이 필요하다", type:"X" }
+    ]
+  },
+  {
+    text: "강독 수업 후 수강생이 가장 기억했으면 하는 것은?",
+    scene: null,
+    opts: [
+      { letter:"A", text:"그 문장이 만든 아름다운 장면과 이미지", type:"S" },
+      { letter:"B", text:"오늘 배운 문법 구조와 어휘의 쓰임", type:"A" },
+      { letter:"C", text:"선생님과 함께 읽으며 느낀 따뜻한 감정", type:"E" },
+      { letter:"D", text:"이 책에서만 발견할 수 있는 새로운 관점", type:"X" }
+    ]
+  },
+  {
+    text: "지금 이 순간, 원서 강독가가 되고 싶은 이유를 솔직하게 고른다면?",
+    scene: null,
+    opts: [
+      { letter:"A", text:"원서의 아름다운 이야기를 더 많은 사람들과 나누고 싶다", type:"S" },
+      { letter:"B", text:"영어의 구조를 체계적으로 가르쳐서 실력을 키워주고 싶다", type:"A" },
+      { letter:"C", text:"영어가 어렵다고 포기한 사람들에게 희망을 주고 싶다", type:"E" },
+      { letter:"D", text:"원서라는 세계를 함께 탐험하는 가이드가 되고 싶다", type:"X" }
+    ]
+  }
+];
+
+const types = {
+  S: {
+    name:"스토리텔러형",
+    sub:"이야기로 세상을 연결하는 강독가",
+    badge:"🌟",
+    color:"linear-gradient(135deg,#2E75B6,#1A3C6B)",
+    desc:"당신은 원서를 읽을 때 이야기 안으로 먼저 들어갑니다. 문장 하나에서 장면을 그리고, 속도와 리듬으로 수강생을 이야기 속으로 데려가는 것이 당신의 가장 큰 강점입니다. 원서 강독을 독해 수업이 아닌 '체험'으로 만드는 강독가입니다. 스텔라가 가르치는 '강독가는 스토리텔러'라는 철학이 당신에게 가장 잘 맞습니다.",
+    traits:[
+      {label:"핵심 강점",val:"이야기 몰입도 · 리듬감"},
+      {label:"어울리는 수강생",val:"원서가 처음인 입문자"},
+      {label:"강화할 부분",val:"문법 설명의 정확성"},
+      {label:"잘 맞는 원서",val:"소설 · 문학 고전"}
+    ],
+    cta:"스텔라의 스토리텔링 강독 코칭으로 당신의 이야기 감각을 완성하세요."
+  },
+  A: {
+    name:"분석가형",
+    sub:"언어의 구조를 꿰뚫어보는 강독가",
+    badge:"🔍",
+    color:"linear-gradient(135deg,var(--teal),#1A5A5A)",
+    desc:"당신은 문장 구조를 직관적으로 분석합니다. 문법 포인트를 정확하게 짚고 어휘의 뉘앙스를 풀어주는 것이 당신의 강점입니다. 수강생에게 '이 문장이 왜 이렇게 쓰이는지' 명확하게 설명할 수 있는 강독가입니다. 스텔라의 문법 워크샵이 특히 당신의 무기를 날카롭게 갈아줄 것입니다.",
+    traits:[
+      {label:"핵심 강점",val:"문법 분석 · 정확한 설명"},
+      {label:"어울리는 수강생",val:"독해력 향상 목표 학습자"},
+      {label:"강화할 부분",val:"감정적 스토리텔링"},
+      {label:"잘 맞는 원서",val:"에세이 · 비문학"}
+    ],
+    cta:"분석의 정확성에 스토리텔링을 더하면 완벽한 강독가가 됩니다."
+  },
+  E: {
+    name:"공감가형",
+    sub:"마음으로 연결하는 따뜻한 강독가",
+    badge:"💛",
+    color:"linear-gradient(135deg,#C8922A,#A06A20)",
+    desc:"당신은 수강생의 마음 상태를 먼저 읽습니다. 영어가 두렵거나 포기했던 사람들을 다시 원서 앞으로 데려오는 것이 당신의 특별한 능력입니다. '선생님 덕분에 영어가 좋아졌어요'라는 말을 가장 많이 듣게 될 강독가입니다. 스텔라의 학습자 문학 교수법이 당신의 공감력에 체계를 더해줄 것입니다.",
+    traits:[
+      {label:"핵심 강점",val:"학습자 공감 · 심리적 안정"},
+      {label:"어울리는 수강생",val:"영어 두려움이 있는 학습자"},
+      {label:"강화할 부분",val:"이론적 기반 강화"},
+      {label:"잘 맞는 원서",val:"감성 소설 · 그림책"}
+    ],
+    cta:"공감하는 힘에 스텔라의 강독 이론을 더하면 누구도 따라올 수 없습니다."
+  },
+  X: {
+    name:"탐험가형",
+    sub:"새로운 원서 세계를 발굴하는 강독가",
+    badge:"🧭",
+    color:"linear-gradient(135deg,#2A5A8A,#1A3C5A)",
+    desc:"당신은 원서를 탐험합니다. 작가의 의도, 숨겨진 상징, 문화적 맥락을 발굴해서 수강생에게 새로운 세계를 열어주는 것이 당신의 강점입니다. 다양한 원서를 발굴하고 소개하는 독보적인 큐레이터형 강독가가 될 것입니다. 스텔라의 문학 이론과 서사 분석 수업이 당신의 탐험에 나침반이 되어줄 것입니다.",
+    traits:[
+      {label:"핵심 강점",val:"문학적 통찰 · 원서 발굴"},
+      {label:"어울리는 수강생",val:"지적 호기심 많은 중급자"},
+      {label:"강화할 부분",val:"전달력과 리듬감"},
+      {label:"잘 맞는 원서",val:"고전 · 장르 문학"}
+    ],
+    cta:"당신의 탐험 본능에 스텔라의 강독 코칭이 날개를 달아줍니다."
+  }
+};
+
+const scores = {label:["스토리텔링","분석·문법","학습자 공감","문학 탐구"], icon:["🌟","🔍","💛","🧭"], key:["S","A","E","X"], colors:["#2E75B6","#2A8A8A","#C8922A","#2A5A8A"]};
+
+let answers = [];
+let current = 0;
+let selectedOpt = null;
+let typeCounts = {S:0,A:0,E:0,X:0};
+
+function startQuiz(){
+  showScreen('quiz');
+  current = 0;
+  answers = [];
+  typeCounts = {S:0,A:0,E:0,X:0};
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('q-num').textContent = `Q ${String(current+1).padStart(2,'0')}`;
+  document.getElementById('q-text').textContent = q.text;
+  const sceneEl = document.getElementById('q-scene');
+  if(q.scene){ sceneEl.textContent = q.scene; sceneEl.style.display='block'; }
+  else{ sceneEl.style.display='none'; }
+  
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  q.opts.forEach(o=>{
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${o.letter}</span>${o.text}`;
+    btn.onclick = ()=>selectOpt(btn,o);
+    optsEl.appendChild(btn);
+  });
+  
+  selectedOpt = null;
+  const nxt = document.getElementById('next-btn');
+  nxt.classList.remove('show');
+  nxt.textContent = current === questions.length-1 ? '결과 보기 →' : '다음 질문 →';
+  
+  const pct = ((current+1)/questions.length)*100;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-label').textContent = `${current+1} / ${questions.length}`;
+}
+
+function selectOpt(btn, opt){
+  document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOpt = opt;
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion(){
+  if(!selectedOpt) return;
+  answers.push(selectedOpt);
+  typeCounts[selectedOpt.type]++;
+  
+  if(current < questions.length-1){
+    current++;
+    renderQuestion();
+  } else {
+    showLoading();
+  }
+}
+
+function showLoading(){
+  showScreen('loading');
+  const msgs = [
+    ["강독 유형 분석 중...", "당신의 답변 패턴을 살펴보고 있습니다"],
+    ["강독 강점 계산 중...", "4가지 역량 분포를 계산하고 있습니다"],
+    ["결과 완성 중...", "당신만의 강독가 프로필을 만들고 있습니다"]
+  ];
+  let i=0;
+  const iv = setInterval(()=>{
+    if(i<msgs.length){
+      document.getElementById('loading-text').textContent = msgs[i][0];
+      document.getElementById('loading-sub').textContent = msgs[i][1];
+      i++;
+    } else {
+      clearInterval(iv);
+      showResult();
+    }
+  }, 700);
+}
+
+function showResult(){
+  let maxType = 'S', maxVal = 0;
+  Object.keys(typeCounts).forEach(k=>{ if(typeCounts[k]>maxVal){maxVal=typeCounts[k];maxType=k;} });
+  const t = types[maxType];
+
+  document.getElementById('res-badge').textContent = t.badge;
+  document.getElementById('res-name').textContent = t.name;
+  document.getElementById('res-sub').textContent = t.sub;
+  document.getElementById('res-desc').textContent = t.desc;
+
+  const tr = document.getElementById('res-traits');
+  tr.innerHTML = t.traits.map(tt=>`<div class="trait"><div class="trait-label">${tt.label}</div><p>${tt.val}</p></div>`).join('');
+
+  const total = Object.values(typeCounts).reduce((a,b)=>a+b,0);
+  const sb = document.getElementById('score-bars');
+  sb.innerHTML = scores.key.map((k,i)=>{
+    const pct = Math.round((typeCounts[k]/total)*100);
+    return `<div class="score-row">
+      <span class="score-icon">${scores.icon[i]}</span>
+      <span class="score-name">${scores.label[i]}</span>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:0%;background:${scores.colors[i]}" data-w="${pct}"></div></div>
+      <span class="score-val">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('res-cta-desc').textContent = t.cta + '\n\nSPECIAL 3기는 10명 지원, 5명만 선발합니다.';
+
+  // ── Firebase 저장 ──
+  sessionStorage.setItem('quizType', t.name);
+  db.collection('quiz_results').add({
+    typeName: t.name,
+    typeKey: maxType,
+    typeSub: t.sub,
+    typeDesc: t.desc,
+    badge: t.badge,
+    scores: {...typeCounts},
+    name: '',
+    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).catch(e=>console.warn('Quiz save error:', e));
+
+  showScreen('result');
+  setTimeout(()=>{
+    document.querySelectorAll('.score-bar-fill').forEach(el=>{
+      el.style.transition='width 1.2s ease';
+      el.style.width=el.dataset.w+'%';
+    });
+  },300);
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function restartQuiz(){
+  showScreen('intro');
+}
+
+function copyResult(){
+  const name = document.getElementById('res-name').textContent;
+  const sub = document.getElementById('res-sub').textContent;
+  navigator.clipboard.writeText(`나의 원서 강독가 유형: ${name} — ${sub}\n리터스텔라 SPECIAL 3기 지원하기`).then(()=>alert('결과가 복사되었습니다!'));
+}
+function shareKakao(){ alert('카카오 SDK 연동 후 활성화됩니다'); }
+</script>
+</body>
+</html>
