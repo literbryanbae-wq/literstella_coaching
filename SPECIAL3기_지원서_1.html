@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPECIAL 3기 지원서 | 리터스텔라 원서 강독 코칭</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const db=firebase.firestore();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1A3C6B; --blue:#2E75B6; --teal:#2A8A8A; --gold:#C8922A;
+  --cream:#FDFAF5; --warm:#F5EFE0; --lg:#E8EFF8; --gray:#5A6A7A;
+  --ink:#1C2A3A; --red:#C0392B;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--ink);}
+
+/* ── HEADER ── */
+.site-header{background:linear-gradient(160deg,#0D2447,#1A3C6B 55%,var(--teal));padding:60px 24px 80px;text-align:center;position:relative;overflow:hidden;}
+.site-header::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(200,146,42,.08),transparent 50%);}
+.header-inner{max-width:640px;margin:0 auto;position:relative;z-index:1;}
+.h-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:7px 18px;border-radius:30px;margin-bottom:24px;letter-spacing:.08em;}
+.h-badge .dot{width:7px;height:7px;background:var(--gold);border-radius:50%;}
+.h-title{font-family:'Noto Serif KR',serif;font-size:clamp(26px,5vw,42px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:14px;}
+.h-title em{font-style:normal;color:#F0C040;}
+.h-sub{font-size:15px;color:rgba(255,255,255,.7);line-height:1.8;}
+.limit-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(200,146,42,.2);border:1px solid rgba(200,146,42,.4);color:#F0C040;font-size:13px;font-weight:700;padding:8px 20px;border-radius:30px;margin-top:20px;}
+
+/* ── PROGRESS ── */
+.form-progress{background:#fff;border-bottom:2px solid var(--lg);padding:16px 24px;position:sticky;top:0;z-index:10;}
+.fp-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:16px;}
+.fp-steps{display:flex;gap:6px;flex:1;}
+.fp-step{flex:1;height:4px;border-radius:2px;background:var(--lg);transition:background .3s;}
+.fp-step.done{background:var(--teal);}
+.fp-step.active{background:var(--gold);}
+.fp-label{font-size:13px;color:var(--gray);white-space:nowrap;}
+.fp-label strong{color:var(--navy);}
+
+/* ── FORM WRAPPER ── */
+.form-wrap{max-width:720px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── SECTIONS ── */
+.form-section{background:#fff;border-radius:20px;padding:36px 32px;margin-bottom:24px;border:1px solid var(--lg);box-shadow:0 2px 12px rgba(26,60,107,.05);}
+.form-section.active-sec{border-color:var(--blue);box-shadow:0 4px 24px rgba(46,117,182,.12);}
+.sec-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.sec-num{width:36px;height:36px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.sec-num.done{background:var(--teal);}
+.sec-num.done::after{content:'✓';}
+.sec-title-wrap h2{font-size:18px;font-weight:700;color:var(--navy);}
+.sec-title-wrap p{font-size:13px;color:var(--gray);margin-top:3px;}
+
+/* ── FIELD ── */
+.field{margin-bottom:24px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.field label .req{color:var(--red);margin-left:3px;}
+.field label .hint{font-size:12px;color:var(--gray);font-weight:400;margin-left:6px;}
+.field input, .field select{width:100%;border:2px solid var(--lg);border-radius:10px;padding:13px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;background:#FDFBF8;}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1);}
+.field textarea{width:100%;border:2px solid var(--lg);border-radius:10px;padding:14px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);resize:vertical;outline:none;background:#FDFBF8;transition:border-color .2s;line-height:1.7;}
+.char-count{text-align:right;font-size:12px;color:var(--gray);margin-top:5px;}
+.char-count.warn{color:var(--gold);}
+.char-count.ok{color:var(--teal);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* 동기부여 질문 스타일 */
+.mq-box{background:linear-gradient(135deg,#EBF3FB,#F0F7F5);border:1px solid rgba(46,117,182,.15);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.mq-box .mq-icon{font-size:24px;margin-bottom:8px;}
+.mq-box .mq-q{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.5;}
+.mq-box .mq-hint{font-size:12px;color:var(--gray);line-height:1.6;background:rgba(255,255,255,.6);border-radius:8px;padding:8px 12px;}
+
+/* 체크박스 */
+.checkbox-group{display:flex;flex-direction:column;gap:10px;}
+.check-item{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.check-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--navy);cursor:pointer;}
+.check-item span{font-size:14px;color:var(--gray);}
+
+/* 라디오 */
+.radio-group{display:flex;flex-wrap:wrap;gap:10px;}
+.radio-item{cursor:pointer;}
+.radio-item input{display:none;}
+.radio-item .radio-label{display:inline-block;border:2px solid var(--lg);border-radius:10px;padding:10px 18px;font-size:14px;color:var(--gray);cursor:pointer;transition:all .2s;}
+.radio-item input:checked + .radio-label{border-color:var(--navy);background:var(--navy);color:#fff;}
+
+/* 의지 레벨 */
+.will-slider{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.will-btn{width:40px;height:40px;border:2px solid var(--lg);border-radius:10px;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:var(--gray);transition:all .2s;font-family:'Noto Sans KR',sans-serif;}
+.will-btn.sel{border-color:var(--navy);background:var(--navy);color:#fff;}
+.will-label{font-size:12px;color:var(--gray);margin-left:6px;}
+
+/* 비전 문장 */
+.vision-box{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:14px;padding:20px 22px;margin-top:16px;}
+.vision-box .vb-label{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:8px;font-weight:600;letter-spacing:.06em;}
+.vision-text{font-family:'Noto Serif KR',serif;font-size:16px;color:#fff;line-height:1.7;min-height:40px;font-style:italic;}
+.vision-text.empty{color:rgba(255,255,255,.3);}
+
+/* SUBMIT */
+.submit-section{background:linear-gradient(160deg,#0D2447,#1A3C6B);border-radius:20px;padding:40px 32px;text-align:center;}
+.submit-section h3{font-size:22px;font-weight:900;color:#fff;margin-bottom:10px;}
+.submit-section p{color:rgba(255,255,255,.7);font-size:15px;margin-bottom:28px;line-height:1.7;}
+.submit-btn{background:linear-gradient(135deg,var(--gold),#E8B040);color:#fff;border:none;font-size:18px;font-weight:700;padding:20px 60px;border-radius:50px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 8px 28px rgba(200,146,42,.45);transition:transform .2s;width:100%;max-width:360px;}
+.submit-btn:hover{transform:translateY(-2px);}
+.submit-note{color:rgba(255,255,255,.4);font-size:12px;margin-top:14px;line-height:1.7;}
+
+/* ── THANK YOU ── */
+#thankyou{display:none;min-height:100vh;background:linear-gradient(160deg,#0D2447,#1A3C6B 55%,var(--teal));align-items:center;justify-content:center;text-align:center;padding:48px 24px;}
+#thankyou.show{display:flex;flex-direction:column;}
+.ty-icon{font-size:80px;margin-bottom:24px;animation:pop .5s ease;}
+@keyframes pop{0%{transform:scale(0);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+.ty-title{font-family:'Noto Serif KR',serif;font-size:clamp(26px,5vw,42px);font-weight:700;color:#fff;margin-bottom:14px;line-height:1.3;}
+.ty-title em{font-style:normal;color:#F0C040;}
+.ty-sub{color:rgba(255,255,255,.75);font-size:16px;line-height:1.8;margin-bottom:8px;max-width:480px;}
+.ty-name{color:#F0C040;font-size:22px;font-weight:700;margin:16px 0;}
+.ty-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:24px 32px;max-width:480px;margin:24px auto 0;text-align:left;}
+.ty-box li{color:rgba(255,255,255,.75);font-size:14px;padding:6px 0;padding-left:20px;position:relative;line-height:1.6;}
+.ty-box li::before{content:'✓';position:absolute;left:0;color:var(--gold);}
+
+@media(max-width:600px){
+  .form-section{padding:24px 20px;}
+  .field-row{grid-template-columns:1fr;}
+  .submit-btn{padding:18px 32px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="site-header">
+  <div class="header-inner">
+    <div class="h-badge"><span class="dot"></span> LITER STELLA SPECIAL COACHING</div>
+    <h1 class="h-title">SPECIAL 3기<br><em>원서 강독 코칭</em> 지원서</h1>
+    <p class="h-sub">이 지원서를 작성하는 동안<br>당신의 강독가 여정이 이미 시작됩니다.</p>
+    <div class="limit-pill">✦ 10명 지원 · 5명만 선발 · 스텔라 직접 검토</div>
+  </div>
+</div>
+
+<!-- ── PROGRESS ── -->
+<div class="form-progress">
+  <div class="fp-inner">
+    <div class="fp-steps">
+      <div class="fp-step active" id="ps1"></div>
+      <div class="fp-step" id="ps2"></div>
+      <div class="fp-step" id="ps3"></div>
+      <div class="fp-step" id="ps4"></div>
+      <div class="fp-step" id="ps5"></div>
+    </div>
+    <div class="fp-label">작성 중 <strong id="prog-pct">0%</strong></div>
+  </div>
+</div>
+
+<div class="form-wrap" id="main-form">
+
+  <!-- SECTION 1: 기본 정보 -->
+  <div class="form-section" id="sec1">
+    <div class="sec-header">
+      <div class="sec-num" id="sn1">1</div>
+      <div class="sec-title-wrap">
+        <h2>기본 정보</h2>
+        <p>지원자님에 대해 알려주세요</p>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>이름<span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="홍길동" oninput="updateProgress()">
+      </div>
+      <div class="field">
+        <label>연락처<span class="req">*</span></label>
+        <input type="tel" id="f-phone" placeholder="010-0000-0000" oninput="updateProgress()">
+      </div>
+    </div>
+    <div class="field">
+      <label>이메일<span class="req">*</span></label>
+      <input type="email" id="f-email" placeholder="stella@example.com" oninput="updateProgress()">
+    </div>
+    <div class="field">
+      <label>영어 티칭 경력<span class="req">*</span><span class="hint">(해당하는 것 모두 선택)</span></label>
+      <div class="checkbox-group" id="career-checks">
+        <label class="check-item"><input type="checkbox" value="공교육 영어 교사" onchange="updateProgress()"><span>공교육 영어 교사 (초·중·고)</span></label>
+        <label class="check-item"><input type="checkbox" value="영어 학원 강사" onchange="updateProgress()"><span>영어 학원 강사</span></label>
+        <label class="check-item"><input type="checkbox" value="영어 공부방" onchange="updateProgress()"><span>영어 공부방 운영</span></label>
+        <label class="check-item"><input type="checkbox" value="토익·토플 강사" onchange="updateProgress()"><span>토익·토플·OPIC 전문 강사</span></label>
+        <label class="check-item"><input type="checkbox" value="그림책·유아영어" onchange="updateProgress()"><span>그림책·유아·초등 영어 강사</span></label>
+        <label class="check-item"><input type="checkbox" value="기업교육" onchange="updateProgress()"><span>기업교육·비즈니스 영어 강사</span></label>
+        <label class="check-item"><input type="checkbox" value="엄마표 아빠표" onchange="updateProgress()"><span>엄마표·아빠표 영어 (자녀 대상)</span></label>
+        <label class="check-item"><input type="checkbox" value="강의 경험 없음" onchange="updateProgress()"><span>아직 강의 경험 없음 (준비 중)</span></label>
+        <label class="check-item"><input type="checkbox" value="기타" onchange="updateProgress()"><span>기타</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>총 영어 티칭 경력<span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="exp" value="없음" onchange="updateProgress()"><span class="radio-label">없음</span></label>
+        <label class="radio-item"><input type="radio" name="exp" value="1년 미만" onchange="updateProgress()"><span class="radio-label">1년 미만</span></label>
+        <label class="radio-item"><input type="radio" name="exp" value="1~3년" onchange="updateProgress()"><span class="radio-label">1~3년</span></label>
+        <label class="radio-item"><input type="radio" name="exp" value="3~7년" onchange="updateProgress()"><span class="radio-label">3~7년</span></label>
+        <label class="radio-item"><input type="radio" name="exp" value="7~15년" onchange="updateProgress()"><span class="radio-label">7~15년</span></label>
+        <label class="radio-item"><input type="radio" name="exp" value="15년 이상" onchange="updateProgress()"><span class="radio-label">15년 이상</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: 원서와의 관계 -->
+  <div class="form-section" id="sec2">
+    <div class="sec-header">
+      <div class="sec-num" id="sn2">2</div>
+      <div class="sec-title-wrap">
+        <h2>원서와 나</h2>
+        <p>영어 원서와 나의 관계를 솔직하게 들려주세요</p>
+      </div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">📖</div>
+        <div class="mq-q">내가 가장 인상 깊게 읽은 영어 원서는 무엇인가요? 그 책이 나에게 어떤 의미였나요?</div>
+        <div class="mq-hint">💡 원서를 읽은 경험이 없다면, 읽고 싶은 책과 이유를 적어주세요. 정답은 없습니다.</div>
+      </div>
+      <textarea id="f-book" rows="4" placeholder="예) 《빨강머리 앤》을 처음 읽었을 때, 앤의 상상력이 저에게 큰 위안이 되었습니다..." oninput="countChars(this,'bc1',50,200);updateProgress()"></textarea>
+      <div class="char-count" id="bc1">0 / 200자 이상 권장</div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">🤔</div>
+        <div class="mq-q">지금까지 원서 강독을 혼자 하면서 가장 어려웠던 점은 무엇인가요?</div>
+        <div class="mq-hint">💡 이 고민이 스텔라 코칭의 출발점이 됩니다. 솔직할수록 좋습니다.</div>
+      </div>
+      <textarea id="f-difficulty" rows="4" placeholder="예) 수강생에게 문법을 어디까지 설명해야 할지 모르겠고, 내 설명이 지루하게 느껴지는 것 같아서..." oninput="countChars(this,'bc2',50,200);updateProgress()"></textarea>
+      <div class="char-count" id="bc2">0 / 200자 이상 권장</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 지원 동기 (핵심) -->
+  <div class="form-section" id="sec3">
+    <div class="sec-header">
+      <div class="sec-num" id="sn3">3</div>
+      <div class="sec-title-wrap">
+        <h2>지원 동기와 목표</h2>
+        <p>이 질문들이 당신을 강독가로 만들어갑니다</p>
+      </div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">🌟</div>
+        <div class="mq-q">왜 지금, 원서 강독 코칭을 받으려 하시나요?<br>수많은 영어 강의 중 왜 '원서 강독'인가요?</div>
+        <div class="mq-hint">💡 '좋아서'가 아닌, 구체적인 계기가 있을 것입니다. 그 이야기를 들려주세요.</div>
+      </div>
+      <textarea id="f-why" rows="5" placeholder="예) 15년간 문법과 독해를 가르쳤는데, 수강생들이 영어를 좋아하게 만드는 데 실패하고 있다는 걸 깨달았습니다. 원서가 그 답이라고 생각했습니다..." oninput="countChars(this,'bc3',80,300);updateProgress()"></textarea>
+      <div class="char-count" id="bc3">0 / 300자 이상 권장</div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">🔭</div>
+        <div class="mq-q">코칭을 수료한 후, 1년 뒤의 나는 어떤 모습인가요?<br>구체적으로 그려보세요.</div>
+        <div class="mq-hint">💡 막연하게 생각했던 것을 글로 쓰면 훨씬 강력한 의지가 됩니다.</div>
+      </div>
+      <textarea id="f-vision1" rows="4" placeholder="예) 매주 원서 강독 유튜브를 올리고, 북클럽 10명을 운영하며, 리터스텔라 워크북의 공동저자로 이름이 올라가 있습니다..." oninput="countChars(this,'bc4',80,300);updateProgress();updateVision()"></textarea>
+      <div class="char-count" id="bc4">0 / 300자 이상 권장</div>
+    </div>
+    <div class="field">
+      <label>지금 이 순간, 강독가가 되고자 하는 의지의 크기는?<span class="req">*</span></label>
+      <div class="will-slider" id="will-group">
+        <button type="button" class="will-btn" onclick="setWill(1)">1</button>
+        <button type="button" class="will-btn" onclick="setWill(2)">2</button>
+        <button type="button" class="will-btn" onclick="setWill(3)">3</button>
+        <button type="button" class="will-btn" onclick="setWill(4)">4</button>
+        <button type="button" class="will-btn" onclick="setWill(5)">5</button>
+        <button type="button" class="will-btn" onclick="setWill(6)">6</button>
+        <button type="button" class="will-btn" onclick="setWill(7)">7</button>
+        <button type="button" class="will-btn" onclick="setWill(8)">8</button>
+        <button type="button" class="will-btn sel" onclick="setWill(9)">9</button>
+        <button type="button" class="will-btn" onclick="setWill(10)">10</button>
+        <span class="will-label" id="will-label">9 — 거의 결심했습니다</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 나의 강독가 비전 -->
+  <div class="form-section" id="sec4">
+    <div class="sec-header">
+      <div class="sec-num" id="sn4">4</div>
+      <div class="sec-title-wrap">
+        <h2>나의 강독가 선언</h2>
+        <p>이 문장들이 당신의 코칭 기간을 지탱해줄 것입니다</p>
+      </div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">✍️</div>
+        <div class="mq-q">5년 뒤 나의 강독가 활동을 한 문장으로 표현해 주세요.<br>지금 쓰는 이 문장이 당신의 강독가 슬로건이 됩니다.</div>
+        <div class="mq-hint">💡 너무 거창할 필요 없습니다. 진심이 담긴 한 문장이 가장 강력합니다.</div>
+      </div>
+      <input type="text" id="f-slogan" placeholder="예) 원서로 세상을 읽는 사람들을 연결하는 강독가" oninput="updateSlogan();updateProgress()">
+      <div class="vision-box" style="margin-top:12px;">
+        <div class="vb-label">나의 강독가 선언</div>
+        <div class="vision-text empty" id="slogan-preview">" 여기에 당신의 선언이 새겨집니다 "</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">👥</div>
+        <div class="mq-q">코칭 수료 후 주로 가르칠 대상은 누구인가요?<br>그 분들에게 원서 강독이 어떤 변화를 줄 것 같나요?</div>
+        <div class="mq-hint">💡 코스 3 1:1 코칭에서 실제로 이 대상을 위한 강독 영상을 제작합니다.</div>
+      </div>
+      <textarea id="f-target" rows="4" placeholder="예) 40~50대 엄마들. 자녀와 함께 원서를 읽고 싶지만 방법을 모르는 분들에게 원서 강독이 자녀와의 소통 방법이 될 거라 생각합니다..." oninput="countChars(this,'bc5',50,200);updateProgress()"></textarea>
+      <div class="char-count" id="bc5">0 / 200자 이상 권장</div>
+    </div>
+    <div class="field">
+      <div class="mq-box">
+        <div class="mq-icon">💎</div>
+        <div class="mq-q">스텔라의 코칭에서 가장 기대하는 것 하나만 꼽는다면?</div>
+        <div class="mq-hint">💡 스텔라가 이 답변을 직접 읽고, 상담 전화에서 이 부분을 가장 먼저 물어봅니다.</div>
+      </div>
+      <textarea id="f-expect" rows="3" placeholder="예) 내 강독 영상을 직접 봐주고 어디가 어떻게 좋고 무엇을 고쳐야 하는지 콕 집어 말해주는 피드백이 가장 기대됩니다..." oninput="countChars(this,'bc6',30,150);updateProgress()"></textarea>
+      <div class="char-count" id="bc6">0 / 150자 이상 권장</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: 마지막 확인 -->
+  <div class="form-section" id="sec5">
+    <div class="sec-header">
+      <div class="sec-num" id="sn5">5</div>
+      <div class="sec-title-wrap">
+        <h2>마지막 확인</h2>
+        <p>선발 과정과 코칭 조건을 확인해 주세요</p>
+      </div>
+    </div>
+    <div class="field">
+      <label>이 코칭에 대해 어떻게 알게 되셨나요?<span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="channel" value="리터스텔라 SNS" onchange="updateProgress()"><span class="radio-label">리터스텔라 SNS</span></label>
+        <label class="radio-item"><input type="radio" name="channel" value="지인 소개" onchange="updateProgress()"><span class="radio-label">지인 소개</span></label>
+        <label class="radio-item"><input type="radio" name="channel" value="유튜브" onchange="updateProgress()"><span class="radio-label">유튜브</span></label>
+        <label class="radio-item"><input type="radio" name="channel" value="검색" onchange="updateProgress()"><span class="radio-label">검색</span></label>
+        <label class="radio-item"><input type="radio" name="channel" value="기타" onchange="updateProgress()"><span class="radio-label">기타</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>아래 사항을 확인하고 동의해 주세요<span class="req">*</span></label>
+      <div class="checkbox-group">
+        <label class="check-item"><input type="checkbox" id="agree1" onchange="updateProgress()"><span>10명이 지원하고 5명만 선발되며, 선발 기준은 스텔라가 직접 검토합니다. 미선발 시 아무런 불이익이 없습니다.</span></label>
+        <label class="check-item"><input type="checkbox" id="agree2" onchange="updateProgress()"><span>선발 후 스텔라와 1:1 상담 전화를 진행하며, 상담 후 최종 결제가 이루어집니다.</span></label>
+        <label class="check-item"><input type="checkbox" id="agree3" onchange="updateProgress()"><span>코스 3에서 실제 강독 영상을 촬영하여 제출하고, 졸업작품을 SNS에 공개하는 것에 동의합니다.</span></label>
+        <label class="check-item"><input type="checkbox" id="agree4" onchange="updateProgress()"><span>수강 기간 동안 적극적으로 참여하고 과제를 완수하겠습니다.</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>스텔라에게 하고 싶은 말이 있다면 자유롭게 적어주세요 <span class="hint">(선택)</span></label>
+      <textarea id="f-message" rows="4" placeholder="자유롭게 적어주세요. 스텔라가 직접 읽습니다." oninput="updateProgress()"></textarea>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-section">
+    <h3>지원서를 제출합니다</h3>
+    <p>스텔라가 직접 검토 후 3~5일 이내 연락드립니다.<br>제출 후에는 수정이 어려우니 다시 한 번 확인해 주세요.</p>
+    <button class="submit-btn" onclick="submitForm()">SPECIAL 3기 지원서 제출하기 →</button>
+    <p class="submit-note">지원서 제출은 무료입니다 · 상담 후 최종 수강 여부 결정<br>개인정보는 선발 검토 후 즉시 파기됩니다</p>
+  </div>
+</div>
+
+<!-- THANK YOU -->
+<div id="thankyou">
+  <div class="ty-icon">✨</div>
+  <div class="ty-title"><em id="ty-name">강독가님</em>의 지원서가<br>스텔라에게 전달되었습니다</div>
+  <p class="ty-sub" style="color:rgba(255,255,255,.75);">이 지원서를 완성한 순간,<br>당신의 강독가 여정은 이미 시작되었습니다.</p>
+  <ul class="ty-box">
+    <li>스텔라가 지원서를 직접 검토합니다</li>
+    <li>3~5일 이내 결과를 연락처로 알려드립니다</li>
+    <li>선발 시 1:1 상담 전화 일정을 잡습니다</li>
+    <li>미선발 시에도 정중히 안내 드립니다</li>
+  </ul>
+  <p style="color:rgba(255,255,255,.5);font-size:13px;margin-top:28px;">© 리터스텔라 | 원서 강독가 스텔라</p>
+</div>
+
+<script>
+let willVal = 9;
+const willLabels = {1:"1 — 아직 탐색 중입니다",2:"2 — 조금 더 알아보고 싶습니다",3:"3 — 관심이 생겼습니다",4:"4 — 진지하게 고민 중입니다",5:"5 — 꽤 원합니다",6:"6 — 많이 원합니다",7:"7 — 강하게 원합니다",8:"8 — 거의 결심했습니다",9:"9 — 거의 결심했습니다",10:"10 — 이미 결심했습니다!"};
+
+function setWill(v){
+  willVal=v;
+  document.querySelectorAll('.will-btn').forEach((b,i)=>b.classList.toggle('sel',i+1===v));
+  document.getElementById('will-label').textContent=willLabels[v];
+  updateProgress();
+}
+
+function countChars(el,countId,min,rec){
+  const len=el.value.length;
+  const el2=document.getElementById(countId);
+  el2.textContent=`${len} / ${rec}자 이상 권장`;
+  if(len>=rec) el2.className='char-count ok';
+  else if(len>=min) el2.className='char-count warn';
+  else el2.className='char-count';
+}
+
+function updateSlogan(){
+  const v=document.getElementById('f-slogan').value.trim();
+  const el=document.getElementById('slogan-preview');
+  if(v){el.textContent=`" ${v} "`;el.classList.remove('empty');}
+  else{el.textContent='" 여기에 당신의 선언이 새겨집니다 "';el.classList.add('empty');}
+}
+
+function updateProgress(){
+  let done=0;
+  const total=10;
+  if(document.getElementById('f-name').value.trim()) done++;
+  if(document.getElementById('f-phone').value.trim()) done++;
+  if(document.getElementById('f-email').value.trim()) done++;
+  if([...document.querySelectorAll('#career-checks input')].some(c=>c.checked)) done++;
+  if(document.querySelector('input[name="exp"]:checked')) done++;
+  if(document.getElementById('f-book').value.length>30) done++;
+  if(document.getElementById('f-why').value.length>50) done++;
+  if(document.getElementById('f-slogan').value.trim()) done++;
+  if(document.querySelector('input[name="channel"]:checked')) done++;
+  const agrees=[...document.querySelectorAll('#agree1,#agree2,#agree3,#agree4')];
+  if(agrees.every(a=>a.checked)) done++;
+  
+  const pct=Math.round((done/total)*100);
+  document.getElementById('prog-pct').textContent=pct+'%';
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById('ps'+i);
+    const threshold=(i/5)*total;
+    if(done>=threshold) el.className='fp-step done';
+    else if(done>=(threshold-(total/5))) el.className='fp-step active';
+    else el.className='fp-step';
+  }
+}
+
+function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const why=document.getElementById('f-why').value.trim();
+  const agree1=document.getElementById('agree1').checked;
+  const agree2=document.getElementById('agree2').checked;
+  const agree3=document.getElementById('agree3').checked;
+  const agree4=document.getElementById('agree4').checked;
+
+  if(!name||!phone||!email){alert('이름, 연락처, 이메일을 입력해 주세요.');return;}
+  if(!why){alert('지원 동기를 입력해 주세요.');return;}
+  if(!agree1||!agree2||!agree3||!agree4){alert('모든 동의 항목을 확인해 주세요.');return;}
+
+  const btn=document.querySelector('.submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='제출 중...';}
+
+  const careers=[...document.querySelectorAll('#career-checks input:checked')].map(e=>e.value);
+  const experience=document.querySelector('input[name="exp"]:checked')?.value||'';
+  const channel=document.querySelector('input[name="channel"]:checked')?.value||'';
+  const quizType=sessionStorage.getItem('quizType')||null;
+
+  const data={
+    name, phone, email, careers, experience,
+    book:document.getElementById('f-book')?.value||'',
+    difficulty:document.getElementById('f-difficulty')?.value||'',
+    why,
+    vision1:document.getElementById('f-vision1')?.value||'',
+    willVal:willVal,
+    slogan:document.getElementById('f-slogan')?.value||'',
+    target:document.getElementById('f-target')?.value||'',
+    expect:document.getElementById('f-expect')?.value||'',
+    channel,
+    message:document.getElementById('f-message')?.value||'',
+    quizType,
+    status:'pending',
+    submittedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  db.collection('applications').add(data)
+    .then(()=>{
+      document.getElementById('main-form').style.display='none';
+      const ty=document.getElementById('thankyou');
+      ty.classList.add('show');
+      document.getElementById('ty-name').textContent=name+' 님';
+      window.scrollTo(0,0);
+    })
+    .catch(e=>{
+      alert('제출 중 오류가 발생했습니다. 다시 시도해 주세요.\n'+e.message);
+      if(btn){btn.disabled=false;btn.textContent='SPECIAL 3기 지원서 제출하기 →';}
+    });
+}
+
+// init
+updateProgress();
+</script>
+</body>
+</html>
