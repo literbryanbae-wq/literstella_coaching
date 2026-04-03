@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커리큘럼 설계서 관리 | 리터스텔라 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;--gold:#C8922A;--green:#2A7A4A;--red:#C0392B;--gray:#6B7A8D;--lg:#E6EDF5;--cream:#FAF7F2;}
+body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
+.nav{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;}
+.nav-logo{color:#fff;font-size:15px;font-weight:700;}
+.nav-links{display:flex;gap:4px;}
+.nav-link{color:rgba(255,255,255,.65);font-size:13px;font-weight:600;padding:6px 14px;border-radius:6px;text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.15);color:#fff;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-user{color:rgba(255,255,255,.5);font-size:12px;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.nav-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.wrap{max-width:1200px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+/* FORM CARD */
+.form-card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;}
+.card-header{background:var(--navy);padding:18px 22px;display:flex;justify-content:space-between;align-items:center;}
+.card-title{color:#fff;font-size:16px;font-weight:700;}
+.card-sub{color:rgba(255,255,255,.55);font-size:12px;margin-top:2px;}
+.header-btns{display:flex;gap:8px;}
+.hbtn{border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.hbtn:hover{background:rgba(255,255,255,.15);color:#fff;}
+.hbtn.primary{background:linear-gradient(135deg,var(--gold),#E8B040);border-color:transparent;color:#fff;}
+.card-body{padding:22px;}
+/* FIELDS */
+.f{margin-bottom:16px;}
+.fl{display:block;font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.12em;margin-bottom:6px;}
+.fi{width:100%;border:1.5px solid var(--lg);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;color:#1C2A3A;outline:none;transition:border-color .2s;background:var(--cream);}
+.fi:focus{border-color:var(--blue);background:#fff;}
+.ft{width:100%;border:1.5px solid var(--lg);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;color:#1C2A3A;outline:none;resize:vertical;line-height:1.75;transition:border-color .2s;background:var(--cream);}
+.ft:focus{border-color:var(--blue);background:#fff;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;}
+.chi{display:none;}
+.chl{border:1.5px solid var(--lg);border-radius:16px;padding:5px 12px;font-size:12px;color:var(--gray);cursor:pointer;transition:all .15s;user-select:none;}
+.chi:checked+.chl{border-color:var(--navy);background:var(--navy);color:#fff;}
+.chi.t:checked+.chl{border-color:var(--teal);background:var(--teal);color:#fff;}
+.chi.g:checked+.chl{border-color:var(--green);background:var(--green);color:#fff;}
+/* SECTION DIVIDER */
+.sdiv{border:none;border-top:1px solid var(--lg);margin:18px 0;}
+.slabel{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.08em;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--navy);display:inline-block;}
+/* WEEK TABLE */
+.wt{width:100%;border-collapse:collapse;font-size:12.5px;}
+.wt thead th{background:#F5F8FC;padding:8px 10px;font-size:10px;font-weight:700;color:var(--navy);text-align:left;letter-spacing:.07em;border-bottom:1px solid var(--lg);}
+.wt tbody td{padding:8px 10px;border-bottom:1px solid var(--lg);vertical-align:middle;}
+.wt tbody tr:last-child td{border-bottom:none;}
+.wt input{width:100%;border:1.5px solid var(--lg);border-radius:6px;padding:6px 8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;background:#fff;}
+.wt input:focus{border-color:var(--blue);}
+.wt select{border:1.5px solid var(--lg);border-radius:6px;padding:5px 7px;font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;background:#fff;width:70px;}
+/* LIST CARD */
+.list-card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;position:sticky;top:74px;}
+.list-item{padding:14px 18px;border-bottom:1px solid var(--lg);cursor:pointer;transition:background .15s;}
+.list-item:last-child{border-bottom:none;}
+.list-item:hover{background:#F5F8FE;}
+.list-item.active{background:#EBF3FB;}
+.li-name{font-size:14px;font-weight:700;color:var(--navy);}
+.li-meta{font-size:11px;color:var(--gray);margin-top:3px;}
+.list-empty{padding:32px 18px;text-align:center;color:var(--gray);font-size:13px;}
+/* SAVE AREA */
+.save-bar{padding:16px 22px;background:#F8FAFE;border-top:1px solid var(--lg);display:flex;justify-content:space-between;align-items:center;}
+.save-note{font-size:12px;color:var(--gray);}
+.save-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;padding:11px 28px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:opacity .2s;}
+.save-btn:hover{opacity:.9;}
+.save-btn:disabled{opacity:.6;cursor:not-allowed;}
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:14px;padding:12px 24px;border-radius:30px;display:none;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+@media(max-width:900px){.wrap{grid-template-columns:1fr;}.list-card{position:static;}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-logo">Liter Stella 관리자</div>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link">📋 지원 현황</a>
+    <a href="curriculum.html" class="nav-link active">📘 커리큘럼</a>
+    <a href="evaluation.html" class="nav-link">🌟 평가표</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="umail"></span>
+    <button class="nav-btn" onclick="logout()">로그아웃</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- 메인 폼 -->
+  <div>
+    <div class="form-card">
+      <div class="card-header">
+        <div><div class="card-title">📘 개별 코칭 커리큘럼 설계서</div><div class="card-sub" id="cur-sub">신규 작성 또는 목록에서 선택</div></div>
+        <div class="header-btns">
+          <button class="hbtn" onclick="newDoc()">+ 신규</button>
+          <button class="hbtn" onclick="printDoc()">🖨️ 인쇄</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- 기본 정보 -->
+        <div class="slabel">기본 정보</div>
+        <div class="frow3">
+          <div class="f" style="margin-bottom:0;"><label class="fl">수강생 이름 *</label>
+            <select class="fi" id="f-applicant" onchange="onApplicantChange()">
+              <option value="">-- 수강생 선택 --</option>
+            </select>
+          </div>
+          <div class="f" style="margin-bottom:0;"><label class="fl">코스 3 원서</label><input type="text" class="fi" id="f-book" placeholder="예) Anne of Green Gables"></div>
+          <div class="f" style="margin-bottom:0;"><label class="fl">설계 완료일</label><input type="date" class="fi" id="f-date"></div>
+        </div>
+        <div class="sdiv"></div>
+
+        <!-- 코스 1 평가 -->
+        <div class="slabel">코스 1 과제 평가</div>
+        <div class="f">
+          <label class="fl">주차별 과제 평가 (점수 선택)</label>
+          <table class="wt">
+            <thead><tr><th style="width:70px;">주차</th><th>과제 내용</th><th>코멘트</th><th style="width:75px;">점수</th></tr></thead>
+            <tbody>
+              <tr><td style="text-align:center;font-weight:700;color:var(--navy);">1주차<br><span style="font-size:10px;color:var(--gray);">문학이론</span></td><td><input type="text" id="w1-content" placeholder="과제 내용 요약"></td><td><input type="text" id="w1-comment" placeholder="강점 · 보완"></td><td style="text-align:center;"><select id="w1-score" class="wt select" onchange="calcC1()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--gray);margin-top:2px;">/4점</div></td></tr>
+              <tr><td style="text-align:center;font-weight:700;color:var(--navy);">2주차<br><span style="font-size:10px;color:var(--gray);">교수법</span></td><td><input type="text" id="w2-content" placeholder="과제 내용 요약"></td><td><input type="text" id="w2-comment" placeholder="강점 · 보완"></td><td style="text-align:center;"><select id="w2-score" class="wt select" onchange="calcC1()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--gray);margin-top:2px;">/4점</div></td></tr>
+              <tr><td style="text-align:center;font-weight:700;color:var(--navy);">3주차<br><span style="font-size:10px;color:var(--gray);">문법분석</span></td><td><input type="text" id="w3-content" placeholder="과제 내용 요약"></td><td><input type="text" id="w3-comment" placeholder="강점 · 보완"></td><td style="text-align:center;"><select id="w3-score" class="wt select" onchange="calcC1()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--gray);margin-top:2px;">/4점</div></td></tr>
+              <tr><td style="text-align:center;font-weight:700;color:var(--navy);">4주차<br><span style="font-size:10px;color:var(--gray);">문장분석</span></td><td><input type="text" id="w4-content" placeholder="과제 내용 요약"></td><td><input type="text" id="w4-comment" placeholder="강점 · 보완"></td><td style="text-align:center;"><select id="w4-score" class="wt select" onchange="calcC1()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--gray);margin-top:2px;">/4점</div></td></tr>
+              <tr><td style="text-align:center;font-weight:700;color:var(--navy);">5주차<br><span style="font-size:10px;color:var(--gray);">서사분석</span></td><td><input type="text" id="w5-content" placeholder="과제 내용 요약"></td><td><input type="text" id="w5-comment" placeholder="강점 · 보완"></td><td style="text-align:center;"><select id="w5-score" class="wt select" onchange="calcC1()"><option value="">—</option><option>4</option><option>3</option><option>2</option><option>1</option></select><div style="font-size:9px;color:var(--gray);margin-top:2px;">/4점</div></td></tr>
+            </tbody>
+          </table>
+          <div style="text-align:right;margin-top:8px;font-size:13px;color:var(--navy);font-weight:700;">코스 1 합산: <span id="c1-total">0</span> / 20점 <span id="c1-grade" style="margin-left:8px;"></span></div>
+        </div>
+        <div class="frow">
+          <div class="f"><label class="fl">발견한 강점 (선택)</label>
+            <div class="chips">
+              <input type="checkbox" class="chi" id="s1" value="스토리텔링 감각"><label class="chl" for="s1">스토리텔링 감각</label>
+              <input type="checkbox" class="chi" id="s2" value="문법 분석력"><label class="chl" for="s2">문법 분석력</label>
+              <input type="checkbox" class="chi" id="s3" value="학습자 공감력"><label class="chl" for="s3">학습자 공감력</label>
+              <input type="checkbox" class="chi" id="s4" value="문학적 통찰"><label class="chl" for="s4">문학적 통찰</label>
+              <input type="checkbox" class="chi" id="s5" value="과제 성실성"><label class="chl" for="s5">과제 성실성</label>
+              <input type="checkbox" class="chi" id="s6" value="독창적 관점"><label class="chl" for="s6">독창적 관점</label>
+              <input type="checkbox" class="chi" id="s7" value="커리큘럼 설계력"><label class="chl" for="s7">커리큘럼 설계력</label>
+              <input type="checkbox" class="chi" id="s8" value="이론 적용력"><label class="chl" for="s8">이론 적용력</label>
+            </div>
+          </div>
+          <div class="f"><label class="fl">보완할 영역 (선택)</label>
+            <div class="chips">
+              <input type="checkbox" class="chi t" id="r1" value="문법 설명 밸런스"><label class="chl" for="r1">문법 설명 밸런스</label>
+              <input type="checkbox" class="chi t" id="r2" value="스토리 몰입도"><label class="chl" for="r2">스토리 몰입도</label>
+              <input type="checkbox" class="chi t" id="r3" value="발음·전달력"><label class="chl" for="r3">발음·전달력</label>
+              <input type="checkbox" class="chi t" id="r4" value="카메라 자신감"><label class="chl" for="r4">카메라 자신감</label>
+              <input type="checkbox" class="chi t" id="r5" value="문화 맥락 설명"><label class="chl" for="r5">문화 맥락 설명</label>
+              <input type="checkbox" class="chi t" id="r6" value="강독 속도 조절"><label class="chl" for="r6">강독 속도 조절</label>
+            </div>
+          </div>
+        </div>
+        <div class="f"><label class="fl">코스 1 종합 코멘트</label><textarea class="ft" id="f-c1comment" rows="2" placeholder="코스 1 수료 후 종합 평가 및 다음 단계 방향"></textarea></div>
+        <div class="sdiv"></div>
+
+        <!-- 코칭 방향 -->
+        <div class="slabel">개별 코칭 방향</div>
+        <div class="frow">
+          <div class="f"><label class="fl">강독 유형 진단</label>
+            <div class="chips">
+              <input type="radio" class="chi" id="ty1" name="ty" value="스토리텔러형"><label class="chl" for="ty1">🌟 스토리텔러형</label>
+              <input type="radio" class="chi" id="ty2" name="ty" value="분석가형"><label class="chl" for="ty2">🔍 분석가형</label>
+              <input type="radio" class="chi" id="ty3" name="ty" value="공감가형"><label class="chl" for="ty3">💛 공감가형</label>
+              <input type="radio" class="chi" id="ty4" name="ty" value="탐험가형"><label class="chl" for="ty4">🧭 탐험가형</label>
+              <input type="radio" class="chi" id="ty5" name="ty" value="복합형"><label class="chl" for="ty5">✨ 복합형</label>
+            </div>
+          </div>
+          <div class="f"><label class="fl">파트너 가능성 (사전)</label>
+            <div class="chips">
+              <input type="radio" class="chi g" id="pp1" name="pp" value="상"><label class="chl" for="pp1">🟢 상</label>
+              <input type="radio" class="chi" id="pp2" name="pp" value="중"><label class="chl" for="pp2">🔵 중</label>
+              <input type="radio" class="chi" id="pp3" name="pp" value="하"><label class="chl" for="pp3">⚪ 하</label>
+            </div>
+          </div>
+        </div>
+        <div class="frow3">
+          <div class="f"><label class="fl">가르칠 대상</label><input type="text" class="fi" id="f-target" placeholder="예) 40대 엄마들"></div>
+          <div class="f"><label class="fl">예상 강독 채널</label><input type="text" class="fi" id="f-channel" placeholder="예) 유튜브, 북클럽"></div>
+          <div class="f"><label class="fl">수강 완료일</label><input type="date" class="fi" id="f-c1date"></div>
+        </div>
+        <div class="f"><label class="fl">핵심 코칭 방향</label><textarea class="ft" id="f-direction" rows="2" placeholder="이 수강생만을 위한 스텔라의 코칭 핵심 방향"></textarea></div>
+        <div class="f"><label class="fl">강독가 선언 문장 (지원서 기재)</label><input type="text" class="fi" id="f-slogan" placeholder="지원서에 적은 강독가 선언 문장"></div>
+        <div class="f"><label class="fl">스텔라의 응원 한 마디</label><textarea class="ft" id="f-cheering" rows="2" placeholder="수강생에게 전하는 스텔라의 개인 메시지"></textarea></div>
+        <div class="f"><label class="fl">메모 / 특이 사항</label><textarea class="ft" id="f-memo" rows="2" placeholder="기타 메모"></textarea></div>
+      </div>
+      <div class="save-bar">
+        <span class="save-note" id="save-note">저장되지 않은 변경사항</span>
+        <button class="save-btn" id="save-btn" onclick="saveDoc()">💾 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 목록 -->
+  <div>
+    <div class="list-card">
+      <div class="card-header"><div><div class="card-title">설계서 목록</div><div class="card-sub" id="list-cnt">0건</div></div></div>
+      <div id="list-body"><div class="list-empty">아직 작성된 설계서가 없습니다</div></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMINS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const auth=firebase.auth(), db=firebase.firestore();
+let docs=[], apps=[], curDocId=null;
+
+auth.onAuthStateChanged(u=>{
+  if(!u||!ADMINS.includes(u.email)){window.location.href='login.html';return;}
+  document.getElementById('umail').textContent=u.email;
+  loadApplicants(); loadDocs();
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-c1date').value=new Date().toISOString().split('T')[0];
+});
+function logout(){auth.signOut().then(()=>window.location.href='login.html');}
+
+function loadApplicants(){
+  db.collection('applications').orderBy('submittedAt','desc').onSnapshot(snap=>{
+    apps=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const sel=document.getElementById('f-applicant');
+    const cur=sel.value;
+    sel.innerHTML='<option value="">-- 수강생 선택 --</option>'+apps.map(a=>`<option value="${a.id}">${a.name||'이름없음'} (${a.email||''})</option>`).join('');
+    if(cur)sel.value=cur;
+  });
+}
+function loadDocs(){
+  db.collection('curriculums').orderBy('updatedAt','desc').onSnapshot(snap=>{
+    docs=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderList();
+  });
+}
+function renderList(){
+  document.getElementById('list-cnt').textContent=docs.length+'건';
+  const el=document.getElementById('list-body');
+  if(!docs.length){el.innerHTML='<div class="list-empty">아직 작성된 설계서가 없습니다</div>';return;}
+  el.innerHTML=docs.map(d=>`<div class="list-item${d.id===curDocId?' active':''}" onclick="loadDoc('${d.id}')">
+    <div class="li-name">${d.applicantName||'—'}</div>
+    <div class="li-meta">${d.book||'원서 미정'} · C1: ${d.c1Total||'—'}점 · ${fmtDate(d.updatedAt)}</div>
+  </div>`).join('');
+}
+function onApplicantChange(){
+  const id=document.getElementById('f-applicant').value;
+  const a=apps.find(x=>x.id===id);
+  if(a&&a.slogan) document.getElementById('f-slogan').value=a.slogan;
+}
+function loadDoc(id){
+  const d=docs.find(x=>x.id===id); if(!d)return;
+  curDocId=id;
+  document.getElementById('f-applicant').value=d.applicantId||'';
+  document.getElementById('f-book').value=d.book||'';
+  document.getElementById('f-date').value=d.designDate||'';
+  document.getElementById('f-c1date').value=d.c1Date||'';
+  document.getElementById('f-c1comment').value=d.c1Comment||'';
+  document.getElementById('f-direction').value=d.direction||'';
+  document.getElementById('f-slogan').value=d.slogan||'';
+  document.getElementById('f-cheering').value=d.cheering||'';
+  document.getElementById('f-target').value=d.target||'';
+  document.getElementById('f-channel').value=d.channel||'';
+  document.getElementById('f-memo').value=d.memo||'';
+  // weeks
+  for(let i=1;i<=5;i++){
+    const w=d['week'+i]||{};
+    document.getElementById('w'+i+'-content').value=w.content||'';
+    document.getElementById('w'+i+'-comment').value=w.comment||'';
+    document.getElementById('w'+i+'-score').value=w.score||'';
+  }
+  // chips
+  document.querySelectorAll('input[id^="s"]').forEach(el=>el.checked=(d.strengths||[]).includes(el.value));
+  document.querySelectorAll('input[id^="r"]').forEach(el=>el.checked=(d.improvements||[]).includes(el.value));
+  document.querySelectorAll('input[name="ty"]').forEach(el=>el.checked=el.value===d.lectureType);
+  document.querySelectorAll('input[name="pp"]').forEach(el=>el.checked=el.value===d.partnerPotential);
+  calcC1();
+  document.getElementById('cur-sub').textContent=(d.applicantName||'')+'  설계서';
+  renderList();
+  document.getElementById('save-note').textContent='마지막 저장: '+fmtDate(d.updatedAt);
+}
+function calcC1(){
+  let total=0;
+  for(let i=1;i<=5;i++){const v=parseInt(document.getElementById('w'+i+'-score').value)||0;total+=v;}
+  document.getElementById('c1-total').textContent=total;
+  const g=total>=18?'S (탁월)':total>=16?'A (우수)':total>=12?'B (양호)':total>=8?'C (보통)':'D (보완필요)';
+  const gc=total>=16?'var(--green)':total>=12?'var(--blue)':total>=8?'var(--gold)':'var(--red)';
+  document.getElementById('c1-grade').textContent=g;
+  document.getElementById('c1-grade').style.color=gc;
+}
+async function saveDoc(){
+  const appId=document.getElementById('f-applicant').value;
+  if(!appId){alert('수강생을 선택해주세요.');return;}
+  const a=apps.find(x=>x.id===appId);
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='저장 중...';
+  const weeks={};
+  for(let i=1;i<=5;i++){weeks['week'+i]={content:document.getElementById('w'+i+'-content').value,comment:document.getElementById('w'+i+'-comment').value,score:document.getElementById('w'+i+'-score').value};}
+  const data={
+    applicantId:appId, applicantName:a?.name||'',
+    book:document.getElementById('f-book').value,
+    designDate:document.getElementById('f-date').value,
+    c1Date:document.getElementById('f-c1date').value,
+    c1Total:parseInt(document.getElementById('c1-total').textContent)||0,
+    c1Comment:document.getElementById('f-c1comment').value,
+    strengths:[...document.querySelectorAll('input[id^="s"]:checked')].map(e=>e.value),
+    improvements:[...document.querySelectorAll('input[id^="r"]:checked')].map(e=>e.value),
+    lectureType:document.querySelector('input[name="ty"]:checked')?.value||'',
+    partnerPotential:document.querySelector('input[name="pp"]:checked')?.value||'',
+    direction:document.getElementById('f-direction').value,
+    target:document.getElementById('f-target').value,
+    channel:document.getElementById('f-channel').value,
+    slogan:document.getElementById('f-slogan').value,
+    cheering:document.getElementById('f-cheering').value,
+    memo:document.getElementById('f-memo').value,
+    ...weeks,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  try{
+    if(curDocId){await db.collection('curriculums').doc(curDocId).update(data);}
+    else{const ref=await db.collection('curriculums').add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});curDocId=ref.id;}
+    showToast('✅ 저장 완료');
+    document.getElementById('save-note').textContent='방금 저장됨';
+  }catch(e){alert('저장 실패: '+e.message);}
+  btn.disabled=false; btn.textContent='💾 저장하기';
+}
+function newDoc(){
+  curDocId=null;
+  document.querySelectorAll('.fi,.ft').forEach(el=>{if(!el.readOnly&&el.type!=='date')el.value='';});
+  document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(el=>el.checked=false);
+  for(let i=1;i<=5;i++){['content','comment','score'].forEach(k=>document.getElementById('w'+i+'-'+k).value='');}
+  document.getElementById('c1-total').textContent='0';
+  document.getElementById('c1-grade').textContent='';
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('cur-sub').textContent='신규 작성';
+  document.getElementById('save-note').textContent='저장되지 않은 문서';
+  renderList();
+}
+function printDoc(){window.print();}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
+function fmtDate(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())}`;}
+function p2(n){return String(n).padStart(2,'0');}
+</script>
+</body>
+</html>

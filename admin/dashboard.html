@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지원 현황 | 리터스텔라 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;--gold:#C8922A;--red:#C0392B;--green:#2A7A4A;--gray:#6B7A8D;--lg:#E6EDF5;}
+body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
+.nav{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;}
+.nav-logo{color:#fff;font-size:15px;font-weight:700;}
+.nav-links{display:flex;gap:4px;}
+.nav-link{color:rgba(255,255,255,.65);font-size:13px;font-weight:600;padding:6px 14px;border-radius:6px;text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.15);color:#fff;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-user{color:rgba(255,255,255,.5);font-size:12px;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.nav-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.wrap{max-width:1200px;margin:0 auto;padding:24px;}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.sc{background:#fff;border-radius:12px;padding:18px 20px;border-left:4px solid var(--blue);box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.sc.gold{border-left-color:var(--gold);}
+.sc.green{border-left-color:var(--green);}
+.sc.red{border-left-color:var(--red);}
+.sc-n{font-size:30px;font-weight:900;color:var(--navy);}
+.sc-l{font-size:12px;color:var(--gray);margin-top:4px;}
+/* TABS */
+.tabs-card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;}
+.tab-nav{display:flex;border-bottom:2px solid var(--lg);padding:0 18px;}
+.tab-btn{padding:15px 20px;font-size:14px;font-weight:700;color:var(--gray);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;font-family:'Noto Sans KR',sans-serif;}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--navy);}
+.tab-pane{display:none;padding:18px;}
+.tab-pane.active{display:block;}
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.search{border:1.5px solid var(--lg);border-radius:8px;padding:8px 14px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;min-width:220px;}
+.search:focus{border-color:var(--blue);}
+.count-label{font-size:12px;color:var(--gray);}
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;}
+.dt thead tr{background:var(--navy);}
+.dt th{padding:10px 13px;font-size:10px;font-weight:700;color:rgba(255,255,255,.75);text-align:left;letter-spacing:.07em;white-space:nowrap;}
+.dt td{padding:12px 13px;font-size:13px;border-bottom:1px solid var(--lg);vertical-align:middle;}
+.dt tr:last-child td{border-bottom:none;}
+.dt tbody tr:hover td{background:#F5F8FE;cursor:pointer;}
+/* BADGES */
+.bdg{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:15px;}
+.bdg-pending{background:#FBF4E8;color:var(--gold);}
+.bdg-selected{background:#EAF4EE;color:var(--green);}
+.bdg-rejected{background:#FDECEA;color:var(--red);}
+.bdg-type{background:#EBF3FB;color:var(--blue);}
+/* EMPTY */
+.empty{text-align:center;padding:56px 20px;color:var(--gray);}
+.empty-ico{font-size:44px;margin-bottom:12px;}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:100;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:700px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.mh{padding:22px 26px 16px;border-bottom:1px solid var(--lg);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1;}
+.mh h2{font-size:17px;font-weight:700;color:var(--navy);}
+.mclose{background:none;border:none;font-size:22px;cursor:pointer;color:var(--gray);padding:4px 8px;line-height:1;}
+.mb{padding:22px 26px;}
+.mf{margin-bottom:14px;}
+.mf label{display:block;font-size:9px;font-weight:700;color:var(--gray);letter-spacing:.12em;margin-bottom:5px;}
+.mf .mv{font-size:14px;color:#1C2A3A;line-height:1.65;background:#F8FAFE;border-radius:8px;padding:9px 13px;}
+.mf2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.mstatus{border:1.5px solid var(--lg);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;}
+.msave{background:var(--navy);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;}
+.msave:hover{background:var(--blue);}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr;}.mf2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-logo">Liter Stella 관리자</div>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link active">📋 지원 현황</a>
+    <a href="curriculum.html" class="nav-link">📘 커리큘럼</a>
+    <a href="evaluation.html" class="nav-link">🌟 평가표</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="umail"></span>
+    <button class="nav-btn" onclick="logout()">로그아웃</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="sc"><div class="sc-n" id="st0">0</div><div class="sc-l">전체 지원자</div></div>
+    <div class="sc gold"><div class="sc-n" id="st1">0</div><div class="sc-l">검토 중</div></div>
+    <div class="sc green"><div class="sc-n" id="st2">0</div><div class="sc-l">선발</div></div>
+    <div class="sc red"><div class="sc-n" id="st3">0</div><div class="sc-l">미선발</div></div>
+  </div>
+
+  <div class="tabs-card">
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('app',this)">📋 지원서 목록</button>
+      <button class="tab-btn" onclick="switchTab('quiz',this)">📊 적성검사 결과</button>
+    </div>
+    <div class="tab-pane active" id="tab-app">
+      <div class="toolbar">
+        <input class="search" type="text" placeholder="이름·이메일·연락처 검색..." oninput="filterApps(this.value)">
+        <span class="count-label" id="app-cnt"></span>
+      </div>
+      <div id="app-wrap"><div class="empty"><div class="empty-ico">📋</div><p>불러오는 중...</p></div></div>
+    </div>
+    <div class="tab-pane" id="tab-quiz">
+      <div id="quiz-wrap"><div class="empty"><div class="empty-ico">📊</div><p>불러오는 중...</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 지원서 모달 -->
+<div class="overlay" id="app-overlay">
+  <div class="modal">
+    <div class="mh"><h2 id="mtitle">지원서 상세</h2><button class="mclose" onclick="closeM('app-overlay')">✕</button></div>
+    <div class="mb" id="mbody"></div>
+  </div>
+</div>
+<!-- 적성검사 모달 -->
+<div class="overlay" id="quiz-overlay">
+  <div class="modal">
+    <div class="mh"><h2 id="qtitle">적성검사 결과</h2><button class="mclose" onclick="closeM('quiz-overlay')">✕</button></div>
+    <div class="mb" id="qbody"></div>
+  </div>
+</div>
+
+<script>
+const ADMINS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const auth=firebase.auth(), db=firebase.firestore();
+let apps=[], quizzes=[], curId=null;
+
+auth.onAuthStateChanged(u=>{
+  if(!u||!ADMINS.includes(u.email)){window.location.href='login.html';return;}
+  document.getElementById('umail').textContent=u.email;
+  loadApps(); loadQuiz();
+});
+function logout(){auth.signOut().then(()=>window.location.href='login.html');}
+
+function loadApps(){
+  db.collection('applications').orderBy('submittedAt','desc').onSnapshot(snap=>{
+    apps=snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateStats(); renderApps(apps);
+  },e=>console.error(e));
+}
+function loadQuiz(){
+  db.collection('quiz_results').orderBy('submittedAt','desc').onSnapshot(snap=>{
+    quizzes=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderQuiz(quizzes);
+  });
+}
+function updateStats(){
+  document.getElementById('st0').textContent=apps.length;
+  document.getElementById('st1').textContent=apps.filter(a=>!a.status||a.status==='pending').length;
+  document.getElementById('st2').textContent=apps.filter(a=>a.status==='selected').length;
+  document.getElementById('st3').textContent=apps.filter(a=>a.status==='rejected').length;
+}
+function renderApps(list){
+  document.getElementById('app-cnt').textContent=list.length+'건';
+  const w=document.getElementById('app-wrap');
+  if(!list.length){w.innerHTML='<div class="empty"><div class="empty-ico">📋</div><p>지원서가 없습니다.</p></div>';return;}
+  w.innerHTML=`<table class="dt"><thead><tr>
+    <th>이름</th><th>연락처</th><th>이메일</th><th>주요 경력</th><th>강독 유형</th><th>의지</th><th>제출일</th><th>상태</th>
+  </tr></thead><tbody>${list.map(a=>`<tr onclick="openApp('${a.id}')">
+    <td><strong>${a.name||'—'}</strong></td>
+    <td>${a.phone||'—'}</td>
+    <td style="font-size:12px;">${a.email||'—'}</td>
+    <td style="font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${(a.careers||[]).slice(0,2).join(', ')||'—'}</td>
+    <td>${a.quizType?`<span class="bdg bdg-type">${a.quizType}</span>`:'—'}</td>
+    <td>${a.willVal?a.willVal+'/10':'—'}</td>
+    <td>${fmtDate(a.submittedAt)}</td>
+    <td><span class="bdg bdg-${a.status||'pending'}">${stLabel(a.status)}</span></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function renderQuiz(list){
+  const w=document.getElementById('quiz-wrap');
+  if(!list.length){w.innerHTML='<div class="empty"><div class="empty-ico">📊</div><p>검사 결과가 없습니다.</p></div>';return;}
+  w.innerHTML=`<table class="dt"><thead><tr>
+    <th>이름(선택)</th><th>유형</th><th>부제</th><th>스토리텔링</th><th>분석·문법</th><th>공감</th><th>탐구</th><th>검사일</th>
+  </tr></thead><tbody>${list.map(q=>`<tr onclick="openQuiz('${q.id}')">
+    <td>${q.name||'<span style="color:#aaa;">익명</span>'}</td>
+    <td><span class="bdg bdg-type">${q.typeName||'—'}</span></td>
+    <td style="font-size:12px;color:var(--gray);">${q.typeSub||'—'}</td>
+    <td style="text-align:center;">${q.scores?.S||0}</td>
+    <td style="text-align:center;">${q.scores?.A||0}</td>
+    <td style="text-align:center;">${q.scores?.E||0}</td>
+    <td style="text-align:center;">${q.scores?.X||0}</td>
+    <td>${fmtDate(q.submittedAt)}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+
+function openApp(id){
+  const a=apps.find(x=>x.id===id); if(!a)return;
+  curId=id;
+  document.getElementById('mtitle').textContent=(a.name||'—')+' 님 지원서';
+  document.getElementById('mbody').innerHTML=`
+    <div class="mf2">
+      <div class="mf"><label>이름</label><div class="mv">${a.name||'—'}</div></div>
+      <div class="mf"><label>연락처</label><div class="mv">${a.phone||'—'}</div></div>
+    </div>
+    <div class="mf2">
+      <div class="mf"><label>이메일</label><div class="mv">${a.email||'—'}</div></div>
+      <div class="mf"><label>총 경력</label><div class="mv">${a.experience||'—'}</div></div>
+    </div>
+    <div class="mf"><label>티칭 경력 (복수 선택)</label><div class="mv">${(a.careers||[]).join(' · ')||'—'}</div></div>
+    <div class="mf"><label>관심 원서</label><div class="mv">${a.book||'—'}</div></div>
+    <div class="mf"><label>원서 강독의 어려움</label><div class="mv">${a.difficulty||'—'}</div></div>
+    <div class="mf"><label>지원 동기 (WHY)</label><div class="mv">${a.why||'—'}</div></div>
+    <div class="mf"><label>1년 후 비전</label><div class="mv">${a.vision1||'—'}</div></div>
+    <div class="mf"><label>강독가 선언 문장</label><div class="mv" style="font-style:italic;color:var(--navy);">"${a.slogan||'—'}"</div></div>
+    <div class="mf2">
+      <div class="mf"><label>가르칠 대상</label><div class="mv">${a.target||'—'}</div></div>
+      <div class="mf"><label>코칭 기대 사항</label><div class="mv">${a.expect||'—'}</div></div>
+    </div>
+    <div class="mf2">
+      <div class="mf"><label>유입 경로</label><div class="mv">${a.channel||'—'}</div></div>
+      <div class="mf"><label>의지 레벨</label><div class="mv">${a.willVal||'—'} / 10</div></div>
+    </div>
+    <div class="mf"><label>적성검사 유형</label><div class="mv">${a.quizType||'미실시'}</div></div>
+    <div class="mf"><label>스텔라에게 전하는 말</label><div class="mv">${a.message||'—'}</div></div>
+    <div class="mf"><label>제출일시</label><div class="mv">${fmtDateTime(a.submittedAt)}</div></div>
+    <hr style="border:none;border-top:1px solid var(--lg);margin:16px 0;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <select class="mstatus" id="mstat">
+        <option value="pending" ${(!a.status||a.status==='pending')?'selected':''}>⏳ 검토 중</option>
+        <option value="selected" ${a.status==='selected'?'selected':''}>✅ 선발</option>
+        <option value="rejected" ${a.status==='rejected'?'selected':''}>❌ 미선발</option>
+      </select>
+      <button class="msave" onclick="saveStatus()">상태 저장</button>
+    </div>`;
+  document.getElementById('app-overlay').classList.add('open');
+}
+function openQuiz(id){
+  const q=quizzes.find(x=>x.id===id); if(!q)return;
+  document.getElementById('qtitle').textContent=(q.name||'익명')+' 적성검사 결과';
+  const s=q.scores||{};
+  document.getElementById('qbody').innerHTML=`
+    <div style="text-align:center;padding:16px 0 20px;border-bottom:1px solid var(--lg);margin-bottom:18px;">
+      <div style="font-size:48px;margin-bottom:8px;">${q.badge||'📖'}</div>
+      <div style="font-size:20px;font-weight:700;color:var(--navy);">${q.typeName||'—'}</div>
+      <div style="font-size:13px;color:var(--gray);margin-top:4px;">${q.typeSub||'—'}</div>
+    </div>
+    <div class="mf"><label>유형 설명</label><div class="mv">${q.typeDesc||'—'}</div></div>
+    <div class="mf"><label>역량 분포</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px;">
+        ${[['S','스토리텔링','#2E75B6'],['A','분석·문법','#2A8A8A'],['E','학습자공감','#C8922A'],['X','문학탐구','#6A3FA0']].map(([k,l,c])=>`
+        <div style="background:var(--lg);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-size:22px;font-weight:900;color:${c};">${s[k]||0}</div>
+          <div style="font-size:10px;color:var(--gray);margin-top:3px;">${l}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="mf"><label>이름 (자발적 입력)</label><div class="mv">${q.name||'익명 (미입력)'}</div></div>
+    <div class="mf"><label>검사일</label><div class="mv">${fmtDateTime(q.submittedAt)}</div></div>`;
+  document.getElementById('quiz-overlay').classList.add('open');
+}
+
+async function saveStatus(){
+  const s=document.getElementById('mstat').value;
+  try{await db.collection('applications').doc(curId).update({status:s});alert('상태가 저장되었습니다.');}
+  catch(e){alert('저장 실패: '+e.message);}
+}
+
+function closeM(id){document.getElementById(id).classList.remove('open');}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+function filterApps(q){
+  const f=apps.filter(a=>(a.name||'').includes(q)||(a.email||'').includes(q)||(a.phone||'').includes(q));
+  renderApps(f);
+}
+function fmtDate(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())}`;}
+function fmtDateTime(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`;}
+function p2(n){return String(n).padStart(2,'0');}
+function stLabel(s){return s==='selected'?'✅ 선발':s==='rejected'?'❌ 미선발':'⏳ 검토 중';}
+
+document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
+</script>
+</body>
+</html>
