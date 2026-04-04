@@ -9,35 +9,91 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D2447,#1A3C6B 60%,#1A5A4A);min-height:100vh;display:flex;align-items:center;justify-content:center;}
-.card{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
-.logo{font-size:22px;font-weight:900;color:#1A3C6B;text-align:center;margin-bottom:6px;}
-.sub{font-size:13px;color:#8E9BAB;text-align:center;margin-bottom:36px;}
-label{display:block;font-size:11px;font-weight:700;color:#6B7A8D;letter-spacing:.1em;margin-bottom:7px;}
-input{width:100%;border:1.5px solid #E6EDF5;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s;margin-bottom:16px;}
-input:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.08);}
-.btn{width:100%;background:linear-gradient(135deg,#1A3C6B,#2E75B6);color:#fff;border:none;border-radius:10px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:opacity .2s;}
+body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D2447,#1A3C6B 60%,#1A5A4A);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.card{background:#fff;border-radius:20px;padding:44px 40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.28);}
+.logo-wrap{text-align:center;margin-bottom:20px;}
+.logo{font-size:22px;font-weight:900;color:#1A3C6B;margin-bottom:4px;}
+.logo-sub{font-size:11px;color:#8E9BAB;letter-spacing:.08em;}
+.divider{border:none;border-top:1px solid #EEF2F7;margin:20px 0;}
+.quick-label{font-size:10px;font-weight:700;color:#8E9BAB;letter-spacing:.12em;text-align:center;margin-bottom:12px;}
+.quick-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px;}
+.quick-item{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F5F8FC;border:1.5px solid #E6EDF5;border-radius:12px;padding:12px 6px;text-decoration:none;transition:all .2s;}
+.quick-item:hover{border-color:#2E75B6;background:#EBF3FB;transform:translateY(-2px);}
+.qi-ico{font-size:20px;}
+.qi-txt{font-size:11px;font-weight:700;color:#1A3C6B;text-align:center;line-height:1.4;}
+.qi-note{font-size:9px;color:#A0AABB;text-align:center;}
+.form-section label{display:block;font-size:11px;font-weight:700;color:#6B7A8D;letter-spacing:.1em;margin-bottom:7px;}
+.form-section input{width:100%;border:1.5px solid #E6EDF5;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s;margin-bottom:14px;}
+.form-section input:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.08);}
+.btn{width:100%;background:linear-gradient(135deg,#1A3C6B,#2E75B6);color:#fff;border:none;border-radius:10px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px;transition:opacity .2s;}
 .btn:hover{opacity:.9;}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
-.error{background:#FDECEA;color:#C0392B;font-size:13px;padding:10px 14px;border-radius:8px;margin-top:12px;display:none;}
+.pw-find{text-align:center;margin-top:14px;}
+.pw-find button{background:none;border:none;font-size:12px;color:#A0AABB;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-decoration:underline;transition:color .2s;}
+.pw-find button:hover{color:#2E75B6;}
+.msg{font-size:13px;padding:10px 14px;border-radius:8px;margin-top:12px;display:none;line-height:1.6;}
+.msg.error{background:#FDECEA;color:#C0392B;}
+.msg.success{background:#EAF4EE;color:#2A7A4A;}
+.bottom-note{margin-top:20px;text-align:center;font-size:11px;color:rgba(255,255,255,.35);line-height:1.8;}
 </style>
 </head>
 <body>
+
 <div class="card">
-  <div class="logo">Liter Stella</div>
-  <div class="sub">관리자 전용 로그인</div>
-  <div>
+  <div class="logo-wrap">
+    <div class="logo">Liter Stella</div>
+    <div class="logo-sub">관리자 전용 · Admin Only</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 바로가기 메뉴 -->
+  <div class="quick-label">바로가기</div>
+  <div class="quick-menu">
+    <a class="quick-item" href="dashboard.html">
+      <span class="qi-ico">📋</span>
+      <span class="qi-txt">지원서 보기</span>
+      <span class="qi-note">로그인 필요</span>
+    </a>
+    <a class="quick-item" href="dashboard.html">
+      <span class="qi-ico">📊</span>
+      <span class="qi-txt">적성검사 결과</span>
+      <span class="qi-note">로그인 필요</span>
+    </a>
+    <a class="quick-item" href="evaluation.html">
+      <span class="qi-ico">🌟</span>
+      <span class="qi-txt">평가표 보기</span>
+      <span class="qi-note">로그인 필요</span>
+    </a>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 로그인 폼 -->
+  <div class="form-section">
     <label>이메일</label>
     <input type="email" id="email" placeholder="관리자 이메일" onkeydown="if(event.key==='Enter')login()">
     <label>비밀번호</label>
     <input type="password" id="pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')login()">
     <button class="btn" id="login-btn" onclick="login()">로그인</button>
-    <div class="error" id="err"></div>
+    <div class="msg error" id="err"></div>
+    <div class="msg success" id="suc"></div>
+  </div>
+
+  <!-- 비밀번호 찾기 -->
+  <div class="pw-find">
+    <button onclick="resetPassword()">비밀번호를 잊으셨나요?</button>
   </div>
 </div>
 
+<p class="bottom-note">
+  literbryanbae@gmail.com · jayne0609@gmail.com<br>
+  등록된 관리자 계정으로만 접근 가능합니다
+</p>
+
 <script>
-const ADMIN_EMAILS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
+const ADMIN_EMAILS = ['literbryanbae@gmail.com','jayne0609@gmail.com'];
+
 firebase.initializeApp({
   apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",
   authDomain:"literstella.firebaseapp.com",
@@ -46,23 +102,62 @@ firebase.initializeApp({
   messagingSenderId:"510303446020",
   appId:"1:510303446020:web:5e0188919058b9fc5f4151"
 });
-const auth=firebase.auth();
+const auth = firebase.auth();
 
-auth.onAuthStateChanged(u=>{
-  if(u&&ADMIN_EMAILS.includes(u.email)) window.location.href='dashboard.html';
+auth.onAuthStateChanged(u => {
+  if(u && ADMIN_EMAILS.includes(u.email)) window.location.href = 'dashboard.html';
 });
 
 function login(){
-  const email=document.getElementById('email').value.trim();
-  const pw=document.getElementById('pw').value;
-  const err=document.getElementById('err');
-  const btn=document.getElementById('login-btn');
-  err.style.display='none';
-  if(!ADMIN_EMAILS.includes(email)){err.textContent='등록된 관리자 이메일이 아닙니다.';err.style.display='block';return;}
-  btn.disabled=true; btn.textContent='로그인 중...';
-  auth.signInWithEmailAndPassword(email,pw)
-    .then(()=>window.location.href='dashboard.html')
-    .catch(()=>{err.textContent='이메일 또는 비밀번호가 올바르지 않습니다.';err.style.display='block';btn.disabled=false;btn.textContent='로그인';});
+  const email = document.getElementById('email').value.trim();
+  const pw    = document.getElementById('pw').value;
+  const err   = document.getElementById('err');
+  const suc   = document.getElementById('suc');
+  const btn   = document.getElementById('login-btn');
+  err.style.display = 'none';
+  suc.style.display = 'none';
+  if(!ADMIN_EMAILS.includes(email)){
+    err.textContent = '등록된 관리자 이메일이 아닙니다.';
+    err.style.display = 'block';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '로그인 중...';
+  auth.signInWithEmailAndPassword(email, pw)
+    .then(() => window.location.href = 'dashboard.html')
+    .catch(() => {
+      err.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '로그인';
+    });
+}
+
+function resetPassword(){
+  const email = document.getElementById('email').value.trim();
+  const err   = document.getElementById('err');
+  const suc   = document.getElementById('suc');
+  err.style.display = 'none';
+  suc.style.display = 'none';
+  if(!email){
+    err.textContent = '이메일을 먼저 입력해 주세요.';
+    err.style.display = 'block';
+    return;
+  }
+  if(!ADMIN_EMAILS.includes(email)){
+    err.textContent = '등록된 관리자 이메일이 아닙니다.';
+    err.style.display = 'block';
+    return;
+  }
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      suc.textContent = '✅ ' + email + ' 으로 재설정 메일을 보냈습니다. 메일함을 확인해 주세요.';
+      suc.style.display = 'block';
+    })
+    .catch(() => {
+      err.textContent = '메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+      err.style.display = 'block';
+    });
 }
 </script>
 </body>
