@@ -476,48 +476,52 @@ function showResult(){
     name: '',
     submittedAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(()=>{
-    // ── 관리자 이메일 알림
-    const total = Object.values(typeCounts).reduce((a,b)=>a+b,0);
-    const pct = k => Math.round((typeCounts[k]/total)*100);
+    // ── 이메일 알림 발송 ──
     db.collection('mail').add({
-      to: ['literbryanbae@gmail.com', 'jayne0609@gmail.com'],
+      to: ['literbryanbae@gmail.com','jayne0609@gmail.com'],
       message: {
-        subject: `[리터스텔라] 적성검사 완료 — ${t.badge} ${t.name}`,
+        subject: `[리터스텔라] 새 적성검사 결과 — ${t.badge} ${t.name}`,
         html: `
-          <div style="font-family:'Noto Sans KR',sans-serif;max-width:520px;margin:0 auto;padding:24px;border:1px solid #E6EDF5;border-radius:12px;">
-            <div style="background:#1A3C6B;padding:16px 20px;border-radius:8px 8px 0 0;margin:-24px -24px 24px;">
-              <h2 style="color:#fff;font-size:16px;margin:0;">📊 원서 강독가 적성검사 완료</h2>
+          <div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
+            <div style="background:#1A3C6B;padding:20px;text-align:center;">
+              <h2 style="color:#fff;margin:0;font-size:18px;">📊 새 적성검사 결과가 등록됐습니다</h2>
             </div>
-            <div style="text-align:center;padding:16px 0 20px;">
+            <div style="padding:24px;background:#f9f9f9;text-align:center;">
               <div style="font-size:48px;margin-bottom:8px;">${t.badge}</div>
               <div style="font-size:20px;font-weight:700;color:#1A3C6B;">${t.name}</div>
-              <div style="font-size:13px;color:#8E9BAB;margin-top:4px;">${t.sub}</div>
+              <div style="font-size:14px;color:#666;margin-top:4px;">${t.sub}</div>
+              <div style="margin-top:20px;display:flex;justify-content:center;gap:12px;">
+                <div style="background:#EBF3FB;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
+                  <div style="font-size:18px;font-weight:900;color:#2E75B6;">${typeCounts.S}</div>
+                  <div style="font-size:10px;color:#666;">스토리텔링</div>
+                </div>
+                <div style="background:#EAF5F5;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
+                  <div style="font-size:18px;font-weight:900;color:#2A8A8A;">${typeCounts.A}</div>
+                  <div style="font-size:10px;color:#666;">분석·문법</div>
+                </div>
+                <div style="background:#FBF4E8;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
+                  <div style="font-size:18px;font-weight:900;color:#C8922A;">${typeCounts.E}</div>
+                  <div style="font-size:10px;color:#666;">학습자공감</div>
+                </div>
+                <div style="background:#F0EBF8;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
+                  <div style="font-size:18px;font-weight:900;color:#6A3FA0;">${typeCounts.X}</div>
+                  <div style="font-size:10px;color:#666;">문학탐구</div>
+                </div>
+              </div>
+              <div style="margin-top:20px;">
+                <a href="https://coaching.literstella.co.kr/admin/dashboard.html"
+                   style="display:inline-block;background:#1A3C6B;color:#fff;padding:12px 28px;text-decoration:none;font-size:14px;font-weight:700;border-radius:4px;">
+                  관리자 대시보드에서 확인하기 →
+                </a>
+              </div>
             </div>
-            <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;">
-              <tr style="background:#F5F8FC;">
-                <td style="padding:8px 12px;font-weight:700;color:#1A3C6B;">스토리텔링</td>
-                <td style="padding:8px 12px;font-weight:700;color:#2A8A8A;">분석·문법</td>
-                <td style="padding:8px 12px;font-weight:700;color:#C8922A;">학습자공감</td>
-                <td style="padding:8px 12px;font-weight:700;color:#6A3FA0;">문학탐구</td>
-              </tr>
-              <tr>
-                <td style="padding:8px 12px;text-align:center;font-size:18px;font-weight:900;color:#1A3C6B;">${pct('S')}%</td>
-                <td style="padding:8px 12px;text-align:center;font-size:18px;font-weight:900;color:#2A8A8A;">${pct('A')}%</td>
-                <td style="padding:8px 12px;text-align:center;font-size:18px;font-weight:900;color:#C8922A;">${pct('E')}%</td>
-                <td style="padding:8px 12px;text-align:center;font-size:18px;font-weight:900;color:#6A3FA0;">${pct('X')}%</td>
-              </tr>
-            </table>
-            <div style="margin-top:16px;text-align:center;">
-              <a href="https://coaching.literstella.co.kr/admin/dashboard.html"
-                 style="display:inline-block;background:#1A3C6B;color:#fff;font-size:14px;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;">
-                관리자 페이지에서 확인하기 →
-              </a>
+            <div style="padding:14px;text-align:center;font-size:11px;color:#999;">
+              © 리터스텔라 Liter Stella
             </div>
-            <p style="margin-top:20px;font-size:11px;color:#A0AABB;text-align:center;">리터스텔라 자동 알림 · coaching.literstella.co.kr</p>
           </div>
         `
       }
-    }).catch(e=>console.warn('메일 발송 오류:', e.message));
+    }).catch(e=>console.warn('Mail error:', e));
   }).catch(e=>console.warn('Quiz save error:', e));
 
   showScreen('result');
