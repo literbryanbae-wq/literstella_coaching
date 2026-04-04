@@ -8,6 +8,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700&display=swap');
 
 *{margin:0;padding:0;box-sizing:border-box;}
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(26,60,107,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.04em;display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo-badge{width:30px;height:30px;background:linear-gradient(135deg,#C8922A,#F0C040);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:900;flex-shrink:0;}
+.nav-logo-wrap{display:flex;flex-direction:column;}
+.nav-logo-main{font-size:15px;font-weight:700;color:#fff;line-height:1.2;}
+.nav-logo-sub{font-size:9px;color:rgba(255,255,255,.42);font-weight:300;letter-spacing:.14em;font-family:'Noto Sans KR',sans-serif;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-kakao{display:flex;align-items:center;gap:6px;background:#FEE500;color:#3C1E1E;font-size:12px;font-weight:700;padding:7px 14px;border-radius:25px;text-decoration:none;transition:opacity .2s;}
+.nav-kakao:hover{opacity:.88;}
+.nav-kakao svg{width:16px;height:16px;}
+.nav-apply{background:linear-gradient(135deg,#C8922A,#E8B040);color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:25px;text-decoration:none;transition:opacity .2s;}
+.nav-apply:hover{opacity:.88;}
+.kakao-float{position:fixed;bottom:28px;right:24px;z-index:99;display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;}
+.kakao-circle{width:56px;height:56px;background:#FEE500;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.22);transition:transform .2s,box-shadow .2s;}
+.kakao-circle:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.kakao-label{font-size:10px;font-weight:700;color:var(--navy);background:#fff;border-radius:20px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;}
 :root{
   --navy:#1A3C6B; --blue:#2E75B6; --teal:#2F8A8A; --coral:#E07050;
   --gold:#C8922A; --light:#F0F6FC; --white:#fff; --gray:#4A5A6A;
@@ -239,18 +255,52 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 </head>
 <body>
 
+<!-- ── 상단 네비게이션 (로고) ── -->
+<nav class="site-nav">
+  <a href="#" class="nav-logo">
+    <img src="images/_half__로고_심볼.png"
+         alt="리터스텔라 심볼"
+         style="height:34px;width:34px;object-fit:contain;filter:brightness(0) invert(1);">
+    <img src="images/유튜브_슬로건제외자산_2xxxhdpi.png"
+         alt="Liter Stella"
+         style="height:22px;object-fit:contain;filter:brightness(0) invert(1);margin-left:2px;">
+  </a>
+  <div class="nav-right">
+    <a href="http://pf.kakao.com/_xkxdZxeb/chat" target="_blank" class="nav-kakao">
+      <svg viewBox="0 0 24 24" fill="#3C1E1E"><path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.08 4.08 6.56L4.9 20.4l4.16-2.24C9.65 18.34 10.81 18.6 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z"/></svg>
+      카톡 문의
+    </a>
+    <a href="#apply" class="nav-apply">지원서 제출 →</a>
+  </div>
+</nav>
+
+<!-- ── 카카오 플로팅 버튼 ── -->
+<a href="http://pf.kakao.com/_xkxdZxeb/chat" target="_blank" class="kakao-float" aria-label="카카오 채널 문의">
+  <div class="kakao-circle">
+    <svg viewBox="0 0 24 24" fill="#3C1E1E" width="28" height="28"><path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.08 4.08 6.56L4.9 20.4l4.16-2.24C9.65 18.34 10.81 18.6 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z"/></svg>
+  </div>
+  <span class="kakao-label">카톡 문의</span>
+</a>
+
 <!-- ───── HERO ───── -->
 <section class="hero">
 <div class="hero-inner">
+  <!-- 본문 영문 로고 -->
+  <div style="margin-bottom:24px;">
+    <img src="images/유튜브_슬로건제외자산_2xxxhdpi.png"
+         alt="Liter Stella"
+         style="height:32px;object-fit:contain;filter:brightness(0) invert(1);opacity:.85;">
+  </div>
   <div class="hero-badge">
     <span class="special">✦ SPECIAL 3기</span>
     리터스텔라 원서 강독 마스터 코칭
   </div>
-  <h1>스텔라가 직접 듣고,<br>직접 고쳐줍니다.<br><em>그게 이 코칭의 전부입니다.</em></h1>
+  <h1>스텔라가 강독을 직접 보고 듣습니다
+<br>스텔라가 직접 고칩니다<br><em>그것 하나로 이 코칭은 충분합니다</em></h1>
   <p class="hero-sub">
     20년 현장에서 찾아낸 답은 하나였습니다.<br>
     <strong>원서로 읽고, 이야기로 가르치는 것.</strong><br>
-    영국 유학·캐나다 테솔·라디오 방송·대기업 강의로 검증한 방법을 당신에게 복사해드립니다.
+    영국 유학·캐나다 테솔·라디오 방송·대기업 강의 그리고 12개 영미 원서, 수백개 이상의 강독으로 검증한 방법을 직접 복사해드립니다.
   </p>
 
   <div class="limit-box">
@@ -274,12 +324,14 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 
   <a href="#apply" class="hero-cta">지원서 제출하기 →</a>
   <p class="hero-note">지원서 → 서류 선발 → 스텔라 상담 → 코칭 결제 순서로 진행됩니다</p>
+  <p class="hero-note">예약금 20만원 입금 순서로 연락 드립니다.</p>
+  <p class="hero-note">미선발시에도 지원서 답변을 드리며, 일주일 이내 즉시 환불해 드립니다</p>
 
   <div class="hero-stats">
     <div class="hero-stat"><div class="num">20년</div><div class="label">영어 교육 현장 경력</div></div>
-    <div class="hero-stat"><div class="num">4.8<span style="font-size:.55em;">/5</span></div><div class="label">무기명 설문 만족도</div></div>
-    <div class="hero-stat"><div class="num">4권</div><div class="label">출판 저서</div></div>
-    <div class="hero-stat"><div class="num">150명+</div><div class="label">원서 완독 함께한 수강생</div></div>
+    <div class="hero-stat"><div class="num">4.8<span style="font-size:.55em;">/5</span></div><div class="label">코칭과정 무기명 설문 만족도</div></div>
+    <div class="hero-stat"><div class="num">14권</div><div class="label">출판 저서</div></div>
+    <div class="hero-stat"><div class="num">3,287명+</div><div class="label">함께한 수강생</div></div>
   </div>
 </div>
 </section>
@@ -293,7 +345,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
     <div class="pstep">
       <div class="pnum">1</div>
       <h4>지원서 제출</h4>
-      <p>온라인 지원서<br>작성 & 제출</p>
+      <p>온라인 지원서<br>상담 예약금 입금</p>
     </div>
     <div class="pstep">
       <div class="pnum">2</div>
@@ -331,6 +383,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
       </div>
     </div>
     <p style="color:rgba(255,255,255,.45);font-size:12px;margin-top:14px;">상담 후 결제 방식을 선택하실 수 있습니다</p>
+    <p style="color:rgba(255,255,255,.45);font-size:12px;margin-top:14px;">미선발시에도 예약금20만원(30%할인) 1코스 수강 가능합니다</p>
   </div>
 </div>
 </div>
@@ -338,7 +391,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 <!-- ───── FOR WHO ───── -->
 <div class="forwho">
 <div class="sec w">
-  <div class="sec-title">이 코칭이 당신을 위한 것인지<br>먼저 확인하세요</div>
+  <div class="sec-title">원서 강독 코칭이 자신을 위한 것인지<br>먼저 확인하세요</div>
   <div class="sec-sub">세 가지 중 하나라도 해당된다면, 이 과정이 필요합니다.</div>
   <div class="who-grid">
     <div class="who-card">
@@ -370,14 +423,16 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 <div class="w">
   <div class="stella-inner">
     <div>
-      <div class="stella-photo">📚</div><!-- 스텔라 사진으로 교체 -->
+      <div class="stella-photo" style="background: transparent;">
+  <img src="images/stella_profile_pictiure.png" alt="리터스텔라 스텔라 강사 프로필" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+</div>
       <div class="stella-quote-card">
-        <p>"가르칠 수 있어야 자신의 평생 실력이 됩니다. 저는 당신의 강독을 직접 듣고, 이름을 부르며 고쳐드립니다."</p>
+        <p>"가르칠 수 있어야 자신도 평생 성장 할 수 있습니다. 강독을 직접 보고 듣고, 디테일한 피드백을 드립니다."</p>
         <div class="from">— 스텔라</div>
       </div>
     </div>
     <div>
-      <div class="stella-eyebrow">원서 강독가 · 수필가 · 리터스텔라 CEO</div>
+      <div class="stella-eyebrow">원서 강독가 · 수필가 · 작가 · 콘텐츠 디렉터</div>
       <div class="stella-name">스텔라</div>
       <div class="stella-tagline">20년 현장 실증 경험 — 원서로 영어를 완성한 방법</div>
 
@@ -399,7 +454,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
         <div class="career-item">
           <div class="career-icon">🏢</div>
           <div class="career-text">
-            <h4>대기업 OPIC · 비즈니스 영어 전문 강사</h4>
+            <h4>대기업 OPIC · 비즈니스 영어 전문 강사· YDA 영어 Debate 코치</h4>
             <p>삼성·LG·현대 등 대기업 임직원 대상 영어 강의. 다양한 학습자 유형에 대한 맞춤 코칭 경험.</p>
             <span class="award">🏆 베스트 티처 어워드 수상</span>
           </div>
@@ -407,21 +462,21 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
         <div class="career-item">
           <div class="career-icon">✍️</div>
           <div class="career-text">
-            <h4>수필가 등단 · 한국산문 수필가협회 차장</h4>
+            <h4>수필가 등단 · 한국산문 수필가협회 </h4>
             <p>영어와 한국어, 두 언어를 글로 쓰는 작가. 문장을 읽는 눈이 다릅니다.</p>
           </div>
         </div>
         <div class="career-item">
           <div class="career-icon">📚</div>
           <div class="career-text">
-            <h4>저서 4권 출판 · 리터스텔라 CEO</h4>
-            <p>『1등 영어 강사의 조건』 외 3권. 영어 원서 읽기 플랫폼 리터스텔라를 직접 운영하는 강독 생태계 설계자.</p>
+            <h4>저서 14권 출판 · 리터스텔라 대표 강독가 · 콘텐츠 디렉터</h4>
+            <p>『1등 영어 강사의 조건』『영어를 읽는 30일 빨강머리앤 / 작은 아씨들』외 클래식 원서 4종/워크북 4종 출간(예정)·리터스텔라 원서 강독 생태계 설계자.</p>
           </div>
         </div>
       </div>
 
       <div class="stella-summary">
-        영국 유학에서 언어를 몸으로 배우고, 캐나다 TESOL로 교수법을 완성하고, 라디오 방송에서 전달력을 다듬고, 대기업 현장에서 다양한 학습자를 만났습니다. <strong>20년의 실증이 쌓인 방법, 원서로 읽으면 영어가 완성됩니다.</strong> 이제 그 방법을 코칭으로 전수합니다.
+        영국 유학에서 언어를 몸으로 배우고, 캐나다에서 유학색을 가르치며 TESOL 자격을, 라디오 방송에서 전달력을 다듬고, 대기업 현장에서 다양한 학습자를 만났습니다. <strong>20년의 실증이 쌓인 방법, 원서로 읽으면 영어가 완성됩니다.</strong> 이제 그 노하우를 코칭으로 전수합니다.
       </div>
     </div>
   </div>
@@ -433,7 +488,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 <!-- ───── PROBLEM ───── -->
 <div class="sec w">
   <div class="sec-title">혼자 하면 반드시 이 벽에 막힙니다</div>
-  <div class="sec-sub">원서 강독을 시작했다가 멈추게 되는 진짜 이유들입니다.</div>
+  <div class="sec-sub">원서 읽기 수업을 시작했다가 멈추게 되는 진짜 이유들입니다.</div>
   <div class="prob-list">
     <div class="prob-item"><div class="x">❌</div><p><strong>독해 수업과 강독의 차이를 모른다.</strong> 원서를 해석하는 것과 이야기 안으로 데려가는 것은 완전히 다른 기술이다.</p></div>
     <div class="prob-item"><div class="x">❌</div><p><strong>문법 설명의 밸런스를 못 잡는다.</strong> 너무 자세하면 지루하고, 너무 가볍게 넘어가면 학습자가 찜찜함을 남긴다.</p></div>
@@ -603,7 +658,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
   <div class="jcard">
     <div class="jcard-week"><div class="wk">9~12주</div><div class="wn">🎯</div></div>
     <div class="jcard-body">
-      <h4>코스 3 — 스텔라가 당신의 강독을 직접 듣는다</h4>
+      <h4>코스 3 — 스텔라가 강독을 직접 듣습니다</h4>
       <p>영상 제출 → 영상 피드백 + 문서 채점 → 개선 → 졸업작품 공개. 스텔라가 당신의 목소리를, 속도를, 스토리텔링을 직접 듣고 고쳐줍니다. 필요하면 전화로도 케어합니다.</p>
       <div class="jcard-quote">"이 선생님의 강의는 이야기에 빠져들게 해줘야 끝까지 가요. 그것이 반은 이야기의 힘으로 가능한 것이고요." — 스텔라, 실제 피드백</div>
     </div>
@@ -634,18 +689,18 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:40px;">
     <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 24px;">
       <div style="font-size:36px;margin-bottom:14px;">🌐</div>
-      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">리터스텔라 홈페이지<br>본인 이름의 강의 런칭</h3>
-      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">리터스텔라 공식 플랫폼에 나만의 원서 강독 강의가 등록됩니다. 스텔라와 나란히 이름이 올라갑니다.</p>
+      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">리터스텔라 홈페이지<br>내 이름의 강의 런칭</h3>
+      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">리터스텔라 공식 플랫폼에 나만의 원서 강독 강의가 등록됩니다. 스텔라와 나란히 이름이 올라갑니다. 수익화에 대해 마케터와 함께 고민합니다</p>
     </div>
     <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 24px;">
       <div style="font-size:36px;margin-bottom:14px;">📗</div>
-      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">워크북 메인 저자 자격<br>출판 및 마케팅 지원</h3>
-      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">공동저자를 넘어 메인 저자로 출판됩니다. 리터스텔라의 마케팅 채널을 통한 전방위 홍보 지원을 받습니다.</p>
+      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">강독 워크북 메인 저자<br>출판 및 마케팅 지원</h3>
+      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">공동저자를 넘어 메인 저자로 출판됩니다.리터스텔라의 마케팅 채널을 통한 홍보 지원을 받습니다.</p>
     </div>
     <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 24px;">
       <div style="font-size:36px;margin-bottom:14px;">📩</div>
-      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">뉴스레터 발행</h3>
-      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">리터스텔라 구독자 대상으로 나의 이름으로 뉴스레터가 발행됩니다. 브랜드 강독가로서 독자를 만납니다.</p>
+      <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;">나의 강독 뉴스레터 발행<br>구독자 팬덤 만들기</h3>
+      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;">리터스텔라 구독자 대상으로 나의 원서 강독이 뉴스레터로 발행됩니다. 전문 원서 강독가로서 독자를 만납니다.</p>
     </div>
   </div>
 
@@ -670,7 +725,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
         <div style="font-size:11px;color:rgba(255,255,255,.5);">단 1명</div>
       </div>
     </div>
-    <p style="font-size:15px;color:rgba(255,255,255,.8);line-height:1.7;max-width:480px;margin:0 auto;">"가르칠 수 있어야 자신의 평생 실력이 됩니다. 제 옆에서 함께 원서 강독 생태계를 만들어갈 파트너를 기다립니다." — <strong style="color:#F0C040;">스텔라</strong></p>
+    <p style="font-size:15px;color:rgba(255,255,255,.8);line-height:1.7;max-width:480px;margin:0 auto;">"저와 함께 원서 강독 생태계를 만들어갈 파트너를 기다립니다." — <strong style="color:#F0C040;">스텔라</strong></p>
   </div>
 </div>
 </div>
@@ -681,12 +736,12 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
 <div style="background:var(--light);padding:80px 0;">
 <div class="w">
   <div style="text-align:center;margin-bottom:48px;">
-    <div class="sec-title">이미 이런 분들이 지원했습니다</div>
-    <div class="sec-sub">3기 OT 신청자들의 티칭 경력 — 스텔라가 직접 공개합니다</div>
+    <div class="sec-title">다양한 배경을 가진분들이 지원합니다</div>
+    <div class="sec-sub">이전 기수 OT 신청자들의 티칭 경력 — 스텔라가 직접 공개합니다</div>
   </div>
   <div style="background:#fff;border-radius:20px;border:2px solid var(--lg);overflow:hidden;max-width:600px;margin:0 auto;">
     <div style="background:var(--navy);padding:20px 28px;">
-      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:4px;letter-spacing:.06em;">3기 OT 신청자 · 영어 티칭 경력</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:4px;letter-spacing:.06em;">OT신청자·수료자·영어 티칭 경력</div>
       <div style="font-size:18px;font-weight:700;color:#fff;">원서 강독을 배우고자 하는 분들</div>
     </div>
     <div style="padding:28px;">
@@ -701,11 +756,15 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
         </div>
         <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--lg);">
           <div style="width:8px;height:8px;background:var(--blue);border-radius:50%;flex-shrink:0;"></div>
-          <span style="font-size:15px;color:var(--ink);">영어 공부방 강사</span>
+          <span style="font-size:15px;color:var(--ink);">수어 통역사</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--lg);">
           <div style="width:8px;height:8px;background:var(--blue);border-radius:50%;flex-shrink:0;"></div>
-          <span style="font-size:15px;color:var(--ink);">영어 그림책 강사</span>
+          <span style="font-size:15px;color:var(--ink);">영어 공부방 / 그림책 강사</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--lg);">
+          <div style="width:8px;height:8px;background:var(--blue);border-radius:50%;flex-shrink:0;"></div>
+          <span style="font-size:15px;color:var(--ink);">영어 강사가 되고 싶은 일반인</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--lg);">
           <div style="width:8px;height:8px;background:var(--blue);border-radius:50%;flex-shrink:0;"></div>
@@ -722,7 +781,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
       </div>
       <div style="margin-top:20px;background:linear-gradient(135deg,#EBF3FB,#F0F7F5);border-radius:12px;padding:16px 20px;border-left:4px solid var(--teal);">
         <p style="font-size:14px;color:var(--navy);font-weight:600;margin-bottom:4px;">이 분들의 공통점</p>
-        <p style="font-size:14px;color:var(--gray);line-height:1.65;">영어를 오래 가르쳐왔지만, <strong style="color:var(--navy);">원서로 가르치는 방법</strong>이 없었습니다. 스텔라 코칭이 바로 그 방법입니다.</p>
+        <p style="font-size:14px;color:var(--gray);line-height:1.65;">영어 원서 읽기 강사가 되고 싶지만 혹은 영어를 오래 가르쳐왔지만, <strong style="color:var(--navy);">원서로 가르치는 강독 방법</strong>이 없었습니다. 스텔라 원서 강독 코칭 과정에 그 방법을 모두 답았습니다</p>
       </div>
     </div>
   </div>
@@ -857,12 +916,12 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
       <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:4px;">패키지 가치 구성</div>
       <div style="font-size:18px;font-weight:700;color:#fff;">개별 정가 합산 vs SPECIAL 패키지</div>
     </div>
-    <div class="vt-row"><span class="name">리터스텔라 전 강의 평생 소장 (9개)</span><span class="price">350,000원</span><span class="inc">포함</span></div>
-    <div class="vt-row"><span class="name">원서 4종 + 워크북 7권 + PDF</span><span class="price">200,000원</span><span class="inc">포함</span></div>
-    <div class="vt-row"><span class="name">코스 1 원서 강독 이론 (15차시)</span><span class="price">300,000원</span><span class="inc">포함</span></div>
-    <div class="vt-row"><span class="name">코스 2 그룹 강독 코칭 (3회)</span><span class="price">500,000원</span><span class="inc">포함</span></div>
+    <div class="vt-row"><span class="name">리터스텔라 전 강의 평생 소장 (9개)(기존 수강생 해당 비용 차감)</span><span class="price">350,000원</span><span class="inc">포함</span></div>
+    <div class="vt-row"><span class="name">원서 4종 + 워크북 7권 + PDF(사전 구매자 비용 차감)</span><span class="price">200,000원</span><span class="inc">포함</span></div>
+    <div class="vt-row"><span class="name">코스 1 원서 강독 이론 (15차시)+과제 제출 평가</span><span class="price">300,000원</span><span class="inc">포함</span></div>
+    <div class="vt-row"><span class="name">코스 2 그룹 강독 코칭 (2회)+ 그룹 특성에 맞는 보충 특강 1회 (영상 문서 종합 피드백)</span><span class="price">500,000원</span><span class="inc">포함</span></div>
     <div class="vt-row"><span class="name">코스 3 1:1 개인 코칭 (4회 · 영상+문서+전화)</span><span class="price">1,000,000원</span><span class="inc">포함</span></div>
-    <div class="vt-row"><span class="name">워크북 공동저자 등재 + 원고료</span><span class="price">별도 지급</span><span class="inc">포함</span></div>
+    <div class="vt-row"><span class="name">워크북 공동저자 등재 (작업 가이드 및 개별 피드백) + 원고료</span><span class="price">별도 지급</span><span class="inc">포함</span></div>
     <div class="vt-row vt-total">
       <span class="name">합산 정가</span>
       <span class="price"><s>2,350,000원</s></span>
@@ -881,7 +940,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
   <div class="bene-grid">
     <div class="bene-card"><div class="ico">✍️</div><h3>워크북 공동저자 등재</h3><p>위대한 개츠비 워크북 공동저자. 원고료 별도 지급. 강독가 공신력의 핵심.</p></div>
     <div class="bene-card"><div class="ico">📋</div><h3>자료 활용 라이선스</h3><p>오프라인 수업 공식 활용. 공교육·방과후 포함 사용 가능.</p></div>
-    <div class="bene-card"><div class="ico">🎬</div><h3>졸업작품 포트폴리오</h3><p>완성 강독 영상 리터스텔라 SNS 소개. 강독가 데뷔 첫 작품.</p></div>
+    <div class="bene-card"><div class="ico">🎬</div><h3>졸업작품 포트폴리오</h3><p>완성 강독 영상 리터스텔라 SNS 소개(선정작품). 강독가 데뷔 첫 작품.</p></div>
     <div class="bene-card"><div class="ico">🤝</div><h3>강독가 네트워크</h3><p>동기 수료생 + 선배 강독가 커뮤니티. 함께 성장하는 연결.</p></div>
   </div>
 </div>
@@ -919,7 +978,7 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
     </div>
     <div class="faq-item">
       <div class="faq-q">영어 실력이 부족해도 신청할 수 있나요?</div>
-      <div class="faq-a">원어민 수준을 요구하지 않습니다. 코스 1의 문법 워크샵을 따라올 수 있는 기본기면 충분합니다. 0기에는 현직 교사부터 직장인, 학부모까지 다양한 분들이 함께했고 모두 수료했습니다. 지원서 제출 후 스텔라와의 상담에서 적합 여부를 먼저 확인하실 수 있습니다.</div>
+      <div class="faq-a">원어민 수준을 요구하지 않습니다. 코스 1의 문법 워크샵을 따라올 수 있는 기본기면 충분합니다. 선배기수에는 현직 학원 원장, 직장인, 학부모, 글로벌 행사 통역 팀장까지 다양한 분들이 함께했고 모두 수료했습니다. 지원서 제출 후 스텔라와의 상담에서 적합 여부를 먼저 확인하실 수 있습니다.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">1:1 코칭 피드백은 어떻게 진행되나요?</div>
@@ -951,16 +1010,41 @@ footer{background:#0D1F38;color:rgba(255,255,255,.4);text-align:center;padding:3
     </div>
   </div>
 
-  <a href="SPECIAL3기_지원서_1.html" class="cta-btn">SPECIAL 3기 지원서 제출 →</a>
+  <a href="SPECIAL3기_지원서.html" class="cta-btn">SPECIAL 3기 지원서 제출 →</a>
   <p class="cta-note">
     지원서 제출 → 서류 선발 → 스텔라 1:1 상담 → 결제 확정<br>
     지원서 제출은 무료입니다 · 상담 후 최종 수강 여부를 결정하세요
   </p>
+
+  <!-- 1코스 수업 확인 버튼 -->
+  <div style="margin-top:28px;">
+    <a href="https://class.literstella.co.kr/cu/84Ekvmm4" target="_blank"
+       style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);color:#fff;font-size:15px;font-weight:600;padding:14px 32px;border-radius:40px;text-decoration:none;transition:all .2s;"
+       onmouseover="this.style.background='rgba(255,255,255,.18)'"
+       onmouseout="this.style.background='rgba(255,255,255,.1)'">
+      📘 코칭 1코스 수업 내용 확인하기
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 7h10M8 3l4 4-4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <p style="color:rgba(255,255,255,.4);font-size:12px;margin-top:10px;">수강 전 1코스 커리큘럼을 먼저 확인하실 수 있습니다</p>
+  </div>
 </section>
 
 <footer>
+  <div style="margin-bottom:14px;">
+    <img src="images/자산_1xxhdpi.png"
+         alt="리터스텔라"
+         style="height:28px;object-fit:contain;filter:brightness(0) invert(1);opacity:.45;">
+  </div>
   © 리터스텔라 Liter Stella | 원서 강독가 스텔라<br>
-  www.literstella.co.kr · 이 페이지의 수강생 후기는 실제 코칭 기록을 바탕으로 작성되었습니다.
+  www.literstella.co.kr · 이 페이지의 수강생 후기는 실제 코칭 기록을 바탕으로 작성되었습니다.<br>
+  <span style="margin-top:10px;display:inline-block;">
+    <a href="http://pf.kakao.com/_xkxdZxeb/chat" target="_blank"
+       style="color:rgba(255,255,255,.4);text-decoration:none;font-size:12px;margin-right:16px;">💬 카카오 채널 문의</a>
+    <a href="admin/login.html"
+       style="color:rgba(255,255,255,.18);text-decoration:none;font-size:11px;letter-spacing:.04em;">관리자</a>
+  </span>
 </footer>
 
 </body>
