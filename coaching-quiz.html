@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 <script>
 firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
 const db=firebase.firestore();
@@ -464,7 +465,7 @@ function showResult(){
 
   document.getElementById('res-cta-desc').textContent = t.cta + '\n\nSPECIAL 3기는 10명 지원, 5명만 선발합니다.';
 
-  // ── Firebase 저장 ──
+  // ── Firebase 저장 + 이메일 알림 ──
   sessionStorage.setItem('quizType', t.name);
   db.collection('quiz_results').add({
     typeName: t.name,
@@ -476,50 +477,27 @@ function showResult(){
     name: '',
     submittedAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(()=>{
-    // ── 이메일 알림 발송 ──
     db.collection('mail').add({
       to: ['literbryanbae@gmail.com','jayne0609@gmail.com'],
       message: {
         subject: `[리터스텔라] 새 적성검사 결과 — ${t.badge} ${t.name}`,
-        html: `
-          <div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
-            <div style="background:#1A3C6B;padding:20px;text-align:center;">
-              <h2 style="color:#fff;margin:0;font-size:18px;">📊 새 적성검사 결과가 등록됐습니다</h2>
-            </div>
-            <div style="padding:24px;background:#f9f9f9;text-align:center;">
-              <div style="font-size:48px;margin-bottom:8px;">${t.badge}</div>
-              <div style="font-size:20px;font-weight:700;color:#1A3C6B;">${t.name}</div>
-              <div style="font-size:14px;color:#666;margin-top:4px;">${t.sub}</div>
-              <div style="margin-top:20px;display:flex;justify-content:center;gap:12px;">
-                <div style="background:#EBF3FB;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
-                  <div style="font-size:18px;font-weight:900;color:#2E75B6;">${typeCounts.S}</div>
-                  <div style="font-size:10px;color:#666;">스토리텔링</div>
-                </div>
-                <div style="background:#EAF5F5;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
-                  <div style="font-size:18px;font-weight:900;color:#2A8A8A;">${typeCounts.A}</div>
-                  <div style="font-size:10px;color:#666;">분석·문법</div>
-                </div>
-                <div style="background:#FBF4E8;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
-                  <div style="font-size:18px;font-weight:900;color:#C8922A;">${typeCounts.E}</div>
-                  <div style="font-size:10px;color:#666;">학습자공감</div>
-                </div>
-                <div style="background:#F0EBF8;border-radius:8px;padding:10px 16px;text-align:center;min-width:60px;">
-                  <div style="font-size:18px;font-weight:900;color:#6A3FA0;">${typeCounts.X}</div>
-                  <div style="font-size:10px;color:#666;">문학탐구</div>
-                </div>
-              </div>
-              <div style="margin-top:20px;">
-                <a href="https://coaching.literstella.co.kr/admin/dashboard.html"
-                   style="display:inline-block;background:#1A3C6B;color:#fff;padding:12px 28px;text-decoration:none;font-size:14px;font-weight:700;border-radius:4px;">
-                  관리자 대시보드에서 확인하기 →
-                </a>
-              </div>
-            </div>
-            <div style="padding:14px;text-align:center;font-size:11px;color:#999;">
-              © 리터스텔라 Liter Stella
+        html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
+          <div style="background:#1A3C6B;padding:20px;text-align:center;">
+            <h2 style="color:#fff;margin:0;font-size:18px;">📊 새 적성검사 결과가 등록됐습니다</h2>
+          </div>
+          <div style="padding:24px;background:#f9f9f9;text-align:center;">
+            <div style="font-size:48px;margin-bottom:8px;">${t.badge}</div>
+            <div style="font-size:20px;font-weight:700;color:#1A3C6B;">${t.name}</div>
+            <div style="font-size:14px;color:#666;margin-top:4px;">${t.sub}</div>
+            <div style="margin-top:20px;">
+              <a href="https://coaching.literstella.co.kr/admin/dashboard.html"
+                 style="display:inline-block;background:#1A3C6B;color:#fff;padding:12px 28px;text-decoration:none;font-size:14px;font-weight:700;border-radius:4px;">
+                관리자 대시보드에서 확인하기 →
+              </a>
             </div>
           </div>
-        `
+          <div style="padding:14px;text-align:center;font-size:11px;color:#999;">© 리터스텔라 Liter Stella</div>
+        </div>`
       }
     }).catch(e=>console.warn('Mail error:', e));
   }).catch(e=>console.warn('Quiz save error:', e));
@@ -545,10 +523,51 @@ function restartQuiz(){
 
 function copyResult(){
   const name = document.getElementById('res-name').textContent;
-  const sub = document.getElementById('res-sub').textContent;
-  navigator.clipboard.writeText(`나의 원서 강독가 유형: ${name} — ${sub}\n리터스텔라 SPECIAL 3기 지원하기`).then(()=>alert('결과가 복사되었습니다!'));
+  const sub  = document.getElementById('res-sub').textContent;
+  navigator.clipboard.writeText(
+    `나의 원서 강독가 유형: ${name} — ${sub}\n리터스텔라 SPECIAL 3기 지원하기\nhttps://coaching.literstella.co.kr/coaching-quiz.html`
+  ).then(()=>alert('결과가 복사되었습니다!'));
 }
-function shareKakao(){ alert('카카오 SDK 연동 후 활성화됩니다'); }
+
+function shareKakao(){
+  const name  = document.getElementById('res-name').textContent;
+  const sub   = document.getElementById('res-sub').textContent;
+  const badge = document.getElementById('res-badge').textContent;
+
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: `나는 ${badge} ${name}`,
+      description: `${sub}\n\n리터스텔라 원서 강독가 적성 검사 결과입니다. 당신의 유형은 무엇인가요?`,
+      imageUrl: 'https://coaching.literstella.co.kr/images/logo-symbol.png',
+      link: {
+        mobileWebUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
+        webUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
+      },
+    },
+    buttons: [
+      {
+        title: '나도 검사하기',
+        link: {
+          mobileWebUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
+          webUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
+        },
+      },
+      {
+        title: 'SPECIAL 3기 지원하기',
+        link: {
+          mobileWebUrl: 'https://coaching.literstella.co.kr/application-form.html',
+          webUrl: 'https://coaching.literstella.co.kr/application-form.html',
+        },
+      },
+    ],
+  });
+}
+
+// 카카오 초기화 — 단 1회
+window.addEventListener('DOMContentLoaded', ()=>{
+  Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
+});
 </script>
 </body>
 </html>
