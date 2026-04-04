@@ -504,11 +504,9 @@ function copyResult(){
 }
 
 function shareKakao(){
-  if(!Kakao.isInitialized()) Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
-
-  const name   = document.getElementById('res-name').textContent;
-  const sub    = document.getElementById('res-sub').textContent;
-  const badge  = document.getElementById('res-badge').textContent;
+  const name  = document.getElementById('res-name').textContent;
+  const sub   = document.getElementById('res-sub').textContent;
+  const badge = document.getElementById('res-badge').textContent;
 
   Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -540,7 +538,7 @@ function shareKakao(){
   });
 }
 
-// 카카오 초기화
+// 카카오 초기화 — 단 1회
 window.addEventListener('DOMContentLoaded', () => {
   Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
 });
