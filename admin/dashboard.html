@@ -73,6 +73,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
 .mstatus{border:1.5px solid var(--lg);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;}
 .msave{background:var(--navy);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;}
 .msave:hover{background:var(--blue);}
+.mdel{background:#fff;color:var(--red);border:1.5px solid var(--red);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:auto;}
+.mdel:hover{background:#FDECEA;}
 @media(max-width:600px){.stats{grid-template-columns:1fr 1fr;}.mf2{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -135,7 +137,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
 const ADMINS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
 firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
 const auth=firebase.auth(), db=firebase.firestore();
-let apps=[], quizzes=[], curId=null;
+let apps=[], quizzes=[], curId=null, curQuizId=null;
 
 auth.onAuthStateChanged(u=>{
   if(!u||!ADMINS.includes(u.email)){window.location.href='login.html';return;}
@@ -234,11 +236,13 @@ function openApp(id){
         <option value="rejected" ${a.status==='rejected'?'selected':''}>❌ 미선발</option>
       </select>
       <button class="msave" onclick="saveStatus()">상태 저장</button>
+      <button class="mdel" onclick="deleteApp()">🗑 삭제</button>
     </div>`;
   document.getElementById('app-overlay').classList.add('open');
 }
 function openQuiz(id){
   const q=quizzes.find(x=>x.id===id); if(!q)return;
+  curQuizId=id;
   document.getElementById('qtitle').textContent=(q.name||'익명')+' 적성검사 결과';
   const s=q.scores||{};
   document.getElementById('qbody').innerHTML=`
@@ -258,7 +262,10 @@ function openQuiz(id){
       </div>
     </div>
     <div class="mf"><label>이름 (자발적 입력)</label><div class="mv">${q.name||'익명 (미입력)'}</div></div>
-    <div class="mf"><label>검사일</label><div class="mv">${fmtDateTime(q.submittedAt)}</div></div>`;
+    <div class="mf"><label>검사일</label><div class="mv">${fmtDateTime(q.submittedAt)}</div></div>
+    <div style="margin-top:16px;text-align:right;">
+      <button class="mdel" onclick="deleteQuiz()">🗑 삭제</button>
+    </div>`;
   document.getElementById('quiz-overlay').classList.add('open');
 }
 
@@ -266,6 +273,24 @@ async function saveStatus(){
   const s=document.getElementById('mstat').value;
   try{await db.collection('applications').doc(curId).update({status:s});alert('상태가 저장되었습니다.');}
   catch(e){alert('저장 실패: '+e.message);}
+}
+
+async function deleteApp(){
+  if(!confirm('이 지원서를 삭제하겠습니까?\n삭제 후 복구가 불가능합니다.')) return;
+  try{
+    await db.collection('applications').doc(curId).delete();
+    closeM('app-overlay');
+    alert('삭제되었습니다.');
+  }catch(e){alert('삭제 실패: '+e.message);}
+}
+
+async function deleteQuiz(){
+  if(!confirm('이 적성검사 결과를 삭제하겠습니까?\n삭제 후 복구가 불가능합니다.')) return;
+  try{
+    await db.collection('quiz_results').doc(curQuizId).delete();
+    closeM('quiz-overlay');
+    alert('삭제되었습니다.');
+  }catch(e){alert('삭제 실패: '+e.message);}
 }
 
 function closeM(id){document.getElementById(id).classList.remove('open');}
