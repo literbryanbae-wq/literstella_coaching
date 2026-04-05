@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>파트너 강독가 선발 평가표 샘플 | 리터스텔라</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;
+  --orange:#D4622A;--gold:#B8820A;--gold-lt:#F0C040;
+  --green:#2A7A4A;--red:#B03030;
+  --cream:#FAFAF7;--rule:#E0E0D8;
+  --gray:#5A6070;--lt:#9AAABB;--ink:#1C1C2C;
+  --c1:#2E75B6;--c2:#2A8A8A;--c3:#7B4FA0;--c4:#C8922A;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:#E8E4DC;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.page{width:210mm;min-height:297mm;background:var(--cream);margin:20px auto;box-shadow:0 4px 32px rgba(0,0,0,.18);position:relative;overflow:hidden;page-break-after:always;}
+
+/* ── 커버 ── */
+.cover{min-height:297mm;background:linear-gradient(160deg,#0D2447,#1A3C6B 55%,#1A5A4A);display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-60px;right:-60px;width:360px;height:360px;border-radius:50%;background:rgba(255,255,255,.025);border:60px solid rgba(255,255,255,.03);}
+.cv-top{padding:44px 52px 0;display:flex;align-items:center;justify-content:space-between;}
+.cv-logo{font-family:'Noto Serif KR',serif;color:rgba(255,255,255,.9);font-size:18px;font-weight:700;}
+.cv-logo span{display:block;font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.2em;font-weight:300;margin-top:2px;font-family:'Noto Sans KR',sans-serif;}
+.cv-badge{background:rgba(200,146,42,.2);border:1px solid rgba(200,146,42,.4);color:#F0C040;font-size:9px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.12em;}
+.cv-main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 52px;}
+.cv-ey{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+.cv-ey::before{content:'';display:block;width:24px;height:2px;background:var(--gold-lt);}
+.cv-ey span{font-size:10px;font-weight:700;color:var(--gold-lt);letter-spacing:.18em;}
+.cv-title{font-family:'Noto Serif KR',serif;color:#fff;line-height:1.2;margin-bottom:20px;}
+.cv-title .en{font-size:14px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px;font-style:italic;}
+.cv-title .ko1{font-size:36px;font-weight:700;display:block;}
+.cv-title .ko2{font-size:20px;font-weight:300;color:rgba(255,255,255,.5);display:block;margin-top:4px;}
+
+/* 총점 원 */
+.cv-total{display:flex;align-items:center;gap:24px;margin-top:28px;}
+.total-circle{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#E8B040);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,146,42,.4);}
+.total-circle .tv{font-size:30px;font-weight:900;color:#fff;line-height:1;}
+.total-circle .tl{font-size:10px;color:rgba(255,255,255,.7);}
+.cv-score-list{display:flex;flex-direction:column;gap:8px;}
+.cv-score-item{display:flex;align-items:center;gap:10px;}
+.cv-score-item .bar{width:100px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+.cv-score-item .bar-fill{height:100%;border-radius:3px;}
+.cv-score-item .lbl{font-size:11px;color:rgba(255,255,255,.6);min-width:70px;}
+.cv-score-item .val{font-size:12px;font-weight:700;color:#fff;min-width:36px;}
+
+.cv-card{margin-top:36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.cv-field label{display:block;font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;}
+.cv-field .val{font-size:14px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;}
+.cv-field .val.anon{font-style:italic;color:rgba(255,255,255,.6);font-size:13px;}
+.cv-bottom{padding:28px 52px;display:flex;align-items:flex-end;justify-content:space-between;}
+.cv-note{font-size:10px;color:rgba(255,255,255,.22);line-height:1.9;}
+.partner-pill{background:rgba(42,122,74,.25);border:1.5px solid rgba(42,122,74,.5);border-radius:10px;padding:10px 18px;text-align:center;}
+.partner-pill .pp-v{font-size:14px;font-weight:700;color:#A0F0C0;display:block;}
+.partner-pill .pp-l{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:.08em;margin-top:3px;display:block;}
+
+/* ── 내지 ── */
+.inner{min-height:297mm;display:flex;flex-direction:column;}
+.pg-top-bar{height:4px;}
+.pg-top-bar.c1{background:linear-gradient(90deg,var(--c1),#4A95D6);}
+.pg-top-bar.c2{background:linear-gradient(90deg,var(--c2),#4AAABA);}
+.pg-top-bar.c3{background:linear-gradient(90deg,var(--c3),#9B6FC0);}
+.pg-top-bar.c4{background:linear-gradient(90deg,var(--c4),#E8B040);}
+.pg-hd{padding:18px 44px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;}
+.pg-hd .logo-t{font-family:'Noto Serif KR',serif;font-size:13px;color:var(--navy);opacity:.5;}
+.pg-hd .meta{font-size:10px;color:var(--lt);text-align:right;line-height:1.7;}
+.pg-hd .meta strong{color:var(--navy);}
+.pg-body{padding:24px 44px 32px;flex:1;}
+.pg-ft{padding:11px 44px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;}
+.pg-ft-note{font-size:9px;color:var(--lt);letter-spacing:.04em;}
+.pg-num{font-size:10px;font-weight:700;color:var(--lt);}
+
+/* ── 코스 헤더 ── */
+.course-hd{border-radius:10px 10px 0 0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;}
+.course-hd.c1{background:linear-gradient(135deg,#1A3C6B,#2E75B6);}
+.course-hd.c2{background:linear-gradient(135deg,#1A5A5A,#2A8A8A);}
+.course-hd.c3{background:linear-gradient(135deg,#4A2A7A,#7B4FA0);}
+.course-hd.c4{background:linear-gradient(135deg,#7A4A10,#C8922A);}
+.course-hd h3{color:#fff;font-size:14px;font-weight:700;}
+.course-hd p{color:rgba(255,255,255,.55);font-size:11px;margin-top:2px;}
+.course-hd .max{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:15px;white-space:nowrap;}
+
+.course-body{border:1px solid var(--rule);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:16px;}
+
+/* ── 평가 테이블 ── */
+.et{width:100%;border-collapse:collapse;font-size:12px;}
+.et thead tr{background:#F5F8FC;}
+.et th{padding:8px 12px;font-size:9px;font-weight:700;color:var(--lt);letter-spacing:.08em;text-align:left;border-bottom:1px solid var(--rule);}
+.et td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top;}
+.et tr:last-child td{border-bottom:none;}
+.item-name{font-weight:600;color:var(--navy);font-size:12.5px;}
+.item-desc{font-size:10px;color:var(--lt);margin-top:2px;line-height:1.5;}
+.score-badge{display:inline-block;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex-shrink:0;}
+.s-full{background:#2A7A4A;}
+.s-good{background:var(--blue);}
+.s-mid{background:var(--gold);}
+.score-max{font-size:10px;color:var(--lt);margin-top:3px;text-align:center;}
+.comment-val{font-size:12px;color:var(--gray);line-height:1.7;font-style:italic;}
+
+/* 소계 행 */
+.subtotal-row td{background:linear-gradient(135deg,#EBF3FB,#F0F8F5)!important;font-weight:700;border-top:2px solid var(--rule);}
+.st-label{color:var(--navy);font-size:13px;}
+.st-val{font-size:20px;font-weight:900;color:var(--navy);text-align:center;}
+
+/* ── 코멘트 박스 ── */
+.co{border-radius:8px;padding:11px 15px;margin:10px 0 0;display:flex;gap:9px;}
+.co.nb{background:#EBF3FB;border-left:3px solid var(--blue);}
+.co.tl{background:#EAF5F5;border-left:3px solid var(--teal);}
+.co.gd{background:#FBF4E8;border-left:3px solid var(--gold);}
+.co.gn{background:#EAF4EE;border-left:3px solid var(--green);}
+.co-ico{font-size:15px;flex-shrink:0;margin-top:1px;}
+.co-txt{font-size:12px;color:var(--ink);line-height:1.75;}
+.co-txt strong{color:var(--navy);}
+
+/* ── 최종 결과 ── */
+.final-wrap{background:linear-gradient(135deg,#0D2447,#1A3C6B);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.final-top{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);}
+.final-top h3{color:#fff;font-size:16px;font-weight:700;}
+.final-circle{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#E8B040);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(200,146,42,.4);}
+.final-circle .fv{font-size:24px;font-weight:900;color:#fff;line-height:1;}
+.final-circle .fl{font-size:9px;color:rgba(255,255,255,.7);}
+.final-body{padding:22px 28px;}
+.score-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.ss-item{background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;}
+.ss-item .sv{font-size:20px;font-weight:900;margin-bottom:2px;}
+.ss-item .sm{font-size:9px;color:rgba(255,255,255,.4);}
+.ss-item .slb{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:6px;}
+.grade-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);}
+.gs-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.12em;margin-bottom:6px;}
+.grade-disp{font-size:28px;font-weight:900;color:#A0F0C0;}
+.grade-desc{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;}
+.partner-box{background:rgba(42,122,74,.2);border:1.5px solid rgba(42,122,74,.4);border-radius:10px;padding:12px 16px;}
+.partner-box .pt{font-size:11px;font-weight:700;color:#A0F0C0;margin-bottom:5px;}
+.partner-box .pv{font-size:13px;color:#fff;font-weight:600;}
+.final-comment{margin-top:14px;}
+.final-comment label{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.12em;display:block;margin-bottom:7px;}
+.final-comment-val{font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.85;font-style:italic;background:rgba(255,255,255,.06);border-radius:8px;padding:13px 16px;}
+
+/* ── 워터마크 & 버튼 ── */
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:80px;font-weight:900;color:rgba(26,60,107,.04);white-space:nowrap;pointer-events:none;z-index:1000;letter-spacing:.1em;}
+.no-print{position:fixed;bottom:24px;right:24px;z-index:99;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.btn-p{background:var(--navy);color:#fff;border:none;padding:12px 22px;border-radius:40px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(26,60,107,.35);display:flex;align-items:center;gap:7px;transition:all .2s;}
+.btn-p:hover{background:var(--blue);transform:translateY(-2px);}
+.sample-note{background:rgba(212,98,42,.9);color:#fff;font-size:11px;font-weight:700;padding:8px 16px;border-radius:20px;text-align:center;}
+
+@media print{
+  body{background:#fff;}
+  .page{margin:0;box-shadow:none;width:100%;}
+  .no-print{display:none!important;}
+  .watermark{display:block;}
+  .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .course-hd{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .final-wrap{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .s-full,.s-good,.s-mid{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{margin:8mm;size:A4;}
+}
+</style>
+</head>
+<body>
+
+<div class="watermark">SAMPLE</div>
+
+<!-- ════════ COVER ════════ -->
+<div class="page">
+<div class="cover">
+  <div class="cv-top">
+    <div class="cv-logo">Liter Stella<span>TIME FOR ORIGINAL CLASSIC</span></div>
+    <div class="cv-badge">SAMPLE · 익명 처리</div>
+  </div>
+  <div class="cv-main">
+    <div class="cv-ey"><span>SPECIAL 코칭 · 파트너 강독가 선발</span></div>
+    <div class="cv-title">
+      <span class="en">Partner Reader Selection · Final Evaluation</span>
+      <span class="ko1">파트너 원서 강독가</span>
+      <span class="ko2">선발 평가표</span>
+    </div>
+
+    <div class="cv-total">
+      <div class="total-circle">
+        <div class="tv">91</div>
+        <div class="tl">/ 100점</div>
+      </div>
+      <div class="cv-score-list">
+        <div class="cv-score-item">
+          <span class="lbl">📘 코스 1</span>
+          <div class="bar"><div class="bar-fill" style="width:90%;background:var(--c1);"></div></div>
+          <span class="val">18/20</span>
+        </div>
+        <div class="cv-score-item">
+          <span class="lbl">👥 코스 2</span>
+          <div class="bar"><div class="bar-fill" style="width:90%;background:var(--c2);"></div></div>
+          <span class="val">18/20</span>
+        </div>
+        <div class="cv-score-item">
+          <span class="lbl">🎯 코스 3</span>
+          <div class="bar"><div class="bar-fill" style="width:88%;background:var(--c3);"></div></div>
+          <span class="val">35/40</span>
+        </div>
+        <div class="cv-score-item">
+          <span class="lbl">🌟 졸업 작품</span>
+          <div class="bar"><div class="bar-fill" style="width:100%;background:var(--c4);"></div></div>
+          <span class="val">20/20</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-card">
+      <div class="cv-field"><label>수강생</label><div class="val anon">Kim ○○ (익명)</div></div>
+      <div class="cv-field"><label>강독 원서</label><div class="val">Anne of Green Gables</div></div>
+      <div class="cv-field"><label>평가일</label><div class="val">2024. 09. 20</div></div>
+    </div>
+  </div>
+  <div class="cv-bottom">
+    <div class="cv-note">평가자: 스텔라 · Liter Stella<br>내부 평가 문서 · 익명 샘플용 재구성</div>
+    <div class="partner-pill">
+      <span class="pp-v">✅ 파트너 강독가 선발</span>
+      <span class="pp-l">91점 · S등급</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 2: 코스 1·2 ════════ -->
+<div class="page">
+<div class="inner">
+  <div class="pg-top-bar c1"></div>
+  <div class="pg-hd">
+    <div class="logo-t">Liter Stella</div>
+    <div class="meta">파트너 강독가 선발 평가표 · SAMPLE<br><strong>Kim ○○ (익명) · 91점</strong></div>
+  </div>
+  <div class="pg-body">
+
+    <!-- 코스 1 -->
+    <div class="course-hd c1">
+      <div><h3>📘 코스 1 — 원서 강독 이론 과정</h3><p>5주 15차시 수강 + 과제 제출 + 개별 커리큘럼 설계</p></div>
+      <div class="max">만점 20점</div>
+    </div>
+    <div class="course-body">
+      <table class="et">
+        <thead><tr><th style="width:35%;">평가 항목</th><th style="width:8%;text-align:center;">배점</th><th style="width:10%;text-align:center;">취득</th><th>스텔라 코멘트</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="item-name">① 수강 성실도</div><div class="item-desc">15차시 전체 수강 완료, 기한 내 완료</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">15차시 전 수강 완료. 보충 수업까지 자발적으로 참여. 단 한 번도 기한을 놓치지 않았습니다.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">② 과제 제출 질</div><div class="item-desc">이론 적용 깊이, 독창성, 구체성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">10점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">9</div><div class="score-max">/10</div></td>
+            <td><div class="comment-val">5주차 감정 흐름 지도가 특히 인상적. 크라센 이론을 자신의 엄마표 경험과 연결하는 방식이 탁월. 문법 설명 과제에서만 학습자 눈높이가 살짝 아쉬움.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">③ 개별 커리큘럼 설계 완성도</div><div class="item-desc">원서 선정 타당성, 대상 명확성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">4</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">대상(초등 자녀 둔 엄마)과 원서(앤) 선정 이유가 매우 설득력 있음. 주 1회 30분 구조도 현실적.</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td class="st-label">📘 코스 1 소계</td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">/20점</td>
+            <td class="st-val">18</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 코스 2 -->
+    <div class="course-hd c2">
+      <div><h3>👥 코스 2 — 그룹 강독 코칭</h3><p>Zoom 3회 릴레이 강독 실습 + 그룹 피드백</p></div>
+      <div class="max">만점 20점</div>
+    </div>
+    <div class="course-body">
+      <table class="et">
+        <thead><tr><th style="width:35%;">평가 항목</th><th style="width:8%;text-align:center;">배점</th><th style="width:10%;text-align:center;">취득</th><th>스텔라 코멘트</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="item-name">① Zoom 참여도</div><div class="item-desc">3회 출석, 릴레이 강독 실제 참여</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">3회 전 출석. 매번 사전 준비가 되어 있었고 시간 엄수. 채팅방 소통도 가장 적극적.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">② 릴레이 강독 퀄리티</div><div class="item-desc">스토리텔링, 전달력, 문장 설명</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">8점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">7</div><div class="score-max">/8</div></td>
+            <td><div class="comment-val">앤의 감정을 전달하는 방식이 그룹 내 최고 수준. 목소리 톤 자연스럽고 속도 조절도 좋음. 문법 설명은 2회차에서 눈에 띄게 개선됨.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">③ 피드백 수용 및 적용</div><div class="item-desc">공통 피드백 반영, 회차 개선도</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">7점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">6</div><div class="score-max">/7</div></td>
+            <td><div class="comment-val">"설명 전에 감정 먼저" 피드백을 다음 회차에서 바로 반영. 그룹 내 다른 수강생에게도 긍정적 영향을 줌.</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td class="st-label">👥 코스 2 소계</td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">/20점</td>
+            <td class="st-val">18</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="pg-ft">
+    <div class="pg-ft-note">LITER STELLA · SPECIAL 코칭 · 파트너 강독가 선발 평가표 · SAMPLE (익명 재구성)</div>
+    <div class="pg-num">P. 02</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 3: 코스 3 ════════ -->
+<div class="page">
+<div class="inner">
+  <div class="pg-top-bar c3"></div>
+  <div class="pg-hd">
+    <div class="logo-t">Liter Stella</div>
+    <div class="meta">파트너 강독가 선발 평가표 · SAMPLE<br><strong>Kim ○○ (익명) · 91점</strong></div>
+  </div>
+  <div class="pg-body">
+
+    <div class="course-hd c3">
+      <div><h3>🎯 코스 3 — 1:1 개인 코칭 (4회)</h3><p>영상 피드백 + 문서 채점 + 필요시 전화 케어</p></div>
+      <div class="max">만점 40점</div>
+    </div>
+    <div class="course-body">
+      <table class="et">
+        <thead><tr><th style="width:35%;">평가 항목</th><th style="width:8%;text-align:center;">배점</th><th style="width:10%;text-align:center;">취득</th><th>스텔라 코멘트</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="item-name">1회차 · 원서 선정 및 방향 명확성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">1챕터 "Blue Wednesday" pp.1-3 선정, 강독 포인트 3가지 명확히 설정. 방향 설정부터 완성도 높음.</div></td>
+          </tr>
+          <tr style="background:#F8F5FC;">
+            <td colspan="4" style="padding:8px 12px;font-size:10px;font-weight:700;color:#7B4FA0;letter-spacing:.06em;">2회차 영상 피드백</td>
+          </tr>
+          <tr>
+            <td><div class="item-name">준비도</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-good" style="margin:0 auto;">4</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">원서 이해 깊이 탁월. 강독 포인트 준비 충실. 시간 배분만 조금 더 다듬으면 완벽.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">설득력 · 스토리텔링</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">앤의 고독함이 시청자에게 그대로 전달됨. "마치 옆에서 읽어주는 것 같다"는 느낌. 이게 이 분의 최대 강점.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">내용 구성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-good" style="margin:0 auto;">3</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">이야기 흐름은 좋으나 문법 설명 비중이 아직 조금 낮음. 다음 회차에서 밸런스 집중 필요.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">목소리 · 전달력</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">발음 명확하고 목소리 톤이 안정적. 속도를 의식적으로 조금 늦췄더니 감정 전달이 완벽해짐.</div></td>
+          </tr>
+          <tr style="background:#F8F5FC;">
+            <td colspan="4" style="padding:8px 12px;font-size:10px;font-weight:700;color:#7B4FA0;letter-spacing:.06em;">3회차 영상 피드백</td>
+          </tr>
+          <tr>
+            <td><div class="item-name">준비도</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">2회차 피드백을 100% 반영. 보충 예문까지 직접 준비해와서 놀랐습니다.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">설득력 · 스토리텔링</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">감정이입 → 문장 설명 → 이야기 복귀 3단계 흐름이 완성됨. 이미 독립적인 강독가의 수준.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">내용 구성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">4</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">문법 설명 밸런스 대폭 개선. 2회차 대비 확연한 성장. 졸업 작품이 기대됩니다.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">목소리 · 전달력</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">목소리 완성도 최고 수준. 속도·리듬·멈춤 모두 자연스럽고 카메라 앞이 편안해 보임.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">피드백 반영 성장도 (2→3회차)</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">4</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">문법 설명 부분이 회차 간 가장 큰 폭으로 개선됨. 스스로 약점을 정확히 인식하고 보완한 흔적이 역력.</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td class="st-label">🎯 코스 3 소계</td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">/40점</td>
+            <td class="st-val">35</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="co tl">
+      <div class="co-ico">💬</div>
+      <div class="co-txt">
+        <strong>코스 3 종합</strong> — 2회차 피드백 이후 3회차에서의 변화가 인상적입니다. 특히 "설명하기 전에 먼저 느끼게 한다"는 원칙을 몸에 익혔을 때 강독이 완전히 달라졌어요. 이 수강생은 피드백을 흡수하는 속도가 그룹 내 가장 빠릅니다.
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-ft">
+    <div class="pg-ft-note">LITER STELLA · SPECIAL 코칭 · 파트너 강독가 선발 평가표 · SAMPLE (익명 재구성)</div>
+    <div class="pg-num">P. 03</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════ PAGE 4: 졸업 + 종합 결과 ════════ -->
+<div class="page">
+<div class="inner">
+  <div class="pg-top-bar c4"></div>
+  <div class="pg-hd">
+    <div class="logo-t">Liter Stella</div>
+    <div class="meta">파트너 강독가 선발 평가표 · SAMPLE<br><strong>Kim ○○ (익명) · 91점</strong></div>
+  </div>
+  <div class="pg-body">
+
+    <!-- 졸업 작품 -->
+    <div class="course-hd c4">
+      <div><h3>🌟 졸업 작품 — 파트너 강독가 최종 심사</h3><p>20~30분 완성 강독 영상 공개 · 스텔라 특별 심사</p></div>
+      <div class="max">만점 20점</div>
+    </div>
+    <div class="course-body">
+      <table class="et">
+        <thead><tr><th style="width:35%;">평가 항목</th><th style="width:8%;text-align:center;">배점</th><th style="width:10%;text-align:center;">취득</th><th>스텔라 코멘트</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="item-name">① 완성도 (전체 흐름·편집)</div><div class="item-desc">20~30분 강독의 전체적 완성도</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">24분 강독. 도입-전개-마무리 구조 완벽. 챕터별 소제목 자막 삽입으로 가독성 높임. 편집 수준 예상 이상.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">② 강독가 고유 스타일</div><div class="item-desc">차별화된 관점, 이 강독가를 선택해야 하는 이유</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">"엄마의 눈으로 읽는 앤" — 이 콘셉트가 명확하게 자리잡음. 다른 강독가와 확연히 구별되는 색깔. 이미 브랜드가 있습니다.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">③ 공개 후 반응</div><div class="item-desc">SNS 업로드 1주일 반응</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">유튜브 조회수 680 (1주), 댓글 23개, 구독 요청 다수. "아이랑 같이 보고 싶다" 댓글이 15개 이상.</div></td>
+          </tr>
+          <tr>
+            <td><div class="item-name">④ 파트너십 적합성</div><div class="item-desc">리터스텔라 가치관 부합, 장기 파트너십 가능성</div></td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">5점</td>
+            <td style="text-align:center;"><div class="score-badge s-full" style="margin:0 auto;">5</div><div class="score-max">/5</div></td>
+            <td><div class="comment-val">코칭 과정 내내 수강생 케어 마인드가 돋보였고, 리터스텔라가 추구하는 "이야기로 영어를 가르친다"는 철학과 완벽히 맞습니다. 함께하고 싶습니다.</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td class="st-label">🌟 졸업 작품 소계</td>
+            <td style="text-align:center;color:var(--lt);font-size:12px;">/20점</td>
+            <td class="st-val">20</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="co gd" style="margin-bottom:16px;">
+      <div class="co-ico">✍️</div>
+      <div class="co-txt">
+        <strong>졸업 작품 총평 · 파트너 선발 사유</strong><br>
+        졸업 작품을 보는 내내 가슴이 뭉클했습니다. 처음 코스 1 과제에서 감정 흐름 지도를 그려온 그 분이, 이제 24분짜리 완성된 강독 영상으로 앤을 이야기합니다. "엄마의 눈으로 읽는 앤" — 이 콘셉트는 아무도 가르쳐드리지 않았는데 스스로 찾아내셨습니다. 이게 강독가의 자질입니다. 파트너로 함께하게 되어 기쁩니다.
+      </div>
+    </div>
+
+    <!-- 종합 결과 -->
+    <div class="final-wrap">
+      <div class="final-top">
+        <h3>📊 종합 평가 결과</h3>
+        <div class="final-circle"><div class="fv">91</div><div class="fl">/ 100점</div></div>
+      </div>
+      <div class="final-body">
+        <div class="score-summary">
+          <div class="ss-item"><div class="slb" style="color:rgba(100,160,220,.9);">📘 코스 1</div><div class="sv" style="color:#7AB8E8;">18</div><div class="sm">/ 20점</div></div>
+          <div class="ss-item"><div class="slb" style="color:rgba(100,200,200,.9);">👥 코스 2</div><div class="sv" style="color:#7AD8D8;">18</div><div class="sm">/ 20점</div></div>
+          <div class="ss-item"><div class="slb" style="color:rgba(180,140,220,.9);">🎯 코스 3</div><div class="sv" style="color:#C8A8E8;">35</div><div class="sm">/ 40점</div></div>
+          <div class="ss-item"><div class="slb" style="color:rgba(220,180,80,.9);">🌟 졸업 작품</div><div class="sv" style="color:#F0C040;">20</div><div class="sm">/ 20점</div></div>
+        </div>
+        <div class="grade-section">
+          <div>
+            <div class="gs-lbl">종합 등급</div>
+            <div class="grade-disp">S</div>
+            <div class="grade-desc">탁월한 수료 · 파트너 강독가 선발</div>
+          </div>
+          <div>
+            <div class="gs-lbl">파트너 강독가 선발 여부</div>
+            <div class="partner-box">
+              <div class="pt">✅ 파트너 강독가 선발 확정</div>
+              <div class="pv">총점 91점 — 선발 기준(85점) 초과<br>리터스텔라 공식 파트너 강독가</div>
+            </div>
+          </div>
+        </div>
+        <div class="final-comment">
+          <label>스텔라 최종 총평</label>
+          <div class="final-comment-val">이 수강생의 여정은 처음부터 남달랐습니다. 코스 1에서 감정 흐름 지도를 그려왔을 때, 이미 알았습니다. 이야기를 사랑하는 사람이구나. 코스 3에서 피드백을 흡수하고 다음 회차에 바로 반영하는 모습을 보며 확신했습니다. 강독가로서의 자질이 충분합니다. 졸업 작품의 680 조회수는 시작일 뿐입니다. 리터스텔라의 파트너로서 함께 원서 강독 생태계를 만들어가게 되어 진심으로 기쁩니다.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-ft">
+    <div class="pg-ft-note">LITER STELLA · SPECIAL 코칭 · 파트너 강독가 선발 평가표 · SAMPLE (익명 재구성)</div>
+    <div class="pg-num">P. 04</div>
+  </div>
+</div>
+</div>
+
+<!-- 버튼 -->
+<div class="no-print">
+  <div class="sample-note">📊 SAMPLE · 익명 처리된 실제 수료생 평가표</div>
+  <button class="btn-p" onclick="window.print()">🖨️ PDF로 저장</button>
+</div>
+
+</body>
+</html>
