@@ -530,6 +530,10 @@ function copyResult(){
 }
 
 function shareKakao(){
+  if(!Kakao.isInitialized()){
+    Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
+  }
+
   const name  = document.getElementById('res-name').textContent;
   const sub   = document.getElementById('res-sub').textContent;
   const badge = document.getElementById('res-badge').textContent;
@@ -539,7 +543,7 @@ function shareKakao(){
     content: {
       title: `나는 ${badge} ${name}`,
       description: `${sub}\n\n리터스텔라 원서 강독가 적성 검사 결과입니다. 당신의 유형은 무엇인가요?`,
-      imageUrl: 'https://coaching.literstella.co.kr/images/logo-symbol.png',
+      imageUrl: 'https://coaching.literstella.co.kr/images/logo-en.png',
       link: {
         mobileWebUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
         webUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
