@@ -125,6 +125,72 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
   .field-row{grid-template-columns:1fr;}
   .submit-btn{padding:18px 32px;}
 }
+
+/* ── 인쇄 버튼 ── */
+.print-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:14px;font-weight:600;padding:12px 28px;border-radius:40px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:20px;transition:all .2s;}
+.print-btn:hover{background:rgba(255,255,255,.22);}
+
+/* ── 인쇄 미리보기 오버레이 ── */
+.print-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,40,.88);z-index:200;overflow-y:auto;padding:28px 16px;}
+.print-overlay.open{display:block;}
+.print-close-bar{max-width:740px;margin:0 auto 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.print-close-bar span{color:rgba(255,255,255,.6);font-size:13px;}
+.print-action-btns{display:flex;gap:8px;}
+.pab{border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.pab.do-print{background:linear-gradient(135deg,#C8922A,#E8B040);color:#fff;}
+.pab.do-close{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);}
+.pab:hover{opacity:.88;}
+
+/* ── 인쇄 문서 본체 ── */
+.print-doc{max-width:740px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.45);}
+.pd-header{background:linear-gradient(135deg,#0D2447,#1A3C6B);padding:32px 44px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.pd-header-left h1{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3;}
+.pd-header-left p{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.08em;}
+.pd-badge{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;padding:12px 18px;text-align:center;flex-shrink:0;}
+.pd-badge .pb-val{font-size:20px;font-weight:900;color:#F0C040;display:block;line-height:1;}
+.pd-badge .pb-lbl{font-size:9px;color:rgba(255,255,255,.4);display:block;margin-top:4px;letter-spacing:.06em;}
+
+.pd-body{padding:32px 44px;}
+.pd-section{margin-bottom:26px;}
+.pd-sec-title{font-size:10px;font-weight:700;color:#1A3C6B;letter-spacing:.14em;text-transform:uppercase;border-bottom:2px solid #1A3C6B;padding-bottom:6px;margin-bottom:14px;}
+.pd-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;}
+.pd-row.single{grid-template-columns:1fr;}
+.pd-field label{display:block;font-size:9px;font-weight:700;color:#8A9AAA;letter-spacing:.12em;margin-bottom:5px;}
+.pd-field .pf-val{font-size:13.5px;color:#1C2A3A;line-height:1.7;background:#F8FAFE;border-radius:6px;padding:9px 12px;min-height:36px;word-break:break-all;}
+.pd-field .pf-val.long{min-height:60px;}
+.pd-field .pf-val.longer{min-height:80px;}
+
+/* 강독가 선언 카드 */
+.pd-slogan{background:linear-gradient(135deg,#1A3C6B,#2355A0);border-radius:10px;padding:18px 22px;margin:12px 0;}
+.pd-slogan .psl-lbl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:.12em;margin-bottom:8px;}
+.pd-slogan .psl-txt{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.65;font-style:italic;}
+
+/* 의지 레벨 */
+.pd-will{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap;}
+.pd-will-dot{width:26px;height:26px;border-radius:7px;background:#EEF2F8;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#C0CCDA;}
+.pd-will-dot.on{background:linear-gradient(135deg,#1A3C6B,#2E75B6);color:#fff;}
+.pd-will-lbl{font-size:12px;color:#6B7A8D;margin-left:4px;}
+
+/* 서명란 */
+.pd-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:24px;padding-top:20px;border-top:1px solid #E6EDF5;}
+.pd-sign-item{text-align:center;}
+.pd-sign-line{border-top:1.5px solid #C8D6E8;padding-top:8px;font-size:10px;color:#8A9AAA;margin-top:44px;}
+
+.pd-footer{background:#F5F8FC;border-top:1px solid #E6EDF5;padding:16px 44px;display:flex;align-items:center;justify-content:space-between;}
+.pd-footer-l{font-size:10px;color:#A0AABB;line-height:1.7;}
+.pd-footer-r{font-size:11px;font-weight:700;color:#1A3C6B;text-align:right;}
+
+/* ── 실제 인쇄 시 ── */
+@media print{
+  body>*:not(.print-overlay){display:none!important;}
+  .print-overlay{display:block!important;position:static!important;background:none!important;padding:0!important;}
+  .print-close-bar{display:none!important;}
+  .print-doc{box-shadow:none!important;border-radius:0!important;max-width:100%!important;}
+  .pd-header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pd-slogan{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pd-will-dot.on{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{margin:10mm;}
+}
 </style>
 </head>
 <body>
@@ -374,8 +440,119 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
     <li>선발 시 1:1 상담 전화 일정을 잡습니다</li>
     <li>미선발 시에도 정중히 안내 드립니다</li>
   </ul>
+  <button class="print-btn" onclick="openPrint()">🖨️ 지원서 인쇄하기</button>
   <p style="color:rgba(255,255,255,.5);font-size:13px;margin-top:28px;">© 리터스텔라 | 원서 강독가 스텔라</p>
 </div>
+
+<!-- ── 인쇄 미리보기 오버레이 ── -->
+<div class="print-overlay" id="print-overlay">
+  <div class="print-close-bar">
+    <span>🖨️ 지원서 인쇄 미리보기</span>
+    <div class="print-action-btns">
+      <button class="pab do-print" onclick="window.print()">인쇄하기</button>
+      <button class="pab do-close" onclick="closePrint()">닫기</button>
+    </div>
+  </div>
+
+  <div class="print-doc" id="print-doc">
+
+    <!-- 문서 헤더 -->
+    <div class="pd-header">
+      <div class="pd-header-left">
+        <h1>원서 강독 코칭 SPECIAL 3기<br>지원서</h1>
+        <p>LITER STELLA · 제출일: <span id="pd-date"></span></p>
+      </div>
+      <div class="pd-badge">
+        <span class="pb-val">SPECIAL<br>3기</span>
+        <span class="pb-lbl">지원서</span>
+      </div>
+    </div>
+
+    <div class="pd-body">
+
+      <!-- 기본 정보 -->
+      <div class="pd-section">
+        <div class="pd-sec-title">01 · 기본 정보</div>
+        <div class="pd-row">
+          <div class="pd-field"><label>이름</label><div class="pf-val" id="pd-name"></div></div>
+          <div class="pd-field"><label>연락처</label><div class="pf-val" id="pd-phone"></div></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-field"><label>이메일</label><div class="pf-val" id="pd-email"></div></div>
+          <div class="pd-field"><label>총 티칭 경력</label><div class="pf-val" id="pd-exp"></div></div>
+        </div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>영어 티칭 경력 (선택)</label><div class="pf-val" id="pd-careers"></div></div>
+        </div>
+      </div>
+
+      <!-- 원서와 나 -->
+      <div class="pd-section">
+        <div class="pd-sec-title">02 · 원서와 나</div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>인상 깊게 읽은 원서 / 읽고 싶은 원서</label><div class="pf-val long" id="pd-book"></div></div>
+        </div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>원서 강독에서 가장 어려웠던 점</label><div class="pf-val long" id="pd-difficulty"></div></div>
+        </div>
+      </div>
+
+      <!-- 지원 동기 -->
+      <div class="pd-section">
+        <div class="pd-sec-title">03 · 지원 동기와 목표</div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>지원 동기</label><div class="pf-val longer" id="pd-why"></div></div>
+        </div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>코칭 수료 후 1년 뒤 나의 모습</label><div class="pf-val longer" id="pd-vision"></div></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-field">
+            <label>강독가가 되고자 하는 의지</label>
+            <div class="pd-will" id="pd-will"></div>
+          </div>
+          <div class="pd-field"><label>코칭 기대 사항</label><div class="pf-val" id="pd-expect"></div></div>
+        </div>
+      </div>
+
+      <!-- 강독가 선언 -->
+      <div class="pd-section">
+        <div class="pd-sec-title">04 · 나의 강독가 선언</div>
+        <div class="pd-slogan">
+          <div class="psl-lbl">나의 강독가 선언 문장</div>
+          <div class="psl-txt" id="pd-slogan"></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-field"><label>가르칠 주요 대상</label><div class="pf-val" id="pd-target"></div></div>
+          <div class="pd-field"><label>유입 경로</label><div class="pf-val" id="pd-channel"></div></div>
+        </div>
+        <div class="pd-row single">
+          <div class="pd-field"><label>스텔라에게 전하는 말</label><div class="pf-val long" id="pd-message"></div></div>
+        </div>
+      </div>
+
+      <!-- 서명란 -->
+      <div class="pd-sign">
+        <div class="pd-sign-item"><div class="pd-sign-line">지원자 서명</div></div>
+        <div class="pd-sign-item"><div class="pd-sign-line">제출일 확인</div></div>
+        <div class="pd-sign-item"><div class="pd-sign-line">스텔라 확인</div></div>
+      </div>
+
+    </div><!-- /pd-body -->
+
+    <div class="pd-footer">
+      <div class="pd-footer-l">
+        리터스텔라 원서 강독 코칭 SPECIAL 3기<br>
+        coaching.literstella.co.kr
+      </div>
+      <div class="pd-footer-r">
+        지원자: <span id="pd-name-footer"></span><br>
+        제출일: <span id="pd-date-footer"></span>
+      </div>
+    </div>
+
+  </div><!-- /print-doc -->
+</div><!-- /print-overlay -->
 
 <script>
 let willVal = 9;
@@ -522,6 +699,55 @@ function submitForm(){
 
 // init
 updateProgress();
+
+// ── 인쇄 미리보기 ──
+function openPrint(){
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+
+  // 텍스트 채우기
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.textContent = val||'—'; };
+
+  set('pd-name',   document.getElementById('f-name')?.value);
+  set('pd-phone',  document.getElementById('f-phone')?.value);
+  set('pd-email',  document.getElementById('f-email')?.value);
+  set('pd-exp',    document.querySelector('input[name="exp"]:checked')?.value);
+  set('pd-book',   document.getElementById('f-book')?.value);
+  set('pd-difficulty', document.getElementById('f-difficulty')?.value);
+  set('pd-why',    document.getElementById('f-why')?.value);
+  set('pd-vision', document.getElementById('f-vision1')?.value);
+  set('pd-expect', document.getElementById('f-expect')?.value);
+  set('pd-slogan', document.getElementById('f-slogan')?.value || '(선언 문장 미입력)');
+  set('pd-target', document.getElementById('f-target')?.value);
+  set('pd-channel',document.querySelector('input[name="channel"]:checked')?.value);
+  set('pd-message',document.getElementById('f-message')?.value);
+  set('pd-date',   dateStr);
+  set('pd-name-footer', document.getElementById('f-name')?.value);
+  set('pd-date-footer', dateStr);
+
+  // 티칭 경력 체크박스
+  const careers = [...document.querySelectorAll('#career-checks input:checked')].map(e=>e.value);
+  set('pd-careers', careers.length ? careers.join(' · ') : '—');
+
+  // 의지 레벨 도트
+  const willWrap = document.getElementById('pd-will');
+  if(willWrap){
+    let html = '';
+    for(let i=1;i<=10;i++){
+      html += `<div class="pd-will-dot${i<=willVal?' on':''}">${i}</div>`;
+    }
+    html += `<span class="pd-will-lbl">${willLabels[willVal]||''}</span>`;
+    willWrap.innerHTML = html;
+  }
+
+  document.getElementById('print-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePrint(){
+  document.getElementById('print-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
