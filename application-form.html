@@ -583,7 +583,7 @@ function updateSlogan(){
 
 function updateProgress(){
   let done=0;
-  const total=10;
+  const total=13;
   if(document.getElementById('f-name').value.trim()) done++;
   if(document.getElementById('f-phone').value.trim()) done++;
   if(document.getElementById('f-email').value.trim()) done++;
@@ -591,11 +591,13 @@ function updateProgress(){
   if(document.querySelector('input[name="exp"]:checked')) done++;
   if(document.getElementById('f-book').value.length>30) done++;
   if(document.getElementById('f-why').value.length>50) done++;
+  if(document.getElementById('f-vision1')?.value.length>50) done++;
   if(document.getElementById('f-slogan').value.trim()) done++;
   if(document.querySelector('input[name="channel"]:checked')) done++;
-  const agrees=[...document.querySelectorAll('#agree1,#agree2,#agree3,#agree4')];
-  if(agrees.every(a=>a.checked)) done++;
-  
+  if(document.getElementById('agree1')?.checked) done++;
+  if(document.getElementById('agree2')?.checked) done++;
+  if(document.getElementById('agree3')?.checked) done++;
+
   const pct=Math.round((done/total)*100);
   document.getElementById('prog-pct').textContent=pct+'%';
   for(let i=1;i<=5;i++){
