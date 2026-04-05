@@ -287,7 +287,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 원서를 읽은 경험이 없다면, 읽고 싶은 책과 이유를 적어주세요. 정답은 없습니다.</div>
       </div>
       <textarea id="f-book" rows="4" placeholder="예) 《빨강머리 앤》을 처음 읽었을 때, 앤의 상상력이 저에게 큰 위안이 되었습니다..." oninput="countChars(this,'bc1',50,200);updateProgress()"></textarea>
-      <div class="char-count" id="bc1">0 / 200자 이상 권장</div>
+      <div class="char-count" id="bc1">0 / 200자 이상 작성시 진행</div>
     </div>
     <div class="field">
       <div class="mq-box">
@@ -296,7 +296,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 이 고민이 스텔라 코칭의 출발점이 됩니다. 솔직할수록 좋습니다.</div>
       </div>
       <textarea id="f-difficulty" rows="4" placeholder="예) 수강생에게 문법을 어디까지 설명해야 할지 모르겠고, 내 설명이 지루하게 느껴지는 것 같아서..." oninput="countChars(this,'bc2',50,200);updateProgress()"></textarea>
-      <div class="char-count" id="bc2">0 / 200자 이상 권장</div>
+      <div class="char-count" id="bc2">0 / 200자 이상 작성시 진행</div>
     </div>
   </div>
 
@@ -316,7 +316,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 '좋아서'가 아닌, 구체적인 계기가 있을 것입니다. 그 이야기를 들려주세요.</div>
       </div>
       <textarea id="f-why" rows="5" placeholder="예) 15년간 문법과 독해를 가르쳤는데, 수강생들이 영어를 좋아하게 만드는 데 실패하고 있다는 걸 깨달았습니다. 원서가 그 답이라고 생각했습니다..." oninput="countChars(this,'bc3',80,300);updateProgress()"></textarea>
-      <div class="char-count" id="bc3">0 / 300자 이상 권장</div>
+      <div class="char-count" id="bc3">0 / 300자 이상 작성시 진행</div>
     </div>
     <div class="field">
       <div class="mq-box">
@@ -325,7 +325,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 막연하게 생각했던 것을 글로 쓰면 훨씬 강력한 의지가 됩니다.</div>
       </div>
       <textarea id="f-vision1" rows="4" placeholder="예) 매주 원서 강독 유튜브를 올리고, 북클럽 10명을 운영하며, 리터스텔라 워크북의 공동저자로 이름이 올라가 있습니다..." oninput="countChars(this,'bc4',80,300);updateProgress();updateVision()"></textarea>
-      <div class="char-count" id="bc4">0 / 300자 이상 권장</div>
+      <div class="char-count" id="bc4">0 / 300자 이상 작성시 진행</div>
     </div>
     <div class="field">
       <label>지금 이 순간, 강독가가 되고자 하는 의지의 크기는?<span class="req">*</span></label>
@@ -373,7 +373,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 코스 3 1:1 코칭에서 실제로 이 대상을 위한 강독 영상을 제작합니다.</div>
       </div>
       <textarea id="f-target" rows="4" placeholder="예) 40~50대 엄마들. 자녀와 함께 원서를 읽고 싶지만 방법을 모르는 분들에게 원서 강독이 자녀와의 소통 방법이 될 거라 생각합니다..." oninput="countChars(this,'bc5',50,200);updateProgress()"></textarea>
-      <div class="char-count" id="bc5">0 / 200자 이상 권장</div>
+      <div class="char-count" id="bc5">0 / 200자 이상 작성시 진행</div>
     </div>
     <div class="field">
       <div class="mq-box">
@@ -382,7 +382,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
         <div class="mq-hint">💡 스텔라가 이 답변을 직접 읽고, 상담 전화에서 이 부분을 가장 먼저 물어봅니다.</div>
       </div>
       <textarea id="f-expect" rows="3" placeholder="예) 내 강독 영상을 직접 봐주고 어디가 어떻게 좋고 무엇을 고쳐야 하는지 콕 집어 말해주는 피드백이 가장 기대됩니다..." oninput="countChars(this,'bc6',30,150);updateProgress()"></textarea>
-      <div class="char-count" id="bc6">0 / 150자 이상 권장</div>
+      <div class="char-count" id="bc6">0 / 150자 이상 작성시 진행</div>
     </div>
   </div>
 
@@ -568,7 +568,7 @@ function setWill(v){
 function countChars(el,countId,min,rec){
   const len=el.value.length;
   const el2=document.getElementById(countId);
-  el2.textContent=`${len} / ${rec}자 이상 권장`;
+  el2.textContent=`${len} / ${rec}자 이상 작성시 진행`;
   if(len>=rec) el2.className='char-count ok';
   else if(len>=min) el2.className='char-count warn';
   else el2.className='char-count';
