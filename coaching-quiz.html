@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 <script>
 firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
 const db=firebase.firestore();
@@ -116,6 +115,57 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
 
 <!-- ── INTRO ── -->
 <div class="screen active" id="intro">
+
+  <!-- ── 궁금증 유발 그래픽 배너 ── -->
+  <div style="width:100%;background:linear-gradient(135deg,#0D2447,#1A3C6B);padding:36px 24px 0;text-align:center;position:relative;overflow:hidden;">
+    <!-- 배경 장식 -->
+    <div style="position:absolute;top:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(200,146,42,.07);"></div>
+    <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(46,117,182,.1);"></div>
+
+    <div style="position:relative;z-index:1;max-width:480px;margin:0 auto;">
+      <!-- 유형 카드 4개 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">
+        <div style="background:rgba(46,117,182,.25);border:1.5px solid rgba(46,117,182,.5);border-radius:12px;padding:12px 6px;text-align:center;">
+          <div style="font-size:26px;margin-bottom:6px;">🌟</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.4;">스토리<br>텔러형</div>
+        </div>
+        <div style="background:rgba(42,138,138,.25);border:1.5px solid rgba(42,138,138,.5);border-radius:12px;padding:12px 6px;text-align:center;">
+          <div style="font-size:26px;margin-bottom:6px;">🔍</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.4;">분석<br>가형</div>
+        </div>
+        <div style="background:rgba(200,146,42,.25);border:1.5px solid rgba(200,146,42,.5);border-radius:12px;padding:12px 6px;text-align:center;">
+          <div style="font-size:26px;margin-bottom:6px;">💛</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.4;">공감<br>가형</div>
+        </div>
+        <div style="background:rgba(106,63,160,.25);border:1.5px solid rgba(106,63,160,.5);border-radius:12px;padding:12px 6px;text-align:center;">
+          <div style="font-size:26px;margin-bottom:6px;">🧭</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.4;">탐험<br>가형</div>
+        </div>
+      </div>
+
+      <!-- 질문 -->
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:18px 20px;margin-bottom:16px;">
+        <p style="font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.08em;margin-bottom:8px;">나는 어떤 수업 스타일일까?</p>
+        <p style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.5;">
+          이야기로 가르치는가,<br>
+          <span style="color:#F0C040;">분석으로 설득하는가?</span>
+        </p>
+      </div>
+
+      <!-- 예시 결과 티저 -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 14px;font-size:11px;color:rgba(255,255,255,.55);">🌟 공감형 강독 스타일</div>
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 14px;font-size:11px;color:rgba(255,255,255,.55);">🔍 분석 + 스토리텔링 복합</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding-bottom:28px;">
+        <div style="width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1.5s infinite;"></div>
+        <p style="font-size:12px;color:rgba(255,255,255,.5);">10문항 · 3분 · 4가지 유형 진단</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기존 intro-inner -->
   <div class="intro-inner">
     <div class="intro-badge">LITER STELLA × 원서 강독</div>
     <div class="book-icons">📖 ✦ 📚</div>
@@ -179,6 +229,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--i
       <div class="score-title">4가지 강독 역량 분포</div>
       <div id="score-bars"></div>
     </div>
+
+    <!-- 유형별 코칭 방향 -->
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-left:3px solid var(--gold);border-radius:10px;padding:16px 18px;margin:0 24px 24px;">
+      <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.12em;margin-bottom:8px;">✦ 코스 3에서 스텔라의 집중 코칭 방향</div>
+      <p style="font-size:13.5px;color:rgba(255,255,255,.85);line-height:1.8;margin:0;" id="res-coaching"></p>
+    </div>
+
     <div class="cta-box">
       <h3 id="res-cta-title">이 강점, 스텔라 코칭으로<br>완성해 보세요</h3>
       <p id="res-cta-desc">SPECIAL 3기는 10명 지원, 5명만 선발합니다.<br>지원서 제출 후 스텔라가 직접 연락드립니다.</p>
@@ -303,6 +360,7 @@ const types = {
     badge:"🌟",
     color:"linear-gradient(135deg,#2E75B6,#1A3C6B)",
     desc:"당신은 원서를 읽을 때 이야기 안으로 먼저 들어갑니다. 문장 하나에서 장면을 그리고, 속도와 리듬으로 수강생을 이야기 속으로 데려가는 것이 당신의 가장 큰 강점입니다. 원서 강독을 독해 수업이 아닌 '체험'으로 만드는 강독가입니다. 스텔라가 가르치는 '강독가는 스토리텔러'라는 철학이 당신에게 가장 잘 맞습니다.",
+    coaching:"코스 3에서 스텔라가 집중할 포인트 — 이미 있는 이야기 감각에 문법 설명의 정확성을 더하는 것. 감성과 분석의 균형이 잡히는 순간 강독이 완성됩니다.",
     traits:[
       {label:"핵심 강점",val:"이야기 몰입도 · 리듬감"},
       {label:"어울리는 수강생",val:"원서가 처음인 입문자"},
@@ -317,6 +375,7 @@ const types = {
     badge:"🔍",
     color:"linear-gradient(135deg,var(--teal),#1A5A5A)",
     desc:"당신은 문장 구조를 직관적으로 분석합니다. 문법 포인트를 정확하게 짚고 어휘의 뉘앙스를 풀어주는 것이 당신의 강점입니다. 수강생에게 '이 문장이 왜 이렇게 쓰이는지' 명확하게 설명할 수 있는 강독가입니다. 스텔라의 문법 워크샵이 특히 당신의 무기를 날카롭게 갈아줄 것입니다.",
+    coaching:"코스 3에서 스텔라가 집중할 포인트 — 분석이 먼저 나오는 습관 앞에 감정이입을 하나 넣는 것. 설명 전에 장면을 먼저 느끼게 하는 순서만 바꿔도 강독이 달라집니다.",
     traits:[
       {label:"핵심 강점",val:"문법 분석 · 정확한 설명"},
       {label:"어울리는 수강생",val:"독해력 향상 목표 학습자"},
@@ -331,6 +390,7 @@ const types = {
     badge:"💛",
     color:"linear-gradient(135deg,#C8922A,#A06A20)",
     desc:"당신은 수강생의 마음 상태를 먼저 읽습니다. 영어가 두렵거나 포기했던 사람들을 다시 원서 앞으로 데려오는 것이 당신의 특별한 능력입니다. '선생님 덕분에 영어가 좋아졌어요'라는 말을 가장 많이 듣게 될 강독가입니다. 스텔라의 학습자 문학 교수법이 당신의 공감력에 체계를 더해줄 것입니다.",
+    coaching:"코스 3에서 스텔라가 집중할 포인트 — 공감력은 이미 충분합니다. 거기에 이론적 기반과 문법 설명 루틴을 얹는 것. 따뜻함과 체계가 만나면 수강생이 떠나지 않습니다.",
     traits:[
       {label:"핵심 강점",val:"학습자 공감 · 심리적 안정"},
       {label:"어울리는 수강생",val:"영어 두려움이 있는 학습자"},
@@ -345,6 +405,7 @@ const types = {
     badge:"🧭",
     color:"linear-gradient(135deg,#2A5A8A,#1A3C5A)",
     desc:"당신은 원서를 탐험합니다. 작가의 의도, 숨겨진 상징, 문화적 맥락을 발굴해서 수강생에게 새로운 세계를 열어주는 것이 당신의 강점입니다. 다양한 원서를 발굴하고 소개하는 독보적인 큐레이터형 강독가가 될 것입니다. 스텔라의 문학 이론과 서사 분석 수업이 당신의 탐험에 나침반이 되어줄 것입니다.",
+    coaching:"코스 3에서 스텔라가 집중할 포인트 — 통찰은 넘칩니다. 그것을 수강생에게 전달하는 속도와 리듬을 다듬는 것. 아는 것을 쉽게 말하는 법이 마지막 완성입니다.",
     traits:[
       {label:"핵심 강점",val:"문학적 통찰 · 원서 발굴"},
       {label:"어울리는 수강생",val:"지적 호기심 많은 중급자"},
@@ -448,6 +509,14 @@ function showResult(){
   document.getElementById('res-sub').textContent = t.sub;
   document.getElementById('res-desc').textContent = t.desc;
 
+  // 코칭 방향 표시
+  const coachingEl = document.getElementById('res-coaching');
+  if(coachingEl) coachingEl.textContent = t.coaching||'';
+
+  // 지원서 링크 연결
+  const applyBtn = document.querySelector('.cta-apply');
+  if(applyBtn) applyBtn.href = 'https://coaching.literstella.co.kr/application-form.html';
+
   const tr = document.getElementById('res-traits');
   tr.innerHTML = t.traits.map(tt=>`<div class="trait"><div class="trait-label">${tt.label}</div><p>${tt.val}</p></div>`).join('');
 
@@ -465,7 +534,7 @@ function showResult(){
 
   document.getElementById('res-cta-desc').textContent = t.cta + '\n\nSPECIAL 3기는 10명 지원, 5명만 선발합니다.';
 
-  // ── Firebase 저장 + 이메일 알림 ──
+  // ── Firebase 저장 ──
   sessionStorage.setItem('quizType', t.name);
   db.collection('quiz_results').add({
     typeName: t.name,
@@ -476,30 +545,6 @@ function showResult(){
     scores: {...typeCounts},
     name: '',
     submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{
-    db.collection('mail').add({
-      to: ['literbryanbae@gmail.com','jayne0609@gmail.com'],
-      message: {
-        subject: `[리터스텔라] 새 적성검사 결과 — ${t.badge} ${t.name}`,
-        html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
-          <div style="background:#1A3C6B;padding:20px;text-align:center;">
-            <h2 style="color:#fff;margin:0;font-size:18px;">📊 새 적성검사 결과가 등록됐습니다</h2>
-          </div>
-          <div style="padding:24px;background:#f9f9f9;text-align:center;">
-            <div style="font-size:48px;margin-bottom:8px;">${t.badge}</div>
-            <div style="font-size:20px;font-weight:700;color:#1A3C6B;">${t.name}</div>
-            <div style="font-size:14px;color:#666;margin-top:4px;">${t.sub}</div>
-            <div style="margin-top:20px;">
-              <a href="https://coaching.literstella.co.kr/admin/dashboard.html"
-                 style="display:inline-block;background:#1A3C6B;color:#fff;padding:12px 28px;text-decoration:none;font-size:14px;font-weight:700;border-radius:4px;">
-                관리자 대시보드에서 확인하기 →
-              </a>
-            </div>
-          </div>
-          <div style="padding:14px;text-align:center;font-size:11px;color:#999;">© 리터스텔라 Liter Stella</div>
-        </div>`
-      }
-    }).catch(e=>console.warn('Mail error:', e));
   }).catch(e=>console.warn('Quiz save error:', e));
 
   showScreen('result');
@@ -523,55 +568,10 @@ function restartQuiz(){
 
 function copyResult(){
   const name = document.getElementById('res-name').textContent;
-  const sub  = document.getElementById('res-sub').textContent;
-  navigator.clipboard.writeText(
-    `나의 원서 강독가 유형: ${name} — ${sub}\n리터스텔라 SPECIAL 3기 지원하기\nhttps://coaching.literstella.co.kr/coaching-quiz.html`
-  ).then(()=>alert('결과가 복사되었습니다!'));
+  const sub = document.getElementById('res-sub').textContent;
+  navigator.clipboard.writeText(`나의 원서 강독가 유형: ${name} — ${sub}\n리터스텔라 SPECIAL 3기 지원하기`).then(()=>alert('결과가 복사되었습니다!'));
 }
-
-function shareKakao(){
-  if(!Kakao.isInitialized()){
-    Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
-  }
-
-  const name  = document.getElementById('res-name').textContent;
-  const sub   = document.getElementById('res-sub').textContent;
-  const badge = document.getElementById('res-badge').textContent;
-
-  Kakao.Share.sendDefault({
-    objectType: 'feed',
-    content: {
-      title: `나는 ${badge} ${name}`,
-      description: `${sub}\n\n리터스텔라 원서 강독가 적성 검사 결과입니다. 당신의 유형은 무엇인가요?`,
-      imageUrl: 'https://coaching.literstella.co.kr/images/logo-en.png',
-      link: {
-        mobileWebUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
-        webUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
-      },
-    },
-    buttons: [
-      {
-        title: '나도 검사하기',
-        link: {
-          mobileWebUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
-          webUrl: 'https://coaching.literstella.co.kr/coaching-quiz.html',
-        },
-      },
-      {
-        title: 'SPECIAL 3기 지원하기',
-        link: {
-          mobileWebUrl: 'https://coaching.literstella.co.kr/application-form.html',
-          webUrl: 'https://coaching.literstella.co.kr/application-form.html',
-        },
-      },
-    ],
-  });
-}
-
-// 카카오 초기화 — 단 1회
-window.addEventListener('DOMContentLoaded', ()=>{
-  Kakao.init('a3095ac59a08bcdef5f4a0a2f6c41e9c');
-});
+function shareKakao(){ alert('카카오 SDK 연동 후 활성화됩니다'); }
 </script>
 </body>
 </html>
