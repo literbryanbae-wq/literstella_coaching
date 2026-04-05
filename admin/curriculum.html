@@ -76,6 +76,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
 .save-btn:disabled{opacity:.6;cursor:not-allowed;}
 /* TOAST */
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:14px;padding:12px 24px;border-radius:30px;display:none;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+/* 인쇄 오버레이 */
+.print-ov{display:none;position:fixed;inset:0;background:rgba(10,20,40,.88);z-index:300;overflow-y:auto;padding:24px 16px;}
+.print-ov-bar{max-width:780px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.print-ov-bar span{color:rgba(255,255,255,.65);font-size:13px;}
+.print-ov-btns{display:flex;gap:8px;}
+.pob{border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.pob.do{background:linear-gradient(135deg,#C8922A,#E8B040);color:#fff;}
+.pob.cl{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);}
+.print-ov-doc{max-width:780px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+@media print{
+  body>*:not(.print-ov){display:none!important;}
+  .print-ov{display:block!important;position:static!important;background:none!important;padding:0!important;}
+  .print-ov-bar{display:none!important;}
+  .print-ov-doc{box-shadow:none!important;border-radius:0!important;max-width:100%!important;}
+  @page{margin:8mm;size:A4;}
+}
 @media(max-width:900px){.wrap{grid-template-columns:1fr;}.list-card{position:static;}}
 </style>
 </head>
@@ -207,6 +223,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- 인쇄 미리보기 오버레이 -->
+<div class="print-ov" id="print-overlay-cur">
+  <div class="print-ov-bar">
+    <span>🖨️ 커리큘럼 설계서 · 인쇄 미리보기</span>
+    <div class="print-ov-btns">
+      <button class="pob do" onclick="window.print()">인쇄 / PDF 저장</button>
+      <button class="pob cl" onclick="document.getElementById('print-overlay-cur').style.display='none';document.body.style.overflow='';">닫기</button>
+    </div>
+  </div>
+  <div class="print-ov-doc" id="print-content-cur"></div>
+</div>
 
 <script>
 const ADMINS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
@@ -340,7 +368,176 @@ function newDoc(){
   document.getElementById('save-note').textContent='저장되지 않은 문서';
   renderList();
 }
-function printDoc(){window.print();}
+function printDoc(){
+  // 수강생명
+  const appId=document.getElementById('f-applicant').value;
+  const a=apps.find(x=>x.id===appId);
+  const name=a?.name||document.getElementById('f-applicant').options[document.getElementById('f-applicant').selectedIndex]?.text||'수강생';
+  const book=document.getElementById('f-book').value||'—';
+  const date=document.getElementById('f-date').value||'';
+  const c1date=document.getElementById('f-c1date').value||'';
+  const c1total=document.getElementById('c1-total').textContent||'0';
+  const c1grade=document.getElementById('c1-grade').textContent||'';
+  const direction=document.getElementById('f-direction').value||'—';
+  const slogan=document.getElementById('f-slogan').value||'—';
+  const cheering=document.getElementById('f-cheering').value||'—';
+  const target=document.getElementById('f-target').value||'—';
+  const channel=document.getElementById('f-channel').value||'—';
+  const c1comment=document.getElementById('f-c1comment').value||'—';
+  const strengths=[...document.querySelectorAll('input[id^="s"]:checked')].map(e=>e.value);
+  const improvements=[...document.querySelectorAll('input[id^="r"]:checked')].map(e=>e.value);
+  const lectureType=document.querySelector('input[name="ty"]:checked')?.value||'—';
+  const partnerPot=document.querySelector('input[name="pp"]:checked')?.value||'—';
+
+  // 주차별 과제
+  const weeks=[];
+  const wLabels=['문학이론','교수법','문법분석','문장분석','서사분석'];
+  for(let i=1;i<=5;i++){
+    weeks.push({
+      content:document.getElementById('w'+i+'-content').value||'—',
+      comment:document.getElementById('w'+i+'-comment').value||'—',
+      score:document.getElementById('w'+i+'-score').value||'—',
+      label:wLabels[i-1]
+    });
+  }
+
+  // 점수 컬러
+  const sc=s=>{const n=parseInt(s);return n>=4?'#2A7A4A':n>=3?'#2E75B6':n>=2?'#C8922A':'#B03030';};
+  const fmtD=d=>{if(!d)return'—';const p=d.split('-');return p[0]+'.'+p[1]+'.'+p[2];};
+
+  const html=`
+  <div style="font-family:'Noto Sans KR',sans-serif;color:#1C1C2C;background:#fff;">
+
+  <!-- 커버 -->
+  <div style="min-height:297mm;background:linear-gradient(160deg,#0D2447,#1A3C6B);display:flex;flex-direction:column;page-break-after:always;">
+    <div style="padding:44px 52px 0;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Noto Serif KR',serif;color:rgba(255,255,255,.9);font-size:18px;font-weight:700;">Liter Stella<span style="display:block;font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.2em;font-weight:300;margin-top:2px;font-family:'Noto Sans KR',sans-serif;">TIME FOR ORIGINAL CLASSIC</span></div>
+      <div style="background:rgba(212,98,42,.2);border:1px solid rgba(212,98,42,.4);color:rgba(212,98,42,.9);font-size:9px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.12em;">SPECIAL · 코칭 문서</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 52px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;"><div style="width:24px;height:2px;background:#D4622A;"></div><span style="font-size:10px;font-weight:700;color:rgba(212,98,42,.85);letter-spacing:.18em;">코스 1 수료 후 개인 발급</span></div>
+      <div style="font-family:'Noto Serif KR',serif;color:#fff;margin-bottom:20px;">
+        <span style="font-size:14px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px;font-style:italic;">Individual Coaching Curriculum</span>
+        <span style="font-size:38px;font-weight:700;display:block;">개별 코칭</span>
+        <span style="font-size:20px;font-weight:300;color:rgba(255,255,255,.5);display:block;margin-top:4px;">커리큘럼 설계서</span>
+      </div>
+      <div style="margin-top:32px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">수강생</div><div style="font-size:16px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${name}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">설계 완료일</div><div style="font-size:16px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${fmtD(date)}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">코스 3 원서</div><div style="font-size:16px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${book}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">코스 1 총점</div><div style="font-size:16px;font-weight:600;color:#F0C040;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${c1total}점 / 20점 ${c1grade}</div></div>
+      </div>
+    </div>
+    <div style="padding:28px 52px;display:flex;align-items:flex-end;justify-content:space-between;">
+      <div style="font-size:10px;color:rgba(255,255,255,.22);line-height:1.9;">설계자: 스텔라 · Liter Stella<br>내부 코칭 문서 · 수강생 전달용</div>
+      <div style="width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(255,255,255,.25);text-align:center;line-height:1.6;">LITER<br>STELLA</div>
+    </div>
+  </div>
+
+  <!-- 코스1 평가 -->
+  <div style="min-height:297mm;display:flex;flex-direction:column;page-break-after:always;">
+    <div style="height:4px;background:linear-gradient(90deg,#1A3C6B,#2A8A8A);"></div>
+    <div style="padding:18px 44px 14px;border-bottom:1px solid #E0E0D8;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Noto Serif KR',serif;font-size:13px;color:#1A3C6B;opacity:.5;">Liter Stella</div>
+      <div style="font-size:10px;color:#9AAABB;text-align:right;line-height:1.7;">개별 코칭 커리큘럼 설계서<br><strong style="color:#1A3C6B;">${name}</strong></div>
+    </div>
+    <div style="padding:24px 44px 32px;flex:1;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+        <div style="width:28px;height:28px;background:#1A3C6B;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <div><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:#1A3C6B;">코스 1 과제 평가 결과</div><div style="font-size:11px;color:#9AAABB;margin-top:2px;">5주 주차별 과제 평가 · 코스 1 수강 완료일: ${fmtD(c1date)}</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <div style="background:linear-gradient(135deg,#FBF4E8,#FDF9F2);border:1.5px solid #C8922A;border-radius:10px;padding:10px 18px;text-align:center;"><div style="font-size:22px;font-weight:900;color:#B8820A;">${c1total}</div><div style="font-size:9px;color:#9AAABB;margin-top:2px;">/ 20점</div></div>
+        <div style="background:#F8FAFE;border:1.5px solid #E6EDF5;border-radius:10px;padding:10px 18px;text-align:center;"><div style="font-size:18px;font-weight:900;color:#1A3C6B;">${c1grade.replace('(탁월)','').replace('(우수)','').replace('(양호)','').replace('(보통)','').replace('(보완필요)','').trim()||'—'}</div><div style="font-size:9px;color:#9AAABB;margin-top:2px;">등급</div></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;">
+        <thead><tr style="background:#1A3C6B;">
+          <th style="padding:8px 11px;font-size:9px;font-weight:700;color:rgba(255,255,255,.7);text-align:left;width:55px;">주차</th>
+          <th style="padding:8px 11px;font-size:9px;font-weight:700;color:rgba(255,255,255,.7);text-align:left;">과제 내용</th>
+          <th style="padding:8px 11px;font-size:9px;font-weight:700;color:rgba(255,255,255,.7);text-align:left;">스텔라 코멘트</th>
+          <th style="padding:8px 11px;font-size:9px;font-weight:700;color:rgba(255,255,255,.7);text-align:center;width:50px;">점수</th>
+        </tr></thead>
+        <tbody>${weeks.map((w,i)=>`<tr style="border-bottom:1px solid #E0E0D8;${i%2===1?'background:#F8FAFE;':''}">
+          <td style="padding:9px 11px;font-weight:700;color:#1A3C6B;text-align:center;font-size:11px;">${i+1}주차<br><span style="font-size:9px;color:#9AAABB;font-weight:400;">${w.label}</span></td>
+          <td style="padding:9px 11px;color:#1C1C2C;">${w.content}</td>
+          <td style="padding:9px 11px;color:#5A6070;font-style:italic;">${w.comment}</td>
+          <td style="padding:9px 11px;text-align:center;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:${sc(w.score)};color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:900;">${w.score}</span></td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:6px;">발견한 강점</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${strengths.length?strengths.map(s=>`<span style="background:#1A3C6B;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;">${s}</span>`).join(''):'<span style="color:#9AAABB;font-size:12px;">—</span>'}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:6px;">집중 보완 영역</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${improvements.length?improvements.map(s=>`<span style="background:#2A8A8A;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;">${s}</span>`).join(''):'<span style="color:#9AAABB;font-size:12px;">—</span>'}</div></div>
+      </div>
+      <div style="background:#EBF3FB;border-left:3px solid #2E75B6;border-radius:0 8px 8px 0;padding:12px 15px;">
+        <div style="font-size:9px;font-weight:700;color:#2E75B6;letter-spacing:.1em;margin-bottom:5px;">✍️ 스텔라 코스 1 종합 코멘트</div>
+        <div style="font-size:12.5px;color:#1C1C2C;line-height:1.8;">${c1comment}</div>
+      </div>
+    </div>
+    <div style="padding:11px 44px;border-top:1px solid #E0E0D8;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:9px;color:#9AAABB;">LITER STELLA · SPECIAL 코칭 · 개별 코칭 커리큘럼 설계서 · 수강생 전달용</div>
+      <div style="font-size:10px;font-weight:700;color:#9AAABB;">P. 02</div>
+    </div>
+  </div>
+
+  <!-- 코칭 방향 + 선언 + 편지 -->
+  <div style="min-height:297mm;display:flex;flex-direction:column;">
+    <div style="height:4px;background:linear-gradient(90deg,#2A8A8A,#C8922A);"></div>
+    <div style="padding:18px 44px 14px;border-bottom:1px solid #E0E0D8;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Noto Serif KR',serif;font-size:13px;color:#1A3C6B;opacity:.5;">Liter Stella</div>
+      <div style="font-size:10px;color:#9AAABB;text-align:right;line-height:1.7;">개별 코칭 커리큘럼 설계서<br><strong style="color:#1A3C6B;">${name}</strong></div>
+    </div>
+    <div style="padding:24px 44px;flex:1;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <div style="width:28px;height:28px;background:#1A3C6B;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">2</div>
+        <div><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:#1A3C6B;">개별 코칭 방향 설계</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:5px;">강독 유형</div><div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="background:#1A3C6B;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">${lectureType}</span></div></div>
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:5px;">파트너 가능성</div><div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="background:${partnerPot==='상'?'#2A7A4A':partnerPot==='중'?'#2E75B6':'#6B7A8D'};color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">${partnerPot==='상'?'🟢 상 · 적극 검토':partnerPot==='중'?'🔵 중 · 가능성 있음':'⚪ 하 · 지켜볼 필요'}</span></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:5px;">코스 3 원서</div><div style="font-size:13px;background:#F8FAFE;padding:8px 11px;border-radius:6px;">${book}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:5px;">가르칠 대상</div><div style="font-size:13px;background:#F8FAFE;padding:8px 11px;border-radius:6px;">${target}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:#9AAABB;letter-spacing:.12em;margin-bottom:5px;">강독 채널</div><div style="font-size:13px;background:#F8FAFE;padding:8px 11px;border-radius:6px;">${channel}</div></div>
+      </div>
+      <div style="background:#EAF5F5;border-left:3px solid #2A8A8A;border-radius:0 8px 8px 0;padding:12px 15px;margin-bottom:14px;">
+        <div style="font-size:9px;font-weight:700;color:#2A8A8A;letter-spacing:.1em;margin-bottom:5px;">🎯 핵심 코칭 방향</div>
+        <div style="font-size:12.5px;color:#1C1C2C;line-height:1.8;">${direction}</div>
+      </div>
+      <div style="border-top:1px solid #E0E0D8;margin:16px 0 14px;"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:28px;height:28px;background:#1A3C6B;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">3</div>
+        <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:#1A3C6B;">강독가 선언</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1A3C6B,#1E4A80);border-radius:12px;padding:20px 24px;margin-bottom:12px;position:relative;overflow:hidden;">
+        <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.16em;margin-bottom:8px;">나의 강독가 선언 · ${name}</div>
+        <div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.65;font-style:italic;">"${slogan}"</div>
+      </div>
+      <div style="background:#FBF5F0;border-left:3px solid #D4622A;padding:12px 15px;border-radius:0 8px 8px 0;margin-bottom:14px;">
+        <div style="font-size:9px;font-weight:700;color:#D4622A;margin-bottom:5px;">스텔라의 응원 한 마디</div>
+        <div style="font-size:12.5px;color:#1C1C2C;line-height:1.8;">${cheering}</div>
+      </div>
+      <div style="border-top:1px solid #E0E0D8;margin:14px 0 12px;"></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-top:14px;">
+        <div style="text-align:center;"><div style="border-top:1.5px solid #C8D6E8;padding-top:8px;font-size:10px;color:#9AAABB;margin-top:44px;">수강생 확인 서명</div></div>
+        <div style="text-align:center;"><div style="border-top:1.5px solid #C8D6E8;padding-top:8px;font-size:10px;color:#9AAABB;margin-top:44px;">스텔라 서명</div></div>
+        <div style="text-align:center;"><div style="border-top:1.5px solid #C8D6E8;padding-top:8px;font-size:10px;color:#9AAABB;margin-top:44px;">설계 완료일 / 발급일</div></div>
+      </div>
+    </div>
+    <div style="padding:11px 44px;border-top:1px solid #E0E0D8;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:9px;color:#9AAABB;">LITER STELLA · SPECIAL 코칭 · 개별 코칭 커리큘럼 설계서 · 수강생 전달용</div>
+      <div style="font-size:10px;font-weight:700;color:#9AAABB;">P. 03</div>
+    </div>
+  </div>
+
+  </div>`;
+
+  // 오버레이 열기
+  const ov=document.getElementById('print-overlay-cur');
+  document.getElementById('print-content-cur').innerHTML=html;
+  ov.style.display='block';
+  document.body.style.overflow='hidden';
+}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
 function fmtDate(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())}`;}
 function p2(n){return String(n).padStart(2,'0');}

@@ -29,6 +29,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
 .header-btns{display:flex;gap:8px;}
 .hbtn{border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .hbtn:hover{background:rgba(255,255,255,.15);}
+/* 인쇄 오버레이 */
+.print-ov{display:none;position:fixed;inset:0;background:rgba(10,20,40,.88);z-index:300;overflow-y:auto;padding:24px 16px;}
+.print-ov-bar{max-width:780px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.print-ov-bar span{color:rgba(255,255,255,.65);font-size:13px;}
+.print-ov-btns{display:flex;gap:8px;}
+.pob{border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.pob.do{background:linear-gradient(135deg,#C8922A,#E8B040);color:#fff;}
+.pob.cl{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);}
+.print-ov-doc{max-width:780px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+@media print{
+  body>*:not(.print-ov){display:none!important;}
+  .print-ov{display:block!important;position:static!important;background:none!important;padding:0!important;}
+  .print-ov-bar{display:none!important;}
+  .print-ov-doc{box-shadow:none!important;border-radius:0!important;max-width:100%!important;}
+  @page{margin:8mm;size:A4;}
+}
 .card-body{padding:22px;}
 .f{margin-bottom:16px;}
 .fl{display:block;font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.12em;margin-bottom:6px;}
@@ -99,6 +115,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
         <div><div class="card-title">🌟 파트너 원서 강독가 선발 평가표</div><div class="card-sub" id="cur-sub">신규 작성 또는 목록에서 선택</div></div>
         <div class="header-btns">
           <button class="hbtn" onclick="newDoc()">+ 신규</button>
+          <button class="hbtn" onclick="printEval()">🖨️ 인쇄</button>
         </div>
       </div>
       <div class="card-body">
@@ -318,6 +335,209 @@ function newDoc(){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
 function fmtDate(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())}`;}
 function p2(n){return String(n).padStart(2,'0');}
+
+function printEval(){
+  const appId=document.getElementById('f-applicant').value;
+  const a=apps.find(x=>x.id===appId);
+  const name=a?.name||'수강생';
+  const book=document.getElementById('f-book').value||'—';
+  const evalDate=document.getElementById('f-date').value||'';
+  const total=parseInt(document.getElementById('tc-total').textContent)||0;
+  const grade=document.getElementById('tc-grade').textContent||'—';
+  const partner=total>=85;
+  const fmtD=d=>{if(!d)return'—';const p=d.split('-');return p[0]+'.'+p[1]+'.'+p[2];};
+  const gv=id=>{return parseInt(document.getElementById(id)?.value)||0;};
+  const cv=id=>{return document.getElementById(id)?.value||'—';};
+  const sub1=gv('e1_1')+gv('e1_2')+gv('e1_3');
+  const sub2=gv('e2_1')+gv('e2_2')+gv('e2_3');
+  const sub3=gv('e3_1')+gv('e3_2a')+gv('e3_2b')+gv('e3_2c')+gv('e3_2d')+gv('e3_3a')+gv('e3_3b')+gv('e3_3c')+gv('e3_3d')+gv('e3_gr');
+  const sub4=gv('e4_1')+gv('e4_2')+gv('e4_3')+gv('e4_4');
+  const sc=v=>v>=5?'#2A7A4A':v>=4?'#2E75B6':v>=3?'#C8922A':'#B03030';
+  const scRow=(label,desc,id,max)=>`<tr style="border-bottom:1px solid #E0E0D8;">
+    <td style="padding:9px 12px;"><div style="font-weight:600;color:#1A3C6B;font-size:12.5px;">${label}</div>${desc?`<div style="font-size:10px;color:#9AAABB;margin-top:2px;">${desc}</div>`:''}
+    </td><td style="text-align:center;padding:9px 12px;color:#9AAABB;font-size:12px;">${max}점</td>
+    <td style="text-align:center;padding:9px 12px;"><div style="display:inline-flex;width:32px;height:32px;border-radius:50%;background:${sc(gv(id))};color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:900;">${gv(id)}</div></td>
+    <td style="padding:9px 12px;font-size:12px;color:#5A6070;font-style:italic;">${cv('c-'+id.replace(/[0-9_a-z]/g,'').toLowerCase())||''}</td>
+  </tr>`;
+
+  const html=`<div style="font-family:'Noto Sans KR',sans-serif;color:#1C1C2C;background:#fff;">
+  <!-- 커버 -->
+  <div style="min-height:297mm;background:linear-gradient(160deg,#0D2447,#1A3C6B 55%,#1A5A4A);display:flex;flex-direction:column;page-break-after:always;">
+    <div style="padding:44px 52px 0;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Noto Serif KR',serif;color:rgba(255,255,255,.9);font-size:18px;font-weight:700;">Liter Stella<span style="display:block;font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.2em;font-weight:300;margin-top:2px;font-family:'Noto Sans KR',sans-serif;">TIME FOR ORIGINAL CLASSIC</span></div>
+      <div style="background:rgba(200,146,42,.2);border:1px solid rgba(200,146,42,.4);color:#F0C040;font-size:9px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.12em;">SPECIAL · 평가 문서</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 52px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;"><div style="width:24px;height:2px;background:#F0C040;"></div><span style="font-size:10px;font-weight:700;color:var(--gold-lt,#F0C040);letter-spacing:.18em;">파트너 강독가 선발</span></div>
+      <div style="font-family:'Noto Serif KR',serif;color:#fff;margin-bottom:28px;">
+        <span style="font-size:14px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px;font-style:italic;">Partner Reader Selection · Final Evaluation</span>
+        <span style="font-size:34px;font-weight:700;display:block;">파트너 원서 강독가</span>
+        <span style="font-size:20px;font-weight:300;color:rgba(255,255,255,.5);display:block;margin-top:4px;">선발 평가표</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;margin-bottom:28px;">
+        <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#C8922A,#E8B040);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,146,42,.4);">
+          <div style="font-size:30px;font-weight:900;color:#fff;line-height:1;">${total}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.7);">/ 100점</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${[['📘 코스 1',sub1,20,'#4A95D6'],['👥 코스 2',sub2,20,'#4AAABA'],['🎯 코스 3',sub3,40,'#9B6FC0'],['🌟 졸업 작품',sub4,20,'#E8B040']].map(([l,v,m,c])=>`
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:11px;color:rgba(255,255,255,.6);min-width:75px;">${l}</span>
+            <div style="width:100px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${Math.round(v/m*100)}%;background:${c};border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#fff;min-width:40px;">${v}/${m}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px 26px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">수강생</div><div style="font-size:15px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${name}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">강독 원서</div><div style="font-size:15px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${book}</div></div>
+        <div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.16em;margin-bottom:6px;">평가일</div><div style="font-size:15px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:6px;">${fmtD(evalDate)}</div></div>
+      </div>
+    </div>
+    <div style="padding:26px 52px;display:flex;align-items:flex-end;justify-content:space-between;">
+      <div style="font-size:10px;color:rgba(255,255,255,.22);line-height:1.9;">평가자: 스텔라 · Liter Stella<br>내부 평가 문서 · 수강생 전달용</div>
+      <div style="background:${partner?'rgba(42,122,74,.25)':'rgba(255,255,255,.08)'};border:1.5px solid ${partner?'rgba(42,122,74,.5)':'rgba(255,255,255,.2)'};border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:13px;font-weight:700;color:${partner?'#A0F0C0':'rgba(255,255,255,.6)'};">${partner?'✅ 파트너 강독가 선발':'⏳ 평가 중'}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;">${total}점 · ${grade}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 코스 1·2 -->
+  <div style="min-height:297mm;display:flex;flex-direction:column;page-break-after:always;">
+    <div style="height:4px;background:linear-gradient(90deg,#2E75B6,#4A95D6);"></div>
+    <div style="padding:18px 44px 14px;border-bottom:1px solid #E0E0D8;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:'Noto Serif KR',serif;font-size:13px;color:#1A3C6B;opacity:.5;">Liter Stella</div>
+      <div style="font-size:10px;color:#9AAABB;text-align:right;">파트너 강독가 선발 평가표<br><strong style="color:#1A3C6B;">${name} · ${total}점</strong></div>
+    </div>
+    <div style="padding:22px 44px;flex:1;">
+      ${[
+        {label:'📘 코스 1 — 원서 강독 이론 과정',sub:'5주 15차시 + 과제 + 커리큘럼 설계',max:20,subtotal:sub1,color:'#2E75B6',rows:[
+          {label:'① 수강 성실도',desc:'15차시 전체 수강, 기한 내 완료',id:'e1_1',max:5},
+          {label:'② 과제 제출 질',desc:'이론 적용 깊이, 독창성, 성실한 분량',id:'e1_2',max:10},
+          {label:'③ 개별 커리큘럼 설계 완성도',desc:'원서 선정 타당성, 대상 명확성',id:'e1_3',max:5},
+        ],comment:cv('c-c1')},
+        {label:'👥 코스 2 — 그룹 강독 코칭',sub:'Zoom 3회 릴레이 강독 실습 + 피드백',max:20,subtotal:sub2,color:'#2A8A8A',rows:[
+          {label:'① Zoom 참여도',desc:'3회 출석, 릴레이 강독 참여',id:'e2_1',max:5},
+          {label:'② 릴레이 강독 퀄리티',desc:'스토리텔링, 전달력, 문장 설명',id:'e2_2',max:8},
+          {label:'③ 피드백 수용 및 적용력',desc:'공통 피드백 반영, 회차 개선도',id:'e2_3',max:7},
+        ],comment:cv('c-c2')},
+      ].map(cs=>`
+      <div style="border-radius:10px 10px 0 0;padding:13px 18px;background:linear-gradient(135deg,${cs.color},${cs.color}CC);display:flex;align-items:center;justify-content:space-between;margin-top:${cs.label.includes('코스 1')?'0':'16px'};">
+        <div><div style="color:#fff;font-size:14px;font-weight:700;">${cs.label}</div><div style="color:rgba(255,255,255,.55);font-size:11px;margin-top:2px;">${cs.sub}</div></div>
+        <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:15px;">만점 ${cs.max}점</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;border:1px solid #E0E0D8;border-top:none;border-radius:0 0 10px 10px;overflow:hidden;">
+        <thead><tr style="background:#F5F8FC;">
+          <th style="padding:7px 12px;font-size:9px;font-weight:700;color:#9AAABB;text-align:left;letter-spacing:.07em;width:38%;">평가 항목</th>
+          <th style="padding:7px 12px;font-size:9px;font-weight:700;color:#9AAABB;text-align:center;width:9%;">배점</th>
+          <th style="padding:7px 12px;font-size:9px;font-weight:700;color:#9AAABB;text-align:center;width:10%;">취득</th>
+          <th style="padding:7px 12px;font-size:9px;font-weight:700;color:#9AAABB;text-align:left;">스텔라 코멘트</th>
+        </tr></thead>
+        <tbody>
+          ${cs.rows.map(r=>`<tr style="border-bottom:1px solid #E0E0D8;">
+            <td style="padding:9px 12px;"><div style="font-weight:600;color:#1A3C6B;font-size:12.5px;">${r.label}</div><div style="font-size:10px;color:#9AAABB;margin-top:2px;">${r.desc}</div></td>
+            <td style="text-align:center;padding:9px 12px;color:#9AAABB;font-size:12px;">${r.max}점</td>
+            <td style="text-align:center;padding:9px 12px;"><div style="display:inline-flex;width:32px;height:32px;border-radius:50%;background:${sc(gv(r.id))};color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:900;">${gv(r.id)}</div></td>
+            <td style="padding:9px 12px;font-size:12px;color:#5A6070;font-style:italic;">—</td>
+          </tr>`).join('')}
+          <tr style="background:linear-gradient(135deg,#EBF3FB,#F0F8F5);">
+            <td style="padding:10px 12px;font-weight:700;color:#1A3C6B;font-size:13px;">소계</td>
+            <td style="text-align:center;color:#9AAABB;font-size:12px;">/${cs.max}점</td>
+            <td style="text-align:center;font-size:20px;font-weight:900;color:#1A3C6B;">${cs.subtotal}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      ${cs.comment&&cs.comment!=='—'?`<div style="background:#EBF3FB;border-left:3px solid #2E75B6;padding:10px 14px;margin-top:8px;font-size:12px;color:#1C1C2C;line-height:1.75;font-style:italic;">${cs.comment}</div>`:''}`).join('')}
+    </div>
+    <div style="padding:11px 44px;border-top:1px solid #E0E0D8;display:flex;justify-content:space-between;">
+      <div style="font-size:9px;color:#9AAABB;">LITER STELLA · SPECIAL 코칭 · 파트너 강독가 선발 평가표 · 수강생 전달용</div>
+      <div style="font-size:10px;font-weight:700;color:#9AAABB;">P. 02</div>
+    </div>
+  </div>
+
+  <!-- 코스 3 + 졸업 + 총평 -->
+  <div style="min-height:297mm;display:flex;flex-direction:column;">
+    <div style="height:4px;background:linear-gradient(90deg,#7B4FA0,#C8922A);"></div>
+    <div style="padding:18px 44px 14px;border-bottom:1px solid #E0E0D8;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:'Noto Serif KR',serif;font-size:13px;color:#1A3C6B;opacity:.5;">Liter Stella</div>
+      <div style="font-size:10px;color:#9AAABB;text-align:right;">파트너 강독가 선발 평가표<br><strong style="color:#1A3C6B;">${name} · ${total}점</strong></div>
+    </div>
+    <div style="padding:22px 44px;flex:1;">
+      <!-- 코스 3 -->
+      <div style="border-radius:10px 10px 0 0;padding:13px 18px;background:linear-gradient(135deg,#4A2A7A,#7B4FA0);display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="color:#fff;font-size:14px;font-weight:700;">🎯 코스 3 — 1:1 개인 코칭 (4회)</div><div style="color:rgba(255,255,255,.55);font-size:11px;margin-top:2px;">영상 피드백 + 문서 채점 + 필요시 전화 케어</div></div>
+        <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:15px;">만점 40점</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;border:1px solid #E0E0D8;border-top:none;margin-bottom:12px;">
+        <thead><tr style="background:#F5F8FC;">
+          <th style="padding:7px 12px;font-size:9px;color:#9AAABB;text-align:left;width:38%;">평가 항목</th>
+          <th style="padding:7px 12px;font-size:9px;color:#9AAABB;text-align:center;width:9%;">배점</th>
+          <th style="padding:7px 12px;font-size:9px;color:#9AAABB;text-align:center;width:10%;">취득</th>
+          <th style="padding:7px 12px;font-size:9px;color:#9AAABB;text-align:left;">스텔라 코멘트</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #E0E0D8;"><td style="padding:8px 12px;font-weight:600;color:#1A3C6B;font-size:12px;">1회차 · 원서 선정 및 방향 명확성</td><td style="text-align:center;color:#9AAABB;font-size:12px;">5</td><td style="text-align:center;"><div style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:${sc(gv('e3_1'))};color:#fff;align-items:center;justify-content:center;font-size:12px;font-weight:900;">${gv('e3_1')}</div></td><td style="font-size:11px;color:#5A6070;font-style:italic;">—</td></tr>
+          <tr style="background:#F8F5FC;"><td colspan="4" style="padding:6px 12px;font-size:10px;font-weight:700;color:#7B4FA0;letter-spacing:.06em;">2회차 영상 피드백</td></tr>
+          ${[['준비도','e3_2a',5],['설득력·스토리텔링','e3_2b',5],['내용 구성','e3_2c',5],['목소리·전달력','e3_2d',5]].map(([l,id,m])=>`<tr style="border-bottom:1px solid #E0E0D8;"><td style="padding:8px 12px;color:#1A3C6B;font-size:12px;font-weight:600;">${l}</td><td style="text-align:center;color:#9AAABB;font-size:12px;">${m}</td><td style="text-align:center;"><div style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:${sc(gv(id))};color:#fff;align-items:center;justify-content:center;font-size:12px;font-weight:900;">${gv(id)}</div></td><td style="font-size:11px;color:#5A6070;font-style:italic;">—</td></tr>`).join('')}
+          <tr style="background:#F8F5FC;"><td colspan="4" style="padding:6px 12px;font-size:10px;font-weight:700;color:#7B4FA0;letter-spacing:.06em;">3회차 영상 피드백</td></tr>
+          ${[['준비도','e3_3a',5],['설득력·스토리텔링','e3_3b',5],['내용 구성','e3_3c',5],['목소리·전달력','e3_3d',5],['피드백 반영 성장도','e3_gr',5]].map(([l,id,m])=>`<tr style="border-bottom:1px solid #E0E0D8;"><td style="padding:8px 12px;color:#1A3C6B;font-size:12px;font-weight:600;">${l}</td><td style="text-align:center;color:#9AAABB;font-size:12px;">${m}</td><td style="text-align:center;"><div style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:${sc(gv(id))};color:#fff;align-items:center;justify-content:center;font-size:12px;font-weight:900;">${gv(id)}</div></td><td style="font-size:11px;color:#5A6070;font-style:italic;">—</td></tr>`).join('')}
+          <tr style="background:linear-gradient(135deg,#EBF3FB,#F0F8F5);"><td style="padding:9px 12px;font-weight:700;color:#1A3C6B;">코스 3 소계</td><td style="text-align:center;color:#9AAABB;">/40점</td><td style="text-align:center;font-size:20px;font-weight:900;color:#1A3C6B;">${sub3}</td><td></td></tr>
+        </tbody>
+      </table>
+      <!-- 졸업 -->
+      <div style="border-radius:10px 10px 0 0;padding:12px 18px;background:linear-gradient(135deg,#7A4A10,#C8922A);display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="color:#fff;font-size:14px;font-weight:700;">🌟 졸업 작품 — 파트너 강독가 최종 심사</div></div>
+        <div style="background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:15px;">만점 20점</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;border:1px solid #E0E0D8;border-top:none;margin-bottom:12px;">
+        <tbody>
+          ${[['① 완성도 (전체 흐름·편집)','e4_1',5],['② 강독가 고유 스타일 구축','e4_2',5],['③ 공개 후 반응 (조회수·댓글)','e4_3',5],['④ 파트너십 적합성 (스텔라 최종)','e4_4',5]].map(([l,id,m])=>`<tr style="border-bottom:1px solid #E0E0D8;"><td style="padding:8px 12px;color:#1A3C6B;font-size:12.5px;font-weight:600;">${l}</td><td style="text-align:center;color:#9AAABB;font-size:12px;">${m}점</td><td style="text-align:center;"><div style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:${sc(gv(id))};color:#fff;align-items:center;justify-content:center;font-size:12px;font-weight:900;">${gv(id)}</div></td><td style="padding:8px 12px;font-size:11px;color:#5A6070;font-style:italic;">—</td></tr>`).join('')}
+          <tr style="background:linear-gradient(135deg,#FBF4E8,#FDF9F2);"><td style="padding:9px 12px;font-weight:700;color:#1A3C6B;">졸업 작품 소계</td><td style="text-align:center;color:#9AAABB;">/20점</td><td style="text-align:center;font-size:20px;font-weight:900;color:#1A3C6B;">${sub4}</td><td></td></tr>
+        </tbody>
+      </table>
+      <!-- 코스 3·4 코멘트 -->
+      ${cv('c-c3')!=='—'?`<div style="background:#EAF5F5;border-left:3px solid #2A8A8A;padding:9px 13px;margin-bottom:8px;font-size:12px;color:#1C1C2C;font-style:italic;line-height:1.7;"><strong style="font-style:normal;color:#2A8A8A;">코스 3 코멘트</strong> · ${cv('c-c3')}</div>`:''}
+      ${cv('c-c4')!=='—'?`<div style="background:#FBF4E8;border-left:3px solid #C8922A;padding:9px 13px;margin-bottom:8px;font-size:12px;color:#1C1C2C;font-style:italic;line-height:1.7;"><strong style="font-style:normal;color:#C8922A;">졸업 작품 총평</strong> · ${cv('c-c4')}</div>`:''}
+      <!-- 최종 결과 -->
+      <div style="background:linear-gradient(135deg,#0D2447,#1A3C6B);border-radius:12px;padding:20px 24px;margin-top:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:14px;">
+          <div style="color:#fff;font-size:15px;font-weight:700;">📊 종합 평가 결과</div>
+          <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#C8922A,#E8B040);display:flex;flex-direction:column;align-items:center;justify-content:center;"><div style="font-size:22px;font-weight:900;color:#fff;line-height:1;">${total}</div><div style="font-size:9px;color:rgba(255,255,255,.7);">/100점</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.12em;margin-bottom:5px;">종합 등급</div><div style="font-size:26px;font-weight:900;color:#A0F0C0;">${grade.split(' ')[0]||grade}</div><div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:3px;">${grade}</div></div>
+          <div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.12em;margin-bottom:5px;">파트너 선발 여부</div>
+          <div style="background:${partner?'rgba(42,122,74,.25)':'rgba(255,255,255,.06)'};border:1.5px solid ${partner?'rgba(42,122,74,.5)':'rgba(255,255,255,.15)'};border-radius:8px;padding:10px 14px;">
+            <div style="font-size:12px;font-weight:700;color:${partner?'#A0F0C0':'rgba(255,255,255,.5)'};">${partner?'✅ 파트너 강독가 선발 확정':'⏳ 이번 기수 미선발'}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">총점 ${total}점 · ${partner?'선발 기준(85점) 충족':'추후 재도전 권고'}</div>
+          </div></div>
+        </div>
+        ${cv('c-final')!=='—'?`<div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.12em;margin-bottom:7px;">스텔라 최종 총평</div><div style="font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.85;font-style:italic;background:rgba(255,255,255,.06);border-radius:8px;padding:12px 15px;">${cv('c-final')}</div></div>`:''}
+      </div>
+    </div>
+    <div style="padding:11px 44px;border-top:1px solid #E0E0D8;display:flex;justify-content:space-between;">
+      <div style="font-size:9px;color:#9AAABB;">LITER STELLA · SPECIAL 코칭 · 파트너 강독가 선발 평가표 · 수강생 전달용</div>
+      <div style="font-size:10px;font-weight:700;color:#9AAABB;">P. 03</div>
+    </div>
+  </div>
+  </div>`;
+
+  document.getElementById('print-content-ev').innerHTML=html;
+  document.getElementById('print-overlay-ev').style.display='block';
+  document.body.style.overflow='hidden';
+}
 </script>
-</body>
-</html>
+
+<!-- 인쇄 미리보기 오버레이 -->
+<div class="print-ov" id="print-overlay-ev">
+  <div class="print-ov-bar">
+    <span>🖨️ 파트너 강독가 평가표 · 인쇄 미리보기</span>
+    <div class="print-ov-btns">
+      <button class="pob do" onclick="window.print()">인쇄 / PDF 저장</button>
+      <button class="pob cl" onclick="document.getElementById('print-overlay-ev').style.display='none';document.body.style.overflow='';">닫기</button>
+    </div>
+  </div>
+  <div class="print-ov-doc" id="print-content-ev"></div>
+</div>
