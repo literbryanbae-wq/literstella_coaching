@@ -156,4 +156,15 @@ function resetPassword(){
   }
   auth.sendPasswordResetEmail(email)
     .then(() => {
+      suc.textContent = '비밀번호 재설정 이메일이 전송되었습니다. 메일함을 확인해 주세요.';
+      suc.style.display = 'block';
+    })
+    .catch((error) => {
+      err.textContent = '메일 발송 중 오류가 발생했습니다. (' + error.message + ')';
+      err.style.display = 'block';
+    });
+}
+</script>
+</body>
+</html>
   
