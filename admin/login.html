@@ -25,6 +25,33 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
 .form-section label{display:block;font-size:11px;font-weight:700;color:#6B7A8D;letter-spacing:.1em;margin-bottom:7px;}
 .form-section input{width:100%;border:1.5px solid #E6EDF5;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s;margin-bottom:14px;}
 .form-section input:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.08);}
+
+/* 아이디 기억하기 체크박스 스타일 */
+.remember-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  margin-top: -4px;
+}
+.remember-wrap input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #2E75B6;
+}
+.remember-wrap label {
+  font-size: 12px;
+  color: #6B7A8D;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 0;
+  letter-spacing: 0;
+  display: inline-block;
+  text-transform: none;
+}
+
 .btn{width:100%;background:linear-gradient(135deg,#1A3C6B,#2E75B6);color:#fff;border:none;border-radius:10px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px;transition:opacity .2s;}
 .btn:hover{opacity:.9;}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
@@ -47,7 +74,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
 
   <hr class="divider">
 
-  <!-- 바로가기 메뉴 -->
   <div class="quick-label">바로가기</div>
   <div class="quick-menu" style="grid-template-columns:repeat(4,1fr);">
     <a class="quick-item" href="dashboard.html">
@@ -74,18 +100,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
 
   <hr class="divider">
 
-  <!-- 로그인 폼 -->
   <div class="form-section">
     <label>이메일</label>
     <input type="email" id="email" placeholder="관리자 이메일" onkeydown="if(event.key==='Enter')login()">
+    
     <label>비밀번호</label>
     <input type="password" id="pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')login()">
+    
+    <div class="remember-wrap">
+      <input type="checkbox" id="remember-id">
+      <label for="remember-id">아이디 기억하기</label>
+    </div>
+
     <button class="btn" id="login-btn" onclick="login()">로그인</button>
     <div class="msg error" id="err"></div>
     <div class="msg success" id="suc"></div>
   </div>
 
-  <!-- 비밀번호 찾기 -->
   <div class="pw-find">
     <button onclick="resetPassword()">비밀번호를 잊으셨나요?</button>
   </div>
@@ -96,7 +127,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
   등록된 관리자 계정으로만 접근 가능합니다
 </p>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
 const ADMIN_EMAILS = ['literbryanbae@gmail.com','jayne0609@gmail.com'];
 
 firebase.initializeApp({
@@ -109,6 +141,15 @@ firebase.initializeApp({
 });
 const auth = firebase.auth();
 
+// 페이지 로드 시 저장된 아이디가 있으면 불러오기
+document.addEventListener('DOMContentLoaded', () => {
+  const savedEmail = localStorage.getItem('savedAdminEmail');
+  if (savedEmail) {
+    document.getElementById('email').value = savedEmail;
+    document.getElementById('remember-id').checked = true;
+  }
+});
+
 auth.onAuthStateChanged(u => {
   if(u && ADMIN_EMAILS.includes(u.email)) window.location.href = 'dashboard.html';
 });
@@ -119,15 +160,27 @@ function login(){
   const err   = document.getElementById('err');
   const suc   = document.getElementById('suc');
   const btn   = document.getElementById('login-btn');
+  
   err.style.display = 'none';
   suc.style.display = 'none';
+  
   if(!ADMIN_EMAILS.includes(email)){
     err.textContent = '등록된 관리자 이메일이 아닙니다.';
     err.style.display = 'block';
     return;
   }
+
+  // 아이디 기억하기 처리 로직
+  const rememberId = document.getElementById('remember-id').checked;
+  if (rememberId) {
+    localStorage.setItem('savedAdminEmail', email);
+  } else {
+    localStorage.removeItem('savedAdminEmail');
+  }
+
   btn.disabled = true;
   btn.textContent = '로그인 중...';
+  
   auth.signInWithEmailAndPassword(email, pw)
     .then(() => window.location.href = 'dashboard.html')
     .catch(() => {
@@ -142,21 +195,25 @@ function resetPassword(){
   const email = document.getElementById('email').value.trim();
   const err   = document.getElementById('err');
   const suc   = document.getElementById('suc');
+  
   err.style.display = 'none';
   suc.style.display = 'none';
+  
   if(!email){
     err.textContent = '이메일을 먼저 입력해 주세요.';
     err.style.display = 'block';
     return;
   }
+  
   if(!ADMIN_EMAILS.includes(email)){
     err.textContent = '등록된 관리자 이메일이 아닙니다.';
     err.style.display = 'block';
     return;
   }
+  
   auth.sendPasswordResetEmail(email)
     .then(() => {
-      suc.textContent = '비밀번호 재설정 이메일이 전송되었습니다. 메일함을 확인해 주세요.';
+      suc.textContent = '비밀번호 재설정 메일이 전송되었습니다. 메일함을 확인해주세요.';
       suc.style.display = 'block';
     })
     .catch((error) => {
@@ -167,4 +224,3 @@ function resetPassword(){
 </script>
 </body>
 </html>
-  
