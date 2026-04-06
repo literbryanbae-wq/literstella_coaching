@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그룹 강독 피드백 | 리터스텔라 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;--gold:#C8922A;--green:#2A7A4A;--red:#C0392B;--gray:#6B7A8D;--lg:#E6EDF5;--cream:#FAF7F2;}
+body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:#1C2A3A;}
+.nav{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;}
+.nav-logo{color:#fff;font-size:15px;font-weight:700;}
+.nav-links{display:flex;gap:4px;}
+.nav-link{color:rgba(255,255,255,.65);font-size:13px;font-weight:600;padding:6px 14px;border-radius:6px;text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.15);color:#fff;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-user{color:rgba(255,255,255,.5);font-size:12px;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.nav-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px;}
+
+/* 회차 탭 */
+.session-tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.stab{background:#fff;border:2px solid var(--lg);border-radius:10px;padding:12px 24px;font-size:14px;font-weight:700;color:var(--gray);cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',sans-serif;}
+.stab:hover{border-color:var(--blue);color:var(--navy);}
+.stab.active{border-color:var(--navy);background:var(--navy);color:#fff;}
+.stab-status{display:block;font-size:10px;font-weight:400;margin-top:2px;color:inherit;opacity:.6;}
+
+/* 카드 공통 */
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;margin-bottom:20px;}
+.card-hd{background:var(--navy);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
+.card-hd h2{color:#fff;font-size:15px;font-weight:700;}
+.card-hd p{color:rgba(255,255,255,.5);font-size:12px;margin-top:2px;}
+.card-body{padding:22px;}
+
+/* Zoom 영상 embed */
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;background:#EEF2F7;border-radius:8px;overflow:hidden;margin-bottom:12px;}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.video-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#9AAABB;}
+.video-placeholder .ico{font-size:36px;margin-bottom:8px;}
+.video-placeholder p{font-size:13px;}
+.video-input-row{display:flex;gap:8px;align-items:center;}
+.vi{flex:1;border:1.5px solid var(--lg);border-radius:8px;padding:10px 13px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s;}
+.vi:focus{border-color:var(--blue);}
+.vi-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;}
+.vi-btn:hover{background:var(--blue);}
+
+/* 폼 필드 */
+.f{margin-bottom:14px;}
+.fl{display:block;font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.12em;margin-bottom:6px;}
+.ft{width:100%;border:1.5px solid var(--lg);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;outline:none;resize:vertical;line-height:1.75;transition:border-color .2s;background:var(--cream);}
+.ft:focus{border-color:var(--blue);background:#fff;}
+
+/* 개별 피드백 카드 */
+.member-card{border:1.5px solid var(--lg);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.mc-head{background:linear-gradient(135deg,#F5F8FC,#EBF3FB);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.mc-head .mc-name{font-size:15px;font-weight:700;color:var(--navy);}
+.mc-head .mc-role{font-size:11px;color:var(--gray);margin-top:2px;}
+.mc-body{padding:18px;}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.video-sm{position:relative;padding-bottom:56.25%;height:0;background:#EEF2F7;border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.video-sm iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.add-member-btn{width:100%;background:transparent;border:2px dashed var(--lg);border-radius:12px;padding:16px;font-size:14px;font-weight:700;color:var(--gray);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.add-member-btn:hover{border-color:var(--blue);color:var(--blue);}
+
+/* 저장 바 */
+.save-bar{background:#F8FAFE;border-top:1px solid var(--lg);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
+.save-note{font-size:12px;color:var(--gray);}
+.save-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;padding:11px 28px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.save-btn:hover{opacity:.9;}
+.pub-btn{background:linear-gradient(135deg,var(--green),#3A9A5A);color:#fff;border:none;padding:11px 22px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;}
+.pub-btn:hover{opacity:.9;}
+
+/* 공개 링크 */
+.pub-link-box{background:#EAF4EE;border:1.5px solid var(--green);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.pub-link-box .pl-lbl{font-size:11px;font-weight:700;color:var(--green);flex-shrink:0;}
+.pub-link-box .pl-url{font-size:13px;color:var(--navy);font-weight:600;flex:1;word-break:break-all;}
+.pl-copy{background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;flex-shrink:0;}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:14px;padding:12px 24px;border-radius:30px;display:none;z-index:200;}
+@media(max-width:700px){.mc-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-logo">Liter Stella 관리자</div>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link">📋 지원 현황</a>
+    <a href="curriculum.html" class="nav-link">📘 커리큘럼</a>
+    <a href="group-feedback.html" class="nav-link active">👥 그룹 피드백</a>
+    <a href="evaluation.html" class="nav-link">🌟 평가표</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="umail"></span>
+    <button class="nav-btn" onclick="logout()">로그아웃</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- 공개 링크 -->
+  <div class="pub-link-box">
+    <span class="pl-lbl">🔗 수강생 공개 링크</span>
+    <span class="pl-url">https://coaching.literstella.co.kr/group-feedback.html</span>
+    <button class="pl-copy" onclick="copyPubLink()">복사</button>
+  </div>
+
+  <!-- 회차 탭 -->
+  <div class="session-tabs">
+    <button class="stab active" onclick="switchSession(1,this)">
+      1회차<span class="stab-status" id="s1-status">미저장</span>
+    </button>
+    <button class="stab" onclick="switchSession(2,this)">
+      2회차<span class="stab-status" id="s2-status">미저장</span>
+    </button>
+    <button class="stab" onclick="switchSession(3,this)">
+      3회차<span class="stab-status" id="s3-status">미저장</span>
+    </button>
+  </div>
+
+  <!-- ① Zoom 릴레이 강독 영상 -->
+  <div class="card">
+    <div class="card-hd">
+      <div>
+        <h2>📹 Zoom 릴레이 강독 영상</h2>
+        <p>전체 그룹이 함께 찍은 Zoom 녹화본 · 유튜브 또는 구글드라이브 링크</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="video-wrap" id="zoom-preview">
+        <div class="video-placeholder">
+          <div class="ico">🎬</div>
+          <p>Zoom 녹화 영상 링크를 입력해주세요</p>
+        </div>
+      </div>
+      <div class="video-input-row">
+        <input type="text" class="vi" id="zoom-url" placeholder="유튜브 또는 구글드라이브 링크 입력">
+        <button class="vi-btn" onclick="embedVideo('zoom-url','zoom-preview')">적용</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 공통 피드백 -->
+  <div class="card">
+    <div class="card-hd">
+      <div>
+        <h2>📝 스텔라 공통 피드백</h2>
+        <p>이번 회차 전원에게 해당하는 피드백 · 그룹 전원 공개</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="f"><label class="fl">이번 회차 공통 강점</label><textarea class="ft" id="common-strength" rows="3" placeholder="예) 전반적으로 이야기 흐름을 살리는 감각이 좋아졌습니다. 지난 회차 대비 문장 설명의 밀도도 높아졌습니다."></textarea></div>
+      <div class="f"><label class="fl">이번 회차 공통 보완 포인트</label><textarea class="ft" id="common-improve" rows="3" placeholder="예) 문법 설명 후 다시 이야기로 자연스럽게 돌아오는 흐름이 아직 어색합니다. 다음 회차에서 집중적으로 연습해봅시다."></textarea></div>
+      <div class="f"><label class="fl">다음 회차 공통 목표</label><textarea class="ft" id="common-goal" rows="2" placeholder="예) 설명 전에 먼저 감정을 느끼게 하는 순서를 의식적으로 연습합니다."></textarea></div>
+    </div>
+  </div>
+
+  <!-- ③ 개별 피드백 -->
+  <div class="card">
+    <div class="card-hd">
+      <div>
+        <h2>👤 수강생별 개별 피드백</h2>
+        <p>스텔라 개인 피드백 영상 + 문서 · 그룹 전원 공개</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="members-wrap"></div>
+      <button class="add-member-btn" onclick="addMember()">+ 수강생 추가</button>
+    </div>
+    <div class="save-bar">
+      <span class="save-note" id="save-note">저장되지 않은 변경사항</span>
+      <div style="display:flex;gap:0;">
+        <button class="save-btn" onclick="saveDoc()">💾 저장하기</button>
+        <button class="pub-btn" onclick="publishDoc()">🌐 공개하기</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMINS=['literbryanbae@gmail.com','jayne0609@gmail.com'];
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const auth=firebase.auth(), db=firebase.firestore();
+let curSession=1, sessionData={1:null,2:null,3:null}, memberIdx=0;
+
+auth.onAuthStateChanged(u=>{
+  if(!u||!ADMINS.includes(u.email)){window.location.href='login.html';return;}
+  document.getElementById('umail').textContent=u.email;
+  loadAllSessions();
+});
+function logout(){auth.signOut().then(()=>window.location.href='login.html');}
+
+// ── 회차 전환
+function switchSession(n, btn){
+  curSession=n;
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadSession(n);
+}
+
+// ── 전체 세션 로드 (상태 표시)
+function loadAllSessions(){
+  for(let i=1;i<=3;i++){
+    db.collection('group_feedback').doc(`session_${i}`).get().then(d=>{
+      if(d.exists){
+        sessionData[i]=d.data();
+        const el=document.getElementById(`s${i}-status`);
+        if(el) el.textContent=d.data().published?'공개중':'저장됨';
+      }
+    });
+  }
+  loadSession(1);
+}
+
+function loadSession(n){
+  const d=sessionData[n];
+  memberIdx=0;
+  // 초기화
+  document.getElementById('zoom-url').value='';
+  document.getElementById('zoom-preview').innerHTML=`<div class="video-placeholder"><div class="ico">🎬</div><p>Zoom 녹화 영상 링크를 입력해주세요</p></div>`;
+  document.getElementById('common-strength').value='';
+  document.getElementById('common-improve').value='';
+  document.getElementById('common-goal').value='';
+  document.getElementById('members-wrap').innerHTML='';
+  if(!d){document.getElementById('save-note').textContent='저장되지 않은 문서';return;}
+  document.getElementById('zoom-url').value=d.zoomUrl||'';
+  if(d.zoomUrl) embedVideo('zoom-url','zoom-preview');
+  document.getElementById('common-strength').value=d.commonStrength||'';
+  document.getElementById('common-improve').value=d.commonImprove||'';
+  document.getElementById('common-goal').value=d.commonGoal||'';
+  (d.members||[]).forEach(m=>addMember(m));
+  document.getElementById('save-note').textContent='마지막 저장: '+fmtDate(d.updatedAt);
+}
+
+// ── 영상 embed
+function embedVideo(inputId, previewId){
+  const url=document.getElementById(inputId).value.trim();
+  if(!url) return;
+  const el=document.getElementById(previewId);
+  let src='';
+  // 유튜브
+  const yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  if(yt) src=`https://www.youtube.com/embed/${yt[1]}`;
+  // 구글드라이브
+  const gd=url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if(gd) src=`https://drive.google.com/file/d/${gd[1]}/preview`;
+  if(src){
+    el.innerHTML=`<iframe src="${src}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    el.innerHTML=`<div class="video-placeholder"><div class="ico">🔗</div><p>유튜브 또는 구글드라이브 링크를 입력해주세요</p></div>`;
+  }
+}
+
+// ── 수강생 추가
+function addMember(data=null){
+  const idx=memberIdx++;
+  const wrap=document.getElementById('members-wrap');
+  const div=document.createElement('div');
+  div.className='member-card';
+  div.id=`mc-${idx}`;
+  div.innerHTML=`
+    <div class="mc-head">
+      <div>
+        <input type="text" value="${data?.name||''}" placeholder="수강생 이름" id="mc-name-${idx}"
+          style="font-size:15px;font-weight:700;color:var(--navy);border:none;background:transparent;outline:none;font-family:'Noto Sans KR',sans-serif;width:180px;">
+        <input type="text" value="${data?.role||''}" placeholder="예) 15년차 영어 강사" id="mc-role-${idx}"
+          style="display:block;font-size:11px;color:var(--gray);border:none;background:transparent;outline:none;font-family:'Noto Sans KR',sans-serif;margin-top:3px;width:240px;">
+      </div>
+      <button onclick="removeMember(${idx})" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--gray);">✕</button>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div>
+          <label class="fl">스텔라 개인 피드백 영상 링크</label>
+          <div class="video-sm" id="mv-preview-${idx}">
+            <div class="video-placeholder" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <div style="font-size:24px;">🎬</div><p style="font-size:11px;color:#9AAABB;">피드백 영상 링크</p>
+            </div>
+          </div>
+          <div class="video-input-row" style="margin-top:6px;">
+            <input type="text" class="vi" id="mv-url-${idx}" value="${data?.feedbackVideoUrl||''}" placeholder="유튜브 또는 구글드라이브">
+            <button class="vi-btn" onclick="embedVideo('mv-url-${idx}','mv-preview-${idx}')">적용</button>
+          </div>
+        </div>
+        <div>
+          <div class="f"><label class="fl">강점</label><textarea class="ft" id="mc-str-${idx}" rows="3" placeholder="이 수강생의 이번 회차 강점">${data?.strength||''}</textarea></div>
+          <div class="f"><label class="fl">보완 포인트</label><textarea class="ft" id="mc-imp-${idx}" rows="3" placeholder="구체적인 보완 방향">${data?.improve||''}</textarea></div>
+          <div class="f"><label class="fl">스텔라 한 줄 코멘트</label><textarea class="ft" id="mc-cmt-${idx}" rows="2" placeholder="이 수강생에게 전하는 핵심 한 마디">${data?.comment||''}</textarea></div>
+        </div>
+      </div>
+    </div>`;
+  wrap.appendChild(div);
+  // 기존 데이터 있으면 영상 embed
+  if(data?.feedbackVideoUrl){
+    setTimeout(()=>embedVideo(`mv-url-${idx}`,`mv-preview-${idx}`),100);
+  }
+}
+
+function removeMember(idx){
+  const el=document.getElementById(`mc-${idx}`);
+  if(el) el.remove();
+}
+
+// ── 저장
+async function saveDoc(){
+  const members=collectMembers();
+  const data={
+    session:curSession,
+    zoomUrl:document.getElementById('zoom-url').value.trim(),
+    commonStrength:document.getElementById('common-strength').value,
+    commonImprove:document.getElementById('common-improve').value,
+    commonGoal:document.getElementById('common-goal').value,
+    members,
+    published:sessionData[curSession]?.published||false,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  try{
+    await db.collection('group_feedback').doc(`session_${curSession}`).set(data);
+    sessionData[curSession]=data;
+    document.getElementById(`s${curSession}-status`).textContent=data.published?'공개중':'저장됨';
+    document.getElementById('save-note').textContent='방금 저장됨';
+    showToast('✅ 저장 완료');
+  }catch(e){alert('저장 실패: '+e.message);}
+}
+
+// ── 공개하기
+async function publishDoc(){
+  await saveDoc();
+  try{
+    await db.collection('group_feedback').doc(`session_${curSession}`).update({published:true});
+    sessionData[curSession].published=true;
+    document.getElementById(`s${curSession}-status`).textContent='공개중';
+    showToast('🌐 공개되었습니다');
+  }catch(e){alert('공개 실패: '+e.message);}
+}
+
+function collectMembers(){
+  const members=[];
+  document.querySelectorAll('.member-card').forEach(card=>{
+    const idx=card.id.replace('mc-','');
+    members.push({
+      name:document.getElementById(`mc-name-${idx}`)?.value||'',
+      role:document.getElementById(`mc-role-${idx}`)?.value||'',
+      feedbackVideoUrl:document.getElementById(`mv-url-${idx}`)?.value||'',
+      strength:document.getElementById(`mc-str-${idx}`)?.value||'',
+      improve:document.getElementById(`mc-imp-${idx}`)?.value||'',
+      comment:document.getElementById(`mc-cmt-${idx}`)?.value||'',
+    });
+  });
+  return members;
+}
+
+function copyPubLink(){
+  navigator.clipboard.writeText('https://coaching.literstella.co.kr/group-feedback.html')
+    .then(()=>showToast('링크가 복사되었습니다'));
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
+function fmtDate(ts){if(!ts)return'—';const d=ts.toDate?ts.toDate():new Date(ts);return`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;}
+</script>
+</body>
+</html>

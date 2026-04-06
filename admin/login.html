@@ -49,20 +49,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
 
   <!-- 바로가기 메뉴 -->
   <div class="quick-label">바로가기</div>
-  <div class="quick-menu">
+  <div class="quick-menu" style="grid-template-columns:repeat(4,1fr);">
     <a class="quick-item" href="dashboard.html">
       <span class="qi-ico">📋</span>
-      <span class="qi-txt">지원서 보기</span>
+      <span class="qi-txt">지원서</span>
       <span class="qi-note">로그인 필요</span>
     </a>
-    <a class="quick-item" href="dashboard.html">
-      <span class="qi-ico">📊</span>
-      <span class="qi-txt">적성검사 결과</span>
+    <a class="quick-item" href="curriculum.html">
+      <span class="qi-ico">📘</span>
+      <span class="qi-txt">커리큘럼</span>
+      <span class="qi-note">로그인 필요</span>
+    </a>
+    <a class="quick-item" href="group-feedback.html">
+      <span class="qi-ico">👥</span>
+      <span class="qi-txt">그룹 피드백</span>
       <span class="qi-note">로그인 필요</span>
     </a>
     <a class="quick-item" href="evaluation.html">
       <span class="qi-ico">🌟</span>
-      <span class="qi-txt">평가표 보기</span>
+      <span class="qi-txt">평가표</span>
       <span class="qi-note">로그인 필요</span>
     </a>
   </div>
@@ -87,11 +92,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(150deg,#0D
 </div>
 
 <p class="bottom-note">
-  literbryanbae@gmail.com · jayne0609@gmail.com<br>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9df1f4e9f8efffefe4fcf3fffcf8ddfaf0fcf4f1b3fef2f0">[email&#160;protected]</a> · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7bdb6aeb9b2e7e1e7ee97b0bab6bebbf9b4b8ba">[email&#160;protected]</a><br>
   등록된 관리자 계정으로만 접근 가능합니다
 </p>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const ADMIN_EMAILS = ['literbryanbae@gmail.com','jayne0609@gmail.com'];
 
 firebase.initializeApp({
@@ -151,14 +156,4 @@ function resetPassword(){
   }
   auth.sendPasswordResetEmail(email)
     .then(() => {
-      suc.textContent = '✅ ' + email + ' 으로 재설정 메일을 보냈습니다. 메일함을 확인해 주세요.';
-      suc.style.display = 'block';
-    })
-    .catch(() => {
-      err.textContent = '메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
-      err.style.display = 'block';
-    });
-}
-</script>
-</body>
-</html>
+  
