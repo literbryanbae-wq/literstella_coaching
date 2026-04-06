@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그룹 강독 코칭 피드백 | 리터스텔라 SPECIAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#1A3C6B;--blue:#2E75B6;--teal:#2A8A8A;--gold:#C8922A;--green:#2A7A4A;--rule:#E8E4DC;--gray:#6B7A8D;--lt:#9AAABB;--ink:#1C2A3A;--cream:#FAF7F2;}
+body{font-family:'Noto Sans KR',sans-serif;background:#F0F4F8;color:var(--ink);}
+
+/* 헤더 */
+.hd{background:linear-gradient(135deg,#0D2447,var(--navy));padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.hd-logo{font-family:'Noto Serif KR',serif;color:#fff;font-size:16px;font-weight:700;}
+.hd-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:11px;padding:4px 12px;border-radius:20px;}
+
+/* 히어로 */
+.hero{background:linear-gradient(160deg,#0D2447,var(--navy) 55%,var(--teal));padding:40px 24px 36px;text-align:center;}
+.hero-eyebrow{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.18em;margin-bottom:14px;}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(22px,5vw,32px);font-weight:700;color:#fff;line-height:1.3;margin-bottom:10px;}
+.hero p{font-size:14px;color:rgba(255,255,255,.55);line-height:1.8;}
+
+/* 회차 탭 */
+.tabs-wrap{max-width:780px;margin:24px auto 0;padding:0 16px;}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.tab{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:14px;font-weight:700;padding:10px 28px;border-radius:30px;cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',sans-serif;}
+.tab:hover{background:rgba(255,255,255,.2);}
+.tab.active{background:#fff;color:var(--navy);border-color:#fff;}
+.tab.locked{opacity:.4;cursor:not-allowed;}
+
+/* 본문 */
+.wrap{max-width:780px;margin:0 auto;padding:24px 16px 60px;}
+
+/* 로딩 */
+.loading{text-align:center;padding:80px 20px;color:var(--lt);}
+.loading .spin{font-size:32px;display:block;margin-bottom:12px;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* 미공개 */
+.locked-box{background:#fff;border-radius:14px;padding:48px 24px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.locked-box .ico{font-size:44px;margin-bottom:16px;}
+.locked-box h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.locked-box p{font-size:14px;color:var(--gray);line-height:1.75;}
+
+/* 섹션 */
+.sec{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden;margin-bottom:20px;}
+.sec-hd{background:var(--navy);padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.sec-hd .ico{font-size:20px;}
+.sec-hd h2{color:#fff;font-size:15px;font-weight:700;}
+.sec-hd p{color:rgba(255,255,255,.5);font-size:11px;margin-top:2px;}
+.sec-body{padding:22px;}
+
+/* 영상 */
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;background:#EEF2F7;border-radius:10px;overflow:hidden;}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+
+/* 공통 피드백 */
+.fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.fb-item{background:var(--cream);border-radius:10px;padding:14px 16px;}
+.fb-item.full{grid-column:1/-1;}
+.fb-label{font-size:9px;font-weight:700;color:var(--lt);letter-spacing:.12em;margin-bottom:7px;}
+.fb-val{font-size:13.5px;color:var(--ink);line-height:1.8;}
+.fb-item.strength .fb-label{color:var(--green);}
+.fb-item.improve .fb-label{color:var(--blue);}
+.fb-item.goal .fb-label{color:var(--gold);}
+
+/* 개별 카드 */
+.member-card{border:1.5px solid var(--rule);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.mc-head{background:linear-gradient(135deg,#F5F8FC,#EBF3FB);padding:14px 18px;display:flex;align-items:center;gap:12px;}
+.mc-avatar{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.mc-name{font-size:15px;font-weight:700;color:var(--navy);}
+.mc-role{font-size:11px;color:var(--gray);margin-top:2px;}
+.mc-body{padding:18px;}
+.mc-video-wrap{position:relative;padding-bottom:56.25%;height:0;background:#EEF2F7;border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.mc-video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.mc-fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.mc-comment{background:linear-gradient(135deg,#EBF3FB,#F0F8F5);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;}
+.mc-comment-lbl{font-size:9px;font-weight:700;color:var(--blue);letter-spacing:.1em;margin-bottom:5px;}
+.mc-comment-val{font-size:13px;color:var(--ink);line-height:1.8;font-style:italic;}
+
+/* 날짜 */
+.session-meta{text-align:right;font-size:11px;color:var(--lt);margin-bottom:16px;}
+
+@media(max-width:600px){
+  .fb-grid,.mc-fb-grid{grid-template-columns:1fr;}
+  .fb-item.full{grid-column:1;}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-logo">Liter Stella</div>
+  <div class="hd-badge">SPECIAL 3기 · 그룹 코칭</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">SPECIAL 3기 · 코스 2 그룹 강독 코칭</div>
+  <h1>그룹 강독 코칭<br>피드백 시트</h1>
+  <p>릴레이 강독 영상 · 스텔라 공통 피드백 · 개별 피드백<br>함께 보고, 함께 성장합니다</p>
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(1,this)" id="tab1">1회차</button>
+      <button class="tab" onclick="switchTab(2,this)" id="tab2">2회차</button>
+      <button class="tab" onclick="switchTab(3,this)" id="tab3">3회차</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="main-wrap">
+  <div class="loading">
+    <span class="spin">⟳</span>
+    <p>피드백 시트를 불러오는 중입니다...</p>
+  </div>
+</div>
+
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCTh5ZK03MpKy4pc2w3GTuV-Q-zHoYY0oI",authDomain:"literstella.firebaseapp.com",projectId:"literstella",storageBucket:"literstella.firebasestorage.app",messagingSenderId:"510303446020",appId:"1:510303446020:web:5e0188919058b9fc5f4151"});
+const db=firebase.firestore();
+let curSession=1;
+
+function switchTab(n, btn){
+  curSession=n;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadSession(n);
+}
+
+async function loadSession(n){
+  const wrap=document.getElementById('main-wrap');
+  wrap.innerHTML=`<div class="loading"><span class="spin">⟳</span><p>불러오는 중...</p></div>`;
+  try{
+    const doc=await db.collection('group_feedback').doc(`session_${n}`).get();
+    if(!doc.exists||!doc.data().published){
+      wrap.innerHTML=`<div class="locked-box">
+        <div class="ico">🔒</div>
+        <h3>${n}회차 피드백이 아직 준비 중입니다</h3>
+        <p>스텔라가 피드백을 작성하는 중입니다.<br>완료되면 이 페이지에 자동으로 공개됩니다.</p>
+      </div>`;
+      return;
+    }
+    const d=doc.data();
+    renderSession(d, n);
+  }catch(e){
+    wrap.innerHTML=`<div class="locked-box"><div class="ico">⚠️</div><h3>불러오기 실패</h3><p>잠시 후 다시 시도해주세요.</p></div>`;
+  }
+}
+
+function embedSrc(url){
+  if(!url) return '';
+  const yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  if(yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const gd=url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if(gd) return `https://drive.google.com/file/d/${gd[1]}/preview`;
+  return '';
+}
+
+function renderSession(d, n){
+  const wrap=document.getElementById('main-wrap');
+  const updDate=d.updatedAt?fmtDate(d.updatedAt):'—';
+  let html=`<div class="session-meta">최종 업데이트: ${updDate}</div>`;
+
+  // ① Zoom 영상
+  const zSrc=embedSrc(d.zoomUrl||'');
+  html+=`<div class="sec">
+    <div class="sec-hd"><div class="ico">📹</div><div><h2>Zoom 릴레이 강독 영상</h2><p>${n}회차 전체 그룹 녹화본</p></div></div>
+    <div class="sec-body">
+      ${zSrc?`<div class="video-wrap"><iframe src="${zSrc}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`
+      :`<div style="background:#F5F8FC;border-radius:10px;padding:40px;text-align:center;color:var(--lt);">🎬 영상이 곧 업로드됩니다</div>`}
+    </div>
+  </div>`;
+
+  // ② 공통 피드백
+  html+=`<div class="sec">
+    <div class="sec-hd"><div class="ico">📝</div><div><h2>스텔라 공통 피드백</h2><p>이번 회차 전원에게 해당하는 피드백</p></div></div>
+    <div class="sec-body">
+      <div class="fb-grid">
+        <div class="fb-item strength">
+          <div class="fb-label">✦ 공통 강점</div>
+          <div class="fb-val">${d.commonStrength||'—'}</div>
+        </div>
+        <div class="fb-item improve">
+          <div class="fb-label">✦ 공통 보완 포인트</div>
+          <div class="fb-val">${d.commonImprove||'—'}</div>
+        </div>
+        <div class="fb-item goal full">
+          <div class="fb-label">✦ 다음 회차 공통 목표</div>
+          <div class="fb-val">${d.commonGoal||'—'}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // ③ 개별 피드백
+  if(d.members&&d.members.length){
+    html+=`<div class="sec">
+      <div class="sec-hd"><div class="ico">👤</div><div><h2>수강생별 개별 피드백</h2><p>스텔라 개인 피드백 영상 + 문서 · 그룹 전원 공개</p></div></div>
+      <div class="sec-body">`;
+    d.members.forEach((m,i)=>{
+      const vSrc=embedSrc(m.feedbackVideoUrl||'');
+      const initial=m.name?m.name.charAt(0):'?';
+      html+=`<div class="member-card">
+        <div class="mc-head">
+          <div class="mc-avatar">${initial}</div>
+          <div><div class="mc-name">${m.name||'수강생'}</div><div class="mc-role">${m.role||''}</div></div>
+        </div>
+        <div class="mc-body">
+          ${vSrc?`<div class="mc-video-wrap"><iframe src="${vSrc}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`
+          :`<div style="background:#F5F8FC;border-radius:8px;padding:28px;text-align:center;color:var(--lt);margin-bottom:14px;font-size:13px;">🎬 피드백 영상 준비 중</div>`}
+          <div class="mc-fb-grid">
+            <div class="fb-item strength"><div class="fb-label">✦ 강점</div><div class="fb-val">${m.strength||'—'}</div></div>
+            <div class="fb-item improve"><div class="fb-label">✦ 보완 포인트</div><div class="fb-val">${m.improve||'—'}</div></div>
+          </div>
+          ${m.comment?`<div class="mc-comment"><div class="mc-comment-lbl">✍️ 스텔라 코멘트</div><div class="mc-comment-val">${m.comment}</div></div>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  wrap.innerHTML=html;
+}
+
+function fmtDate(ts){
+  if(!ts)return'—';
+  const d=ts.toDate?ts.toDate():new Date(ts);
+  return`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// 최초 로드
+loadSession(1);
+</script>
+</body>
+</html>
