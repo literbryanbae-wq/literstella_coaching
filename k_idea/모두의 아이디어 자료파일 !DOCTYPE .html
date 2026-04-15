@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-문명 국가전략 2026: 데이터 인터랙티브 리포트</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+@media (min-width: 768px) { .chart-container { height: 400px; } }
+body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; background-color: #faf9f6; color: #1e293b; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+.tab-btn.active { border-bottom: 2px solid #b45309; color: #b45309; font-weight: 700; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.timeline-item { cursor: pointer; transition: all 0.2s; }
+.timeline-item:hover, .timeline-item.active { background-color: #f1f5f9; border-left-color: #b45309; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- Chosen Palette: Warm Neutrals (#faf9f6), Deep Navy (#0f172a), and Gold/Bronze accents (#b45309) -->
+<!-- Application Structure Plan: A dashboard-style single-page application divided into 5 thematic sections (The Paradox, The OS Gap, Historical Proof, Action Plan, ROI). This structure was chosen to guide the user logically from the initial problem (gap between capability and perception) to the root cause (lack of OS), the historical evidence of the solution, the actionable governance plan, and finally the economic justification. Interactive tabs and charts encourage deep diving without overwhelming the user with a massive wall of text. -->
+<!-- Visualization & Content Choices: 
+1. Brand Finance Data -> Bar Chart (Chart.js) -> Hover for details -> Visually emphasizes the gap between KR and top nations (NO SVG/Mermaid).
+2. OS Comparison & Strategies -> Interactive Tabs & CSS Grid Cards -> Click to reveal details -> Organizes dense comparative data into bite-sized explorable chunks (NO SVG/Mermaid).
+3. Historical Timeline -> Interactive HTML/CSS Timeline -> Click events to highlight eras -> Shows the organic, bottom-up growth of K-Civilization (NO SVG/Mermaid).
+4. ROI & Conflict Cost -> Doughnut Chart (Chart.js) -> Hover -> Highlights the massive economic potential of social capital (NO SVG/Mermaid). -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<nav class="fixed w-full bg-[#0f172a] text-white z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <span class="text-xl font-bold tracking-tight text-[#fde68a]">K-CIVILIZATION 2026</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#paradox" class="hover:text-[#fde68a] transition-colors text-sm font-medium">1. 역설의 데이터</a>
+                <a href="#os-gap" class="hover:text-[#fde68a] transition-colors text-sm font-medium">2. 국가 철학 비교</a>
+                <a href="#history" class="hover:text-[#fde68a] transition-colors text-sm font-medium">3. 역사적 증명</a>
+                <a href="#strategy" class="hover:text-[#fde68a] transition-colors text-sm font-medium">4. 거버넌스 전략</a>
+                <a href="#roi" class="hover:text-[#fde68a] transition-colors text-sm font-medium">5. 경제적 부가가치</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<header class="pt-28 pb-16 px-4 text-center max-w-4xl mx-auto">
+    <div class="inline-block bg-[#fef3c7] text-[#b45309] px-4 py-1 rounded-full text-sm font-bold mb-6 tracking-widest">DATA FACT PACK</div>
+    <h1 class="text-4xl md:text-5xl font-extrabold text-[#0f172a] leading-tight mb-6">K-문명 국가전략 2026</h1>
+    <p class="text-xl text-[#475569] leading-relaxed">역량 세계 1위가 왜 인식 11위인가. 문화 강국의 정체성 공백과 지속 가능성 위기를 극복하기 위한 '국가 철학(OS)' 구축 및 글로벌 소프트파워 5위 도약 마스터플랜.</p>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+    <section id="paradox" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-[#0f172a] mb-4">1. 역설의 데이터: 역량과 인식의 괴리</h2>
+            <p class="text-[#475569] leading-relaxed">이 섹션은 대한민국이 직면한 소프트파워의 모순을 보여줍니다. IMF 객관적 지표와 Brand Finance 인식 조사의 간극을 차트로 탐색하며, 왜 단순한 '콘텐츠 수출'을 넘어선 '국가 브랜드화'가 필요한지 확인할 수 있습니다. 차트의 막대를 마우스로 호버하여 각 국가의 세부 강점 필라를 확인하십시오.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-10">
+                <div class="bg-[#f8fafc] p-6 rounded-xl text-center border border-slate-100">
+                    <div class="text-sm font-bold text-[#64748b] uppercase tracking-wider mb-2">IMF 객관적 지표 (WP/24/212)</div>
+                    <div class="text-5xl font-black text-[#0f172a] mb-2">세계 1위</div>
+                    <p class="text-sm text-[#475569]">디지털 및 문화적 도달력 (1.68점)</p>
+                </div>
+                <div class="bg-[#fef2f2] p-6 rounded-xl text-center border border-red-100">
+                    <div class="text-sm font-bold text-[#ef4444] uppercase tracking-wider mb-2">Brand Finance 2026 인식 조사</div>
+                    <div class="text-5xl font-black text-[#b91c1c] mb-2">세계 11위</div>
+                    <p class="text-sm text-[#7f1d1d]">종합 59.2점 (목표: 독일 67.7점)</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="brandFinanceChart"></canvas>
+            </div>
+            <p class="text-center text-sm text-[#64748b] mt-4">출처: Brand Finance Global Soft Power Index 2026 / 상위 주요국 및 한국 비교</p>
+        </div>
+    </section>
+
+    <section id="os-gap" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-[#0f172a] mb-4">2. 국가 철학(OS)의 공백과 차별성</h2>
+            <p class="text-[#475569] leading-relaxed">세계 선진국들이 어떻게 '국가(State)' 주도의 철학(OS)을 바탕으로 소프트파워를 전파하는지 분석합니다. 아래 탭을 클릭하여 주요 7개국의 거버넌스 구조를 비교하고, 일본 '쿨재팬'과 중국 '공자학원'의 실패 사례를 통해 한국만의 상향식(Bottom-up) 'K-문명' 전략이 왜 독보적인지 탐색하십시오.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="flex border-b border-slate-200 overflow-x-auto">
+                <button class="tab-btn active px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-os">7개국 OS 및 전파 구조</button>
+                <button class="tab-btn px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-fail">경쟁국 실패 사례 분석</button>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <div id="tab-os" class="tab-content active">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="os-cards-container">
+                    </div>
+                </div>
+
+                <div id="tab-fail" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-6">
+                            <div class="text-3xl mb-4">🇯🇵</div>
+                            <h3 class="text-lg font-bold text-[#0f172a] mb-2">일본: 쿨재팬 (Cool Japan)</h3>
+                            <ul class="text-sm text-[#475569] space-y-3">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 관 주도 (관료 기획, 대규모 펀드)</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 상업적 콘텐츠(애니/식음료) 수출 보조</li>
+                                <li><strong class="text-[#ef4444]">실패 요인:</strong> 공급자 중심의 일방적 국수주의적 문화 주입 (갈라파고스화), 막대한 펀드 손실.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-6">
+                            <div class="text-3xl mb-4">🇨🇳</div>
+                            <h3 class="text-lg font-bold text-[#0f172a] mb-2">중국: 공자학원</h3>
+                            <ul class="text-sm text-[#475569] space-y-3">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 당/국가 주도</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 체제 선전, 일방적 이데올로기 주입</li>
+                                <li><strong class="text-[#ef4444]">실패 요인:</strong> 학문의 자유 침해 논란으로 서구권 반발 및 연쇄 퇴출. 소프트파워의 하드파워화.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#fffbeb] border border-[#fde68a] rounded-xl p-6 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-[#b45309]"></div>
+                            <div class="text-3xl mb-4">🇰🇷</div>
+                            <h3 class="text-lg font-bold text-[#b45309] mb-2">한국: K-문명 전략 (제안)</h3>
+                            <ul class="text-sm text-[#475569] space-y-3">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 민간 생태계 자생 + 법적/제도적 토대</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 인류 보편의 가치(홍익인간), 역사적 경험 글로벌 공명</li>
+                                <li><strong class="text-[#059669]">성공 전략:</strong> "존중해야 존중받는다"는 상호 호혜성 확보. 일방적 주입이 아닌 보편적 연대.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="history" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-[#0f172a] mb-4">3. 역사적 실천: 정(情)·한(恨)·흥(興)의 증명</h2>
+            <p class="text-[#475569] leading-relaxed">K-문명의 근간인 '정, 한, 흥'은 단순한 기질이 아닌 수백만 명의 자발적 결집으로 증명된 역사적 실천(Historical Praxis)입니다. 좌측의 타임라인 연도를 클릭하여 대한민국의 결정적 순간들이 어떻게 인류 보편적 가치(비폭력, 공생)로 발현되었는지 우측 상세 패널에서 확인하십시오. 태안 자원봉사의 UN 공인 기록 등 객관적 팩트를 제공합니다.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3 border-r border-slate-200 pr-4" id="timeline-container">
+                </div>
+                <div class="md:w-2/3 pl-0 md:pl-4 flex flex-col justify-center min-h-[300px]" id="timeline-detail">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="strategy" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-[#0f172a] mb-4">4. 전략 및 거버넌스 재설계</h2>
+            <p class="text-[#475569] leading-relaxed">부처 이기주의와 기능의 파편화를 혁파하기 위한 거버넌스 통합 모델과 글로벌 타겟팅 전략입니다. 현재의 비효율적인 분산 구조를 분석하고, 영국 브리티시 카운슬과 프랑스 알리앙스 프랑세즈를 벤치마킹한 독립적 컨트롤타워 구축 로드맵을 정리했습니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-2xl">🏛️</span>
+                    <h3 class="text-xl font-bold text-[#0f172a]">재외 기관 파편화 현황</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-[#0f172a]">외교부 (한국국제교류재단)</div>
+                            <div class="text-xs text-slate-500 mt-1">162개국 공관. 공공외교 주도, 예산/콘텐츠 한계</div>
+                        </div>
+                        <span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">거점 분산</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-[#0f172a]">문체부 (세종학당/문화원)</div>
+                            <div class="text-xs text-slate-500 mt-1">87개국 252개소. 인프라 최대, 언어/K팝 편중</div>
+                        </div>
+                        <span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">기능 제한</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-[#0f172a]">교육부 (한국교육원)</div>
+                            <div class="text-xs text-slate-500 mt-1">19개국 43개소. 재외동포 중심, 철학 확산 미비</div>
+                        </div>
+                        <span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">대상 한정</span>
+                    </div>
+                    <div class="mt-4 p-4 bg-[#fef3c7] border border-[#fde68a] rounded-lg text-sm text-[#b45309] font-medium text-center">
+                        해결책: 'K-문명 기본법' 기반 단일 철학(One-OS) 원스톱 거점 통합
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-2xl">🌍</span>
+                    <h3 class="text-xl font-bold text-[#0f172a]">국가별 진입 전략 (Global Targeting)</h3>
+                </div>
+                <div class="space-y-6">
+                    <div class="border-l-4 border-[#0f172a] pl-4">
+                        <h4 class="font-bold text-[#0f172a] text-lg">노스폴 (Global North)</h4>
+                        <p class="text-sm text-slate-500 mb-2">미국, 영국, 프랑스, 독일 등 서구 선진국</p>
+                        <p class="text-sm text-[#475569]"><strong>감성 침투 후 학술화 전략:</strong> 이미 익숙한 K-컬처를 고차원적 인문학(정·한·흥)으로 격상시켜 지식인 사회 포섭. K-문명 글로벌 서밋 개최 및 선도 대학 내 연구소 설립.</p>
+                    </div>
+                    <div class="border-l-4 border-[#b45309] pl-4">
+                        <h4 class="font-bold text-[#b45309] text-lg">사우스폴 (Global South)</h4>
+                        <p class="text-sm text-slate-500 mb-2">아세안, 중동, 아프리카, 중남미</p>
+                        <p class="text-sm text-[#475569]"><strong>역사적 서사 및 정서적 공명 전략:</strong> 식민지, 민주화, 경제 기적의 경험을 공유. 공적개발원조(ODA) 및 K-City 수출에 '우리가 너희를 돕는다'는 홍익인간적 호혜성 연동.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roi" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-[#0f172a] mb-4">5. 거시경제적 부가가치 (ROI)</h2>
+            <p class="text-[#475569] leading-relaxed">K-문명은 단순한 문화 정책이 아닙니다. 매년 한국 사회에서 증발하는 막대한 '갈등 비용'을 제거하고, 경제적 효율성을 극대화하는 가장 강력한 '사회적 자본(Social Capital)' 투자입니다. 아래 차트는 K-문명 신뢰 시스템 정착 시 절감할 수 있는 경제적 손실 규모를 직관적으로 보여줍니다.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="chart-container" style="height: 300px; max-height: 300px;">
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-[#64748b] mt-4">출처: KDI / 삼성경제연구소 등 사회 갈등비용 추산치 종합</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-[#f8fafc] p-5 rounded-xl border border-slate-200">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-xl">📉</span>
+                            <h4 class="font-bold text-[#0f172a]">현재의 경제적 손실</h4>
+                        </div>
+                        <p class="text-sm text-[#475569]">한국의 사회갈등 지수는 OECD 3위. 이로 인한 경제적 손실액은 연간 최대 <strong>82조 원 ~ 246조 원 (명목 GDP의 10% 이상)</strong>으로 추산됨. 불필요한 보안, 소송, 신뢰 비용의 증발.</p>
+                    </div>
+                    
+                    <div class="bg-[#fffbeb] p-5 rounded-xl border border-[#fde68a]">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-xl">📈</span>
+                            <h4 class="font-bold text-[#b45309]">K-문명의 투자 자본 수익률</h4>
+                        </div>
+                        <p class="text-sm text-[#475569]">카페에 지갑을 두고 가는 '정(情)'의 문화는 연간 수조 원의 보안 비용을 절감시키는 무비용 고효율 시스템임. 시민교육 및 생태계 육성을 통해 신뢰도가 OECD 평균으로 회복될 경우, <strong>연간 수십조 원의 경제 성장 효과 및 150조 원 한류 수출 목표 달성</strong>의 핵심 동력이 됨.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-[#0f172a] text-white py-12 text-center">
+    <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-2xl font-bold text-[#fde68a] mb-4">Hongik — 널리 인간을 이롭게 하라</h2>
+        <p class="text-slate-400 text-sm mb-8">본 인터랙티브 리포트는 K-문명 국가전략 2026 핵심 데이터 증빙자료집을 기반으로 제작되었습니다.</p>
+        <p class="text-xs text-slate-500">&copy; 2026 K-Civilization Strategy Group. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- State Management & Data Storage ---
+    const appState = {
+        currentOsTab: 'tab-os',
+        currentTimelineIndex: 7 // default to Taean
+    };
+
+    const osData = [
+        { flag: '🇺🇸', name: '미국', os: '자유민주주의, 실용주의', core: '개인의 자유와 성취', type: '국가·엘리트 (Top-Down)', mechanism: '달러, 군사력, 헐리우드, 실리콘밸리' },
+        { flag: '🇬🇧', name: '영국', os: '전통과 팝아트의 공존', core: '귀족적 품격과 파격', type: '국가·엘리트 (Top-Down)', mechanism: 'BBC, 브리티시 카운슬, 잉글리시 클래식' },
+        { flag: '🇫🇷', name: '프랑스', os: '똘레랑스, 삶의 예술', core: '지적 향유와 다양성', type: '국가·지식인 (Top-Down)', mechanism: '알리앙스 프랑세즈, 럭셔리 산업' },
+        { flag: '🇩🇪', name: '독일', os: '정밀성, 게뮈틀리히카이트', core: '소집단의 온기와 철학', type: '국가·학계 (Top-Down)', mechanism: '괴테 인스티투트, 마이스터' },
+        { flag: '🇯🇵', name: '일본', os: '모노노아와레, 오모테나시', core: '감수성과 장인정신', type: '정부·엘리트 (Top-Down)', mechanism: '쿨재팬, 애니메이션, 게임' },
+        { flag: '🇨🇳', name: '중국', os: '중화사상, 꽌시', core: '국가 중심의 위계 질서', type: '국가/당 (Top-Down)', mechanism: '공자학원, 일대일로' },
+        { flag: '🇰🇷', name: '한국', os: '정(情)·한(恨)·흥(興)', core: '수백만 자발적 연대의 에너지', type: '국민 주체 (Bottom-Up)', mechanism: 'K-콘텐츠, 디지털 인프라, 시민 행동' }
+    ];
+
+    const timelineData = [
+        { year: '1894', title: '동학농민운동', participants: '약 30만 명', detail: '인내천(人乃天) 사상 제창. 민중 주도의 보편적 인권 선언으로 글로벌 사우스의 서사와 공명.' },
+        { year: '1919', title: '3·1 운동', participants: '약 200만 명', detail: '한(恨)을 비폭력 저항으로 승화. 제국주의에 맞선 롤모델.' },
+        { year: '1960', title: '4·19 혁명', participants: '전국적 학생/시민', detail: '부당한 권력에 대한 정의(한). 아시아 민주주의의 이정표.' },
+        { year: '1980', title: '5·18 광주민주화', participants: '광주 시민 전체', detail: '국가 폭력 앞 공동체 수호(정/한). 한강 소설을 통한 글로벌 트라우마 공명.' },
+        { year: '1987', title: '6월 항쟁', participants: '약 100만 명', detail: '국민이 직접 헌법(직선제) 설계. 쟁취하는 민주주의 표본.' },
+        { year: '1997', title: '금모으기 운동', participants: '약 350만 명', detail: '국가 위기를 공동체 유대(정)로 극복. 전무후무한 경제 주권 수호.' },
+        { year: '2002', title: '월드컵 거리응원', participants: '연인원 2,400만 명', detail: '집단 생동감과 비폭력 축제(흥). 세계 최고 수준의 질서 있는 군중 문화.' },
+        { year: '2007', title: '태안 기름 유출', participants: '약 123만 명', detail: '한(恨)을 연대(정)로 극복. UN 공인 세계 최대 자발적 환경 자원봉사 (UNESCO 기록유산 등재).' },
+        { year: '2016', title: '촛불 혁명', participants: '누적 1,700만 명', detail: '분노를 축제(흥)로 바꾼 비폭력 저항. 세계 민주주의 역사상 가장 평화로운 혁명.' },
+        { year: '2024', title: '계엄 저지', participants: '전 국민적', detail: '제도가 아닌 국민이 직접 헌법 수호. 총칼 앞에서도 물러서지 않는 K-민주주의 입증.' }
+    ];
+
+    // --- Core Interaction Handling & Functional Navigation ---
+    
+    // 1. OS Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            const targetId = e.target.getAttribute('data-target');
+            e.target.classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+            appState.currentOsTab = targetId;
+        });
+    });
+
+    // 2. Render OS Cards
+    const osContainer = document.getElementById('os-cards-container');
+    osData.forEach((item, index) => {
+        const isKorea = item.name === '한국';
+        const cardClass = isKorea ? 'bg-[#fffbeb] border-[#fde68a] border-2 shadow-md relative' : 'bg-[#f8fafc] border-slate-200 border';
+        const titleClass = isKorea ? 'text-[#b45309]' : 'text-[#0f172a]';
+        
+        let cardHTML = `
+            <div class="rounded-xl p-5 ${cardClass}">
+                ${isKorea ? '<div class="absolute -top-3 -right-3 bg-[#b45309] text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">K-문명 제안</div>' : ''}
+                <div class="text-3xl mb-3">${item.flag}</div>
+                <h3 class="text-lg font-bold ${titleClass} mb-2">${item.name}</h3>
+                <div class="text-sm font-bold text-slate-700 mb-1">OS: <span class="font-normal text-[#475569]">${item.os}</span></div>
+                <div class="text-sm font-bold text-slate-700 mb-1">주도: <span class="font-normal ${isKorea ? 'text-[#b45309] font-bold' : 'text-[#475569]'}">${item.type}</span></div>
+                <div class="text-sm font-bold text-slate-700">기제: <span class="font-normal text-[#475569] truncate block" title="${item.mechanism}">${item.mechanism}</span></div>
+            </div>
+        `;
+        osContainer.innerHTML += cardHTML;
+    });
+
+    // 3. Render Timeline
+    const tlContainer = document.getElementById('timeline-container');
+    const tlDetail = document.getElementById('timeline-detail');
+
+    function renderTimelineDetail(index) {
+        const data = timelineData[index];
+        tlDetail.innerHTML = `
+            <div class="animate-[fadeIn_0.3s_ease-out]">
+                <div class="text-[#b45309] font-bold text-xl mb-2">${data.year}</div>
+                <h3 class="text-3xl font-extrabold text-[#0f172a] mb-4">${data.title}</h3>
+                <div class="inline-block px-4 py-2 bg-slate-100 rounded-lg text-sm font-bold text-[#475569] mb-6">
+                    참여 규모: ${data.participants}
+                </div>
+                <p class="text-lg text-slate-700 leading-relaxed border-l-4 border-[#b45309] pl-5 py-2 bg-slate-50">
+                    ${data.detail}
+                </p>
+            </div>
+        `;
+    }
+
+    timelineData.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `timeline-item border-l-4 border-slate-200 pl-4 py-3 mb-2 rounded-r-lg ${index === appState.currentTimelineIndex ? 'active border-l-[#b45309] bg-[#f1f5f9]' : ''}`;
+        div.innerHTML = `<span class="font-bold text-[#0f172a]">${item.year}</span> <span class="text-sm text-slate-500 ml-2">${item.title}</span>`;
+        
+        div.addEventListener('click', () => {
+            document.querySelectorAll('.timeline-item').forEach(el => {
+                el.classList.remove('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]');
+                el.classList.add('border-slate-200');
+            });
+            div.classList.remove('border-slate-200');
+            div.classList.add('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]');
+            appState.currentTimelineIndex = index;
+            renderTimelineDetail(index);
+        });
+        tlContainer.appendChild(div);
+    });
+    renderTimelineDetail(appState.currentTimelineIndex);
+
+
+    // --- Chart.js Implementations ---
+
+    // Chart 1: Brand Finance Comparison (Bar Chart)
+    const ctxBrand = document.getElementById('brandFinanceChart').getContext('2d');
+    new Chart(ctxBrand, {
+        type: 'bar',
+        data: {
+            labels: ['미국', '영국', '일본', '독일 (목표)', '프랑스', '한국 (현재)'],
+            datasets: [{
+                label: '2026 소프트파워 총점',
+                data: [74.2, 70.5, 69.8, 67.7, 66.8, 59.2],
+                backgroundColor: [
+                    '#e2e8f0', '#e2e8f0', '#e2e8f0', '#b45309', '#e2e8f0', '#0f172a'
+                ],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const details = [
+                                '강점: 미디어/통신, 비즈니스',
+                                '강점: 문화/유산, 교육',
+                                '강점: 비즈니스, 거버넌스',
+                                '강점: 거버넌스, 지속가능성',
+                                '강점: 문화/유산',
+                                '강점: 비즈니스, K-팝 편중'
+                            ];
+                            return details[context.dataIndex];
+                        }
+                    },
+                    padding: 12,
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 }
+                }
+            },
+            scales: {
+                x: { min: 40, max: 80, grid: { color: '#f1f5f9' } },
+                y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 14 } } }
+            }
+        }
+    });
+
+    // Chart 2: Economic ROI / Conflict Cost (Doughnut Chart)
+    const ctxRoi = document.getElementById('roiChart').getContext('2d');
+    new Chart(ctxRoi, {
+        type: 'doughnut',
+        data: {
+            labels: ['생산적 경제 가치 (정상 성장)', '연간 사회 갈등 비용 증발'],
+            datasets: [{
+                data: [90, 10], // Representing ~10% GDP lost to conflict
+                backgroundColor: ['#0f172a', '#ef4444'],
+                borderWidth: 0,
+                cutout: '75%'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if(context.dataIndex === 1) return ' 최대 246조 원 (명목 GDP의 10%)';
+                            return ' 경제 성장분';
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [{
+            id: 'textCenter',
+            beforeDraw: function(chart) {
+                var width = chart.width, height = chart.height, ctx = chart.ctx;
+                ctx.restore();
+                var fontSize = (height / 160).toFixed(2);
+                ctx.font = "bold " + fontSize + "em sans-serif";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#0f172a";
+                var text = "GDP 10%",
+                    textX = Math.round((width - ctx.measureText(text).width) / 2),
+                    textY = height / 2 - 15;
+                ctx.fillText(text, textX, textY);
+                
+                ctx.font = "normal " + (fontSize*0.5).toFixed(2) + "em sans-serif";
+                ctx.fillStyle = "#ef4444";
+                var text2 = "비용 증발",
+                    text2X = Math.round((width - ctx.measureText(text2).width) / 2),
+                    text2Y = height / 2 + 15;
+                ctx.fillText(text2, text2X, text2Y);
+                ctx.save();
+            }
+        }]
+    });
+
+});
+</script>
+</body>
+</html>
