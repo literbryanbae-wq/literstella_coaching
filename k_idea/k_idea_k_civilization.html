@@ -1,488 +1,714 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K-문명 국가전략 2026: 데이터 인터랙티브 리포트</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* Base Styles */
-body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; background-color: #faf9f6; color: #1e293b; }
-
-/* Chart Containers */
-.chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 280px; max-height: 280px; }
-@media (min-width: 768px) { .chart-container { height: 400px; max-height: 400px; } }
-
-/* Desktop Tab Logic */
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-.tab-btn.active { border-bottom: 2px solid #b45309; color: #b45309; font-weight: 700; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Mobile Linear Overrides */
-@media (max-width: 767px) {
-    /* 1. Force tabs to stack sequentially */
-    .mobile-linear-tabs .tab-btn-container { display: none; }
-    .mobile-linear-tabs .tab-content { display: block !important; opacity: 1; transform: none; margin-bottom: 2.5rem; }
-    .mobile-linear-tabs .tab-content:last-child { margin-bottom: 0; }
-    
-    /* 2. Show section titles inside the stacked tabs for context */
-    .mobile-section-title { display: block; font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-    
-    /* 3. Hide the separate desktop detail panel for timeline */
-    #timeline-detail { display: none !important; }
-}
-@media (min-width: 768px) {
-    .mobile-section-title { display: none; }
-}
-
-/* Timeline Interactive Styles */
-.timeline-item { cursor: pointer; transition: all 0.2s; }
-.timeline-item:hover, .timeline-item.active { background-color: #f1f5f9; border-left-color: #b45309; }
-@media (max-width: 767px) {
-    /* On mobile, remove the hover/active styling to feel like a static list */
-    .timeline-item { cursor: default; }
-    .timeline-item.active { background-color: transparent; border-left-color: #e2e8f0; }
-}
-</style>
-</head>
-<body class="antialiased">
-
-<nav class="fixed w-full bg-[#0f172a] text-white z-50 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex items-center">
-                <span class="text-xl font-bold tracking-tight text-[#fde68a]">K-CIVILIZATION 2026</span>
-            </div>
-            <div class="hidden md:flex items-center space-x-8 overflow-x-auto">
-                <a href="#paradox" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">1. 역설의 데이터</a>
-                <a href="#os-gap" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">2. 국가 철학 비교</a>
-                <a href="#history" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">3. 역사적 증명</a>
-                <a href="#strategy" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">4. 거버넌스 전략</a>
-                <a href="#roi" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">5. 경제적 부가가치</a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<header class="pt-24 md:pt-32 pb-12 md:pb-16 px-4 text-center max-w-4xl mx-auto">
-    <div class="inline-block bg-[#fef3c7] text-[#b45309] px-4 py-1 rounded-full text-xs md:text-sm font-bold mb-6 tracking-widest">DATA FACT PACK</div>
-    <h1 class="text-3xl md:text-5xl font-extrabold text-[#0f172a] leading-tight mb-4 md:mb-6 break-keep">K-문명 국가전략 2026</h1>
-    <p class="text-lg md:text-xl text-[#475569] leading-relaxed break-keep">역량 세계 1위가 왜 인식 11위인가. 문화 강국의 정체성 공백과 지속 가능성 위기를 극복하기 위한 '국가 철학(OS)' 구축 및 글로벌 소프트파워 5위 도약 마스터플랜.</p>
-</header>
-
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-20 md:space-y-24">
-
-    <section id="paradox" class="scroll-mt-20">
-        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">1. 역설의 데이터: 역량과 인식의 괴리</h2>
-            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">이 섹션은 대한민국이 직면한 소프트파워의 모순을 보여줍니다. 단순한 '콘텐츠 수출'을 넘어선 '국가 브랜드화'가 필요한 이유를 객관적 수치로 확인하십시오.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center mb-8">
-                <div class="bg-[#f8fafc] p-5 md:p-6 rounded-xl text-center border border-slate-100">
-                    <div class="text-xs md:text-sm font-bold text-[#64748b] uppercase tracking-wider mb-2">IMF 객관적 지표 (WP/24/212)</div>
-                    <div class="text-4xl md:text-5xl font-black text-[#0f172a] mb-2">세계 1위</div>
-                    <p class="text-xs md:text-sm text-[#475569]">디지털 및 문화적 도달력 (1.68점)</p>
-                </div>
-                <div class="bg-[#fef2f2] p-5 md:p-6 rounded-xl text-center border border-red-100">
-                    <div class="text-xs md:text-sm font-bold text-[#ef4444] uppercase tracking-wider mb-2">Brand Finance 2026 인식 조사</div>
-                    <div class="text-4xl md:text-5xl font-black text-[#b91c1c] mb-2">세계 11위</div>
-                    <p class="text-xs md:text-sm text-[#7f1d1d]">종합 59.2점 (목표: 독일 67.7점)</p>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="brandFinanceChart"></canvas>
-            </div>
-            <p class="text-center text-xs md:text-sm text-[#64748b] mt-4">출처: Brand Finance Global Soft Power Index 2026</p>
-        </div>
-    </section>
-
-    <section id="os-gap" class="scroll-mt-20">
-        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">2. 국가 철학(OS)의 공백과 차별성</h2>
-            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">세계 선진국들의 주도 방식과 실패 사례를 통해 한국만의 상향식(Bottom-up) 'K-문명' 전략이 왜 독보적인지 비교 분석합니다.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mobile-linear-tabs">
-            <div class="flex border-b border-slate-200 overflow-x-auto tab-btn-container">
-                <button class="tab-btn active px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-os">7개국 OS 및 전파 구조</button>
-                <button class="tab-btn px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-fail">경쟁국 실패 사례 분석</button>
-            </div>
-            
-            <div class="p-5 md:p-8">
-                <div id="tab-os" class="tab-content active">
-                    <div class="mobile-section-title">7개국 OS 및 전파 구조</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="os-cards-container">
-                        </div>
-                </div>
-
-                <div id="tab-fail" class="tab-content">
-                    <div class="mobile-section-title">경쟁국 실패 사례 분석</div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-5 md:p-6">
-                            <div class="text-2xl md:text-3xl mb-3">🇯🇵</div>
-                            <h3 class="text-base md:text-lg font-bold text-[#0f172a] mb-2">일본: 쿨재팬 (Cool Japan)</h3>
-                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
-                                <li><strong class="text-[#0f172a]">주체:</strong> 관 주도 (관료 기획, 펀드)</li>
-                                <li><strong class="text-[#0f172a]">목적:</strong> 상업적 콘텐츠 수출 보조</li>
-                                <li><strong class="text-[#ef4444]">결과:</strong> 국수주의적 주입 및 갈라파고스화, 펀드 손실.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-5 md:p-6">
-                            <div class="text-2xl md:text-3xl mb-3">🇨🇳</div>
-                            <h3 class="text-base md:text-lg font-bold text-[#0f172a] mb-2">중국: 공자학원</h3>
-                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
-                                <li><strong class="text-[#0f172a]">주체:</strong> 당/국가 주도</li>
-                                <li><strong class="text-[#0f172a]">목적:</strong> 체제 선전, 이데올로기 주입</li>
-                                <li><strong class="text-[#ef4444]">결과:</strong> 서구권 반발 및 연쇄 퇴출. 소프트파워의 하드파워화.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-[#fffbeb] border border-[#fde68a] rounded-xl p-5 md:p-6 shadow-sm relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-[#b45309]"></div>
-                            <div class="text-2xl md:text-3xl mb-3">🇰🇷</div>
-                            <h3 class="text-base md:text-lg font-bold text-[#b45309] mb-2">한국: K-문명 (제안)</h3>
-                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
-                                <li><strong class="text-[#0f172a]">주체:</strong> 민간 자생 + 법적 토대</li>
-                                <li><strong class="text-[#0f172a]">목적:</strong> 인류 보편의 가치(홍익인간) 공유</li>
-                                <li><strong class="text-[#059669]">전략:</strong> 일방적 주입이 아닌 보편적 연대와 호혜성 확보.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="history" class="scroll-mt-20">
-        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">3. 역사적 실천: 정(情)·한(恨)·흥(興)의 증명</h2>
-            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">수백만 명의 자발적 결집으로 증명된 객관적 사실들입니다. 아래 역사적 순간들이 어떻게 인류 보편적 가치로 발현되었는지 확인하십시오.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-8">
-            <div class="flex flex-col md:flex-row gap-0 md:gap-8">
-                <div class="md:w-1/3 md:border-r border-slate-200 md:pr-4" id="timeline-container">
-                    </div>
-                <div class="hidden md:flex md:w-2/3 pl-4 flex-col justify-center min-h-[300px]" id="timeline-detail">
-                    </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="strategy" class="scroll-mt-20">
-        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">4. 전략 및 거버넌스 재설계</h2>
-            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">부처 이기주의를 혁파하기 위한 거버넌스 통합 모델과 타겟 국가별 차별화된 진입 전략입니다.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
-                <div class="flex items-center gap-3 mb-5 md:mb-6">
-                    <span class="text-xl md:text-2xl">🏛️</span>
-                    <h3 class="text-lg md:text-xl font-bold text-[#0f172a]">재외 기관 파편화 현황</h3>
-                </div>
-                <div class="space-y-3 md:space-y-4">
-                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm md:text-base text-[#0f172a]">외교부 (국제교류재단)</div>
-                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">162개국 공관. 예산/콘텐츠 한계</div>
-                        </div>
-                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">거점 분산</span>
-                    </div>
-                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm md:text-base text-[#0f172a]">문체부 (세종학당/문화원)</div>
-                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">87개국 252개소. 인프라 최대, 언어 편중</div>
-                        </div>
-                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">기능 제한</span>
-                    </div>
-                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm md:text-base text-[#0f172a]">교육부 (한국교육원)</div>
-                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">19개국 43개소. 동포 중심, 확산 미비</div>
-                        </div>
-                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">대상 한정</span>
-                    </div>
-                    <div class="mt-4 p-3 md:p-4 bg-[#fef3c7] border border-[#fde68a] rounded-lg text-xs md:text-sm text-[#b45309] font-bold text-center break-keep">
-                        해결책: 'K-문명 기본법' 기반 One-OS 원스톱 거점 통합
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
-                <div class="flex items-center gap-3 mb-5 md:mb-6">
-                    <span class="text-xl md:text-2xl">🌍</span>
-                    <h3 class="text-lg md:text-xl font-bold text-[#0f172a]">국가별 진입 전략</h3>
-                </div>
-                <div class="space-y-5 md:space-y-6">
-                    <div class="border-l-4 border-[#0f172a] pl-3 md:pl-4">
-                        <h4 class="font-bold text-[#0f172a] text-base md:text-lg">노스폴 (Global North)</h4>
-                        <p class="text-[11px] md:text-sm text-slate-500 mb-1 md:mb-2">서구 선진국 중심</p>
-                        <p class="text-xs md:text-sm text-[#475569] break-keep"><strong>감성 침투 후 학술화 전략:</strong> 익숙한 K-컬처를 고차원적 인문학(정·한·흥)으로 격상시켜 지식인 사회 포섭. 글로벌 서밋 및 연구소 설립.</p>
-                    </div>
-                    <div class="border-l-4 border-[#b45309] pl-3 md:pl-4">
-                        <h4 class="font-bold text-[#b45309] text-base md:text-lg">사우스폴 (Global South)</h4>
-                        <p class="text-[11px] md:text-sm text-slate-500 mb-1 md:mb-2">아세안, 중동, 중남미, 아프리카</p>
-                        <p class="text-xs md:text-sm text-[#475569] break-keep"><strong>역사적 서사 공명 전략:</strong> 식민지, 민주화, 경제 기적의 경험 공유. ODA 및 K-City 수출에 홍익인간적 호혜성 연동.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="roi" class="scroll-mt-20">
-        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">5. 거시경제적 부가가치 (ROI)</h2>
-            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">K-문명 신뢰 시스템 정착 시 절감할 수 있는 '사회적 갈등 비용'의 회수 규모를 직관적으로 분석합니다.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-                <div>
-                    <div class="relative w-full mx-auto" style="height: 240px;">
-                        <canvas id="roiChart"></canvas>
-                    </div>
-                    <p class="text-center text-[10px] md:text-xs text-[#64748b] mt-4 break-keep">출처: KDI / 삼성경제연구소 등 사회 갈등비용 추산치</p>
-                </div>
-                
-                <div class="space-y-4 md:space-y-6">
-                    <div class="bg-[#f8fafc] p-4 md:p-5 rounded-xl border border-slate-200">
-                        <div class="flex items-center gap-2 md:gap-3 mb-2">
-                            <span class="text-lg md:text-xl">📉</span>
-                            <h4 class="font-bold text-sm md:text-base text-[#0f172a]">현재의 경제적 손실</h4>
-                        </div>
-                        <p class="text-xs md:text-sm text-[#475569] break-keep">한국의 사회갈등 지수 OECD 3위. 경제적 손실 연간 <strong>최대 246조 원 (명목 GDP의 10%)</strong> 증발. 불필요한 보안 및 신뢰 비용 증가.</p>
-                    </div>
-                    
-                    <div class="bg-[#fffbeb] p-4 md:p-5 rounded-xl border border-[#fde68a]">
-                        <div class="flex items-center gap-2 md:gap-3 mb-2">
-                            <span class="text-lg md:text-xl">📈</span>
-                            <h4 class="font-bold text-sm md:text-base text-[#b45309]">K-문명 투자 자본 수익률</h4>
-                        </div>
-                        <p class="text-xs md:text-sm text-[#475569] break-keep">카페에 지갑을 두는 '정' 문화는 연간 수조 원의 물리적 보안 비용을 없애는 고효율 시스템. 시민 연대 회복 시 <strong>연간 수십조 원의 경제 효과 달성.</strong></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-</main>
-
-<footer class="bg-[#0f172a] text-white py-10 md:py-12 text-center">
-    <div class="max-w-3xl mx-auto px-4">
-        <h2 class="text-lg md:text-2xl font-bold text-[#fde68a] mb-3 md:mb-4">Hongik — 널리 인간을 이롭게 하라</h2>
-        <p class="text-slate-400 text-xs md:text-sm mb-6 md:mb-8 break-keep">본 리포트는 K-문명 국가전략 2026 핵심 데이터 증빙자료집을 기반으로 제작되었습니다.</p>
-        <p class="text-[10px] md:text-xs text-slate-500">&copy; 2026 K-Civilization, Bae sun won. All rights reserved.</p>
-    </div>
-</footer>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Data Storage ---
-    const appState = {
-        currentTimelineIndex: 7 // default desktop selected item
-    };
-
-    const osData = [
-        { flag: '🇺🇸', name: '미국', os: '자유민주주의, 실용주의', type: '국가·엘리트 (Top-Down)', mechanism: '달러, 군사력, 헐리우드' },
-        { flag: '🇬🇧', name: '영국', os: '전통과 팝아트의 공존', type: '국가·엘리트 (Top-Down)', mechanism: '브리티시 카운슬, 영어' },
-        { flag: '🇫🇷', name: '프랑스', os: '똘레랑스, 삶의 예술', type: '국가·지식인 (Top-Down)', mechanism: '알리앙스 프랑세즈, 럭셔리' },
-        { flag: '🇩🇪', name: '독일', os: '정밀성, 게뮈틀리히카이트', type: '국가·학계 (Top-Down)', mechanism: '괴테 인스티투트, 마이스터' },
-        { flag: '🇯🇵', name: '일본', os: '모노노아와레, 오모테나시', type: '정부·엘리트 (Top-Down)', mechanism: '쿨재팬, 애니메이션' },
-        { flag: '🇨🇳', name: '중국', os: '중화사상, 꽌시', type: '국가/당 (Top-Down)', mechanism: '공자학원, 일대일로' },
-        { flag: '🇰🇷', name: '한국', os: '정(情)·한(恨)·흥(興)', type: '국민 주체 (Bottom-Up)', mechanism: 'K-콘텐츠, 시민 행동' }
-    ];
-
-    const timelineData = [
-        { year: '1894', title: '동학농민운동', participants: '약 30만 명', detail: '인내천(人乃天) 사상 제창. 민중 주도의 보편적 인권 선언으로 글로벌 사우스의 서사와 공명.' },
-        { year: '1919', title: '3·1 운동', participants: '약 200만 명', detail: '한(恨)을 비폭력 저항으로 승화. 제국주의에 맞선 롤모델.' },
-        { year: '1960', title: '4·19 혁명', participants: '전국적 학생/시민', detail: '부당한 권력에 대한 정의(한). 아시아 민주주의의 이정표.' },
-        { year: '1980', title: '5·18 광주민주화', participants: '광주 시민 전체', detail: '국가 폭력 앞 공동체 수호(정/한). 한강 소설을 통한 글로벌 트라우마 공명.' },
-        { year: '1987', title: '6월 항쟁', participants: '약 100만 명', detail: '국민이 직접 헌법(직선제) 설계. 쟁취하는 민주주의 표본.' },
-        { year: '1997', title: '금모으기 운동', participants: '약 350만 명', detail: '국가 위기를 공동체 유대(정)로 극복. 전무후무한 경제 주권 수호.' },
-        { year: '2002', title: '월드컵 거리응원', participants: '연인원 2,400만 명', detail: '집단 생동감과 비폭력 축제(흥). 세계 최고 수준의 질서 있는 군중 문화.' },
-        { year: '2007', title: '태안 기름 유출', participants: '약 123만 명', detail: '한(恨)을 연대(정)로 극복. UN 공인 세계 최대 자발적 환경 자원봉사.' },
-        { year: '2016', title: '촛불 혁명', participants: '누적 1,700만 명', detail: '분노를 축제(흥)로 바꾼 비폭력 저항. 평화로운 혁명의 아이콘.' },
-        { year: '2024', title: '계엄 저지', participants: '전 국민적', detail: '국민이 직접 헌법 수호. 총칼 앞에서도 물러서지 않는 K-민주주의 입증.' }
-    ];
-
-    // --- Desktop Tab Handling ---
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            if(window.innerWidth < 768) return; // Disable tab clicks on mobile
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            const targetId = e.target.getAttribute('data-target');
-            e.target.classList.add('active');
-            document.getElementById(targetId).classList.add('active');
-        });
-    });
-
-    // --- Render OS Cards ---
-    const osContainer = document.getElementById('os-cards-container');
-    osData.forEach(item => {
-        const isKorea = item.name === '한국';
-        const cardClass = isKorea ? 'bg-[#fffbeb] border-[#fde68a] border-2 shadow-md relative' : 'bg-[#f8fafc] border-slate-200 border';
-        const titleClass = isKorea ? 'text-[#b45309]' : 'text-[#0f172a]';
-        
-        let cardHTML = `
-            <div class="rounded-xl p-4 md:p-5 ${cardClass}">
-                ${isKorea ? '<div class="absolute -top-3 -right-2 md:-right-3 bg-[#b45309] text-white text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 rounded-full shadow-sm">K-문명 제안</div>' : ''}
-                <div class="text-2xl md:text-3xl mb-2">${item.flag}</div>
-                <h3 class="text-base md:text-lg font-bold ${titleClass} mb-2">${item.name}</h3>
-                <div class="text-xs md:text-sm font-bold text-slate-700 mb-1">OS: <span class="font-normal text-[#475569]">${item.os}</span></div>
-                <div class="text-xs md:text-sm font-bold text-slate-700 mb-1">주도: <span class="font-normal ${isKorea ? 'text-[#b45309] font-bold' : 'text-[#475569]'}">${item.type}</span></div>
-                <div class="text-xs md:text-sm font-bold text-slate-700">기제: <span class="font-normal text-[#475569] truncate block" title="${item.mechanism}">${item.mechanism}</span></div>
-            </div>
-        `;
-        osContainer.innerHTML += cardHTML;
-    });
-
-    // --- Render Timeline (Responsive Logic) ---
-    const tlContainer = document.getElementById('timeline-container');
-    const tlDetail = document.getElementById('timeline-detail');
-
-    function renderDesktopDetail(index) {
-        const data = timelineData[index];
-        tlDetail.innerHTML = `
-            <div class="animate-[fadeIn_0.3s_ease-out]">
-                <div class="text-[#b45309] font-bold text-lg md:text-xl mb-2">${data.year}</div>
-                <h3 class="text-2xl md:text-3xl font-extrabold text-[#0f172a] mb-4">${data.title}</h3>
-                <div class="inline-block px-3 py-1 md:px-4 md:py-2 bg-slate-100 rounded-lg text-xs md:text-sm font-bold text-[#475569] mb-5 md:mb-6">
-                    참여 규모: ${data.participants}
-                </div>
-                <p class="text-base md:text-lg text-slate-700 leading-relaxed border-l-4 border-[#b45309] pl-4 md:pl-5 py-2 bg-slate-50 break-keep">
-                    ${data.detail}
-                </p>
-            </div>
-        `;
-    }
-
-    timelineData.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = `timeline-item border-l-2 md:border-l-4 border-slate-200 pl-3 md:pl-4 py-3 mb-3 md:mb-2 rounded-r-lg ${index === appState.currentTimelineIndex ? 'md:active md:border-l-[#b45309] md:bg-[#f1f5f9]' : ''}`;
-        
-        // HTML Injection: Clean list header + Mobile-only inline detail
-        div.innerHTML = `
-            <div class="flex items-center">
-                <span class="font-bold text-[#0f172a] md:text-base">${item.year}</span>
-                <span class="text-sm text-slate-700 ml-2 md:ml-3 font-semibold md:font-normal md:text-slate-500">${item.title}</span>
-            </div>
-            <div class="md:hidden mt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border-l-2 border-[#b45309]">
-                <div class="font-bold text-[11px] mb-1 text-slate-500">규모: ${item.participants}</div>
-                <div class="break-keep">${item.detail}</div>
-            </div>
-        `;
-        
-        div.addEventListener('click', () => {
-            if(window.innerWidth < 768) return; // Disable hover/click state change on mobile
-            document.querySelectorAll('.timeline-item').forEach(el => {
-                el.classList.remove('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]', 'md:active', 'md:border-l-[#b45309]', 'md:bg-[#f1f5f9]');
-                el.classList.add('border-slate-200');
-            });
-            div.classList.remove('border-slate-200');
-            div.classList.add('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]');
-            appState.currentTimelineIndex = index;
-            renderDesktopDetail(index);
-        });
-        tlContainer.appendChild(div);
-    });
-    
-    // Initialize desktop detail pane
-    renderDesktopDetail(appState.currentTimelineIndex);
-
-
-    // --- Chart.js Implementations ---
-    Chart.defaults.font.family = "'Pretendard', sans-serif";
-
-    // Chart 1: Brand Finance Comparison
-    const ctxBrand = document.getElementById('brandFinanceChart').getContext('2d');
-    new Chart(ctxBrand, {
-        type: 'bar',
-        data: {
-            labels: ['미국', '영국', '일본', '독일(목표)', '프랑스', '한국'],
-            datasets: [{
-                label: '2026 예상 총점',
-                data: [74.2, 70.5, 69.8, 67.7, 66.8, 59.2],
-                backgroundColor: ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#b45309', '#e2e8f0', '#0f172a'],
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: 'y',
-            plugins: {
-                legend: { display: false },
-                tooltip: { padding: 10, titleFont: { size: 12 }, bodyFont: { size: 12 } }
-            },
-            scales: {
-                x: { min: 40, max: 80, grid: { color: '#f1f5f9' }, ticks: { font: {size: 10} } },
-                y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 12 } } }
-            }
-        }
-    });
-
-    // Chart 2: Economic ROI
-    const ctxRoi = document.getElementById('roiChart').getContext('2d');
-    new Chart(ctxRoi, {
-        type: 'doughnut',
-        data: {
-            labels: ['생산적 가치', '갈등 비용 증발'],
-            datasets: [{
-                data: [90, 10], 
-                backgroundColor: ['#0f172a', '#ef4444'],
-                borderWidth: 0,
-                cutout: '75%'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 11} } },
-                tooltip: { callbacks: { label: function(c) { return c.dataIndex === 1 ? ' 최대 246조원' : ' 경제성장분'; } } }
-            }
-        },
-        plugins: [{
-            id: 'textCenter',
-            beforeDraw: function(chart) {
-                var width = chart.width, height = chart.height, ctx = chart.ctx;
-                ctx.restore();
-                
-                // Adjust font size dynamically for mobile/desktop
-                var isMobile = width < 300;
-                var fontSizeTitle = isMobile ? "1.2em" : "1.8em";
-                var fontSizeSub = isMobile ? "0.8em" : "1em";
-                
-                ctx.textBaseline = "middle";
-                ctx.font = "bold " + fontSizeTitle + " sans-serif";
-                ctx.fillStyle = "#0f172a";
-                var text = "GDP 10%",
-                    textX = Math.round((width - ctx.measureText(text).width) / 2),
-                    textY = height / 2 - (isMobile ? 10 : 15);
-                ctx.fillText(text, textX, textY);
-                
-                ctx.font = "normal " + fontSizeSub + " sans-serif";
-                ctx.fillStyle = "#ef4444";
-                var text2 = "비용 증발",
-                    text2X = Math.round((width - ctx.measureText(text2).width) / 2),
-                    text2Y = height / 2 + (isMobile ? 15 : 20);
-                ctx.fillText(text2, text2X, text2Y);
-                ctx.save();
-            }
-        }]
-    });
-
-});
-</script>
-</body>
-</html>
+<div class="se-contents" style="font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.2;">
+	<style>@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap");.se-contents * { margin: 0px; padding: 0px; box-sizing: border-box; }.se-contents { font-family: "Noto Sans KR", sans-serif; background: rgb(248, 247, 244); color: rgb(26, 26, 46); line-height: 1.8; font-size: 15px; }.se-contents .container { max-width: 860px; margin: 0px auto; padding: 40px 24px; }.se-contents .hero { background: linear-gradient(135deg, rgb(13, 27, 62) 0%, rgb(26, 58, 110) 60%, rgb(13, 43, 94) 100%); color: white; padding: 52px 40px; border-radius: 12px; margin-bottom: 40px; position: relative; overflow: hidden; }.se-contents .hero::before { content: "弘益"; position: absolute; right: 30px; top: 50%; transform: translateY(-50%); font-family: "Noto Serif KR", serif; font-size: 120px; font-weight: 900; color: rgba(255, 255, 255, 0.06); letter-spacing: -4px; }.se-contents .hero-tag { display: inline-block; background: rgba(212, 175, 55, 0.25); border: 1px solid rgba(212, 175, 55, 0.5); color: rgb(212, 175, 55); font-size: 12px; font-weight: 700; letter-spacing: 3px; padding: 6px 16px; border-radius: 20px; margin-bottom: 20px; text-transform: uppercase; }.se-contents .hero h1 { font-family: "Noto Serif KR", serif; font-size: 28px; font-weight: 900; line-height: 1.4; margin-bottom: 12px; letter-spacing: -0.5px; }.se-contents .hero h1 span { color: rgb(212, 175, 55); }.se-contents .hero p { font-size: 14px; color: rgba(255, 255, 255, 0.7); font-weight: 300; }.se-contents .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }.se-contents .section-num { width: 32px; height: 32px; background: rgb(13, 27, 62); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }.se-contents .section-title { font-family: "Noto Serif KR", serif; font-size: 20px; font-weight: 700; color: rgb(13, 27, 62); }.se-contents .card { background: white; border-radius: 12px; padding: 32px; margin-bottom: 28px; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 16px; border-left: 4px solid rgb(13, 27, 62); }.se-contents .card.gold { border-left-color: rgb(212, 175, 55); }.se-contents .card.red { border-left-color: rgb(192, 57, 43); }.se-contents .paradox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0px; }.se-contents .stat-box { background: rgb(240, 244, 255); border-radius: 10px; padding: 20px; text-align: center; }.se-contents .stat-box.highlight { background: linear-gradient(135deg, rgb(13, 27, 62), rgb(26, 58, 110)); color: white; }.se-contents .stat-box.warning { background: linear-gradient(135deg, rgb(192, 57, 43), rgb(231, 76, 60)); color: white; }.se-contents .stat-num { font-family: "Noto Serif KR", serif; font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 8px; }.se-contents .stat-label { font-size: 12px; font-weight: 500; opacity: 0.85; line-height: 1.4; }.se-contents .stat-gold { color: rgb(212, 175, 55); }.se-contents .ppt-ref { display: inline-block; background: rgb(238, 242, 255); color: rgb(57, 73, 171); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 6px; letter-spacing: 0.5px; vertical-align: middle; }.se-contents .compare-table { width: 100%; border-collapse: collapse; margin: 20px 0px; font-size: 14px; }.se-contents .compare-table th { background: rgb(13, 27, 62); color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 13px; }.se-contents .compare-table td { padding: 12px 16px; border-bottom: 1px solid rgb(238, 238, 238); vertical-align: top; }.se-contents .compare-table tr:nth-child(2n) td { background: rgb(248, 249, 255); }.se-contents .compare-table tr.korea-row td { background: linear-gradient(90deg, rgb(255, 248, 225), rgb(255, 253, 231)); font-weight: 700; color: rgb(13, 27, 62); }.se-contents .compare-table .tag { display: inline-block; background: rgb(232, 245, 233); color: rgb(46, 125, 50); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }.se-contents .compare-table .tag.down { background: rgb(252, 228, 236); color: rgb(198, 40, 40); }.se-contents .timeline { position: relative; padding: 8px 0px; margin: 24px 0px; }.se-contents .timeline::before { content: ""; position: absolute; left: 36px; top: 0px; bottom: 0px; width: 2px; background: linear-gradient(rgb(212, 175, 55), rgb(13, 27, 62)); }.se-contents .timeline-item { display: flex; gap: 20px; margin-bottom: 28px; position: relative; }.se-contents .timeline-dot { width: 72px; flex-shrink: 0; text-align: center; }.se-contents .timeline-year { display: inline-block; background: rgb(13, 27, 62); color: rgb(212, 175, 55); font-weight: 900; font-size: 13px; padding: 6px 10px; border-radius: 8px; position: relative; z-index: 1; }.se-contents .timeline-content { background: white; border-radius: 10px; padding: 18px 20px; box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 12px; flex: 1 1 0%; border-top: 3px solid rgb(212, 175, 55); }.se-contents .timeline-content h4 { font-size: 15px; font-weight: 700; color: rgb(13, 27, 62); margin-bottom: 6px; }.se-contents .timeline-content p { font-size: 13px; color: rgb(85, 85, 85); line-height: 1.7; }.se-contents .timeline-badge { display: inline-block; background: rgb(255, 243, 205); color: rgb(133, 100, 4); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; margin-bottom: 8px; }.se-contents .timeline-badge.blue { background: rgb(227, 242, 253); color: rgb(21, 101, 192); }.se-contents .timeline-badge.green { background: rgb(232, 245, 233); color: rgb(46, 125, 50); }.se-contents .timeline-badge.red { background: rgb(252, 228, 236); color: rgb(198, 40, 40); }.se-contents .timeline-badge.dark { background: rgb(26, 26, 46); color: rgb(212, 175, 55); }.se-contents .concept-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 20px 0px; }.se-contents .concept-box { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 10px; }.se-contents .concept-char { font-family: "Noto Serif KR", serif; font-size: 40px; font-weight: 900; color: rgb(13, 27, 62); line-height: 1; margin-bottom: 8px; }.se-contents .concept-name { font-size: 13px; font-weight: 700; color: rgb(51, 51, 51); margin-bottom: 6px; }.se-contents .concept-desc { font-size: 12px; color: rgb(119, 119, 119); line-height: 1.5; }.se-contents .tasks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0px; }.se-contents .task-item { background: white; border-radius: 10px; padding: 18px; display: flex; gap: 14px; align-items: flex-start; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 10px; }.se-contents .task-num { width: 28px; height: 28px; background: rgb(13, 27, 62); color: rgb(212, 175, 55); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; flex-shrink: 0; }.se-contents .task-text strong { display: block; font-size: 13px; font-weight: 700; color: rgb(13, 27, 62); margin-bottom: 4px; }.se-contents .task-text span { font-size: 12px; color: rgb(119, 119, 119); line-height: 1.5; }.se-contents .result-bar { background: white; border-radius: 10px; padding: 24px 28px; margin: 12px 0px; display: flex; align-items: center; gap: 20px; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 10px; }.se-contents .result-icon { font-size: 32px; flex-shrink: 0; }.se-contents .result-title { font-size: 15px; font-weight: 700; color: rgb(13, 27, 62); }.se-contents .result-desc { font-size: 13px; color: rgb(102, 102, 102); margin-top: 3px; }.se-contents .closing { background: linear-gradient(135deg, rgb(13, 27, 62) 0%, rgb(26, 58, 110) 100%); color: white; border-radius: 12px; padding: 40px; text-align: center; margin-top: 32px; }.se-contents .closing h3 { font-family: "Noto Serif KR", serif; font-size: 22px; font-weight: 900; margin-bottom: 12px; color: rgb(212, 175, 55); }.se-contents .closing p { font-size: 14px; color: rgba(255, 255, 255, 0.8); line-height: 1.9; max-width: 560px; margin: 0px auto; }.se-contents .divider { height: 1px; background: linear-gradient(90deg, transparent, rgb(221, 221, 221), transparent); margin: 32px 0px; }.se-contents .highlight-text { font-family: "Noto Serif KR", serif; font-size: 17px; font-weight: 700; color: rgb(13, 27, 62); line-height: 1.8; margin: 20px 0px; padding: 20px 24px; background: rgb(240, 244, 255); border-radius: 8px; border-left: 4px solid rgb(212, 175, 55); }.se-contents .zen-quote { background: rgb(26, 26, 46); color: white; border-radius: 10px; padding: 22px 28px; margin: 20px 0px; font-family: "Noto Serif KR", serif; font-size: 15px; line-height: 1.8; }.se-contents .zen-quote .accent { color: rgb(212, 175, 55); font-weight: 700; }@media (max-width: 600px) {
+  .paradox-grid { grid-template-columns: 1fr 1fr; }
+  .concept-grid { grid-template-columns: 1fr; }
+  .tasks-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 22px; }
+  .stat-num { font-size: 28px; }
+}</style>
+	<div class="se-div container">
+		<div class="se-div hero">
+			<div class="se-div hero-tag">
+				<p style="margin: 0px;"><span>정책 아이디어 제안</span></p>
+			</div>
+			<h1>
+				<span>대한민국은 이상한 나라다.</span>
+				<br>
+				<span>역량 세계 1위가 왜 인식 11위인가.</span>
+			</h1>
+			<p><span>K-문명 브랜드로 글로벌 소프트파워 5위 달성 전략 제안</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>1</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>역설의 데이터</span></p>
+			</div>
+		</div>
+		<div class="se-div card">
+			<p class="body-text"><span>IMF가 객관지표로 측정한 소프트파워&nbsp;</span><span style="font-weight: bold;">세계 1위</span><span>. 과학 인프라&nbsp;</span><span style="font-weight: bold;">세계 2위</span><span>. 수출&nbsp;</span><span style="font-weight: bold;">세계 6위</span><span>. 그런데 세계인의 인식을 묻는 Brand Finance 소프트파워 조사에서는&nbsp;</span><span style="font-weight: bold;">11위</span><span>다.</span></p>
+			<div class="se-div paradox-grid">
+				<div class="se-div stat-box highlight">
+					<div class="se-div stat-num stat-gold">
+						<p style="margin: 0px;"><span>1위</span></p>
+					</div>
+					<div class="se-div stat-label">
+						<p style="margin: 0px;"><span>IMF 객관지표</span><br><span>소프트파워 (2024)</span></p>
+					</div>
+				</div>
+				<div class="se-div stat-box warning">
+					<div class="se-div stat-num">
+						<p style="margin: 0px;"><span>11위</span></p>
+					</div>
+					<div class="se-div stat-label">
+						<p style="margin: 0px;"><span>Brand Finance</span><br><span>세계인 인식 조사 (2026)</span></p>
+					</div>
+				</div>
+				<div class="se-div stat-box">
+					<div class="se-div stat-num" style="color: rgb(13, 27, 62);">
+						<p style="margin: 0px;"><span>2위</span></p>
+					</div>
+					<div class="se-div stat-label" style="color: rgb(51, 51, 51);">
+						<p style="margin: 0px;"><span>IMD 과학 인프라</span></p>
+					</div>
+				</div>
+				<div class="se-div stat-box">
+					<div class="se-div stat-num" style="color: rgb(13, 27, 62);">
+						<p style="margin: 0px;"><span>6위</span></p>
+					</div>
+					<div class="se-div stat-label" style="color: rgb(51, 51, 51);">
+						<p style="margin: 0px;"><span>글로벌 수출 규모</span><br><span>7,000억 달러 돌파</span></p>
+					</div>
+				</div>
+			</div>
+			<p class="body-text"><span>더 이상한 것이 있다.&nbsp;</span><span>&nbsp;Brand Finance&nbsp;</span><span style="font-weight: bold;">3위 (</span><span style="font-weight: bold;">인식</span><span>)</span><span style="font-weight: bold;">&nbsp;일본</span><span>은&nbsp;</span><span>IMD 국가경쟁력&nbsp;</span><span style="font-weight: bold;">35위 (지표)</span><span>다. 한국은&nbsp;</span><span style="font-weight: bold;">27위</span><span>다. 실력에서 앞서는데 인식에서 뒤진다.</span></p>
+			<p style="margin: 0px;"><br></p>
+			<p style="margin: 0px;"><span class="ppt-ref">→ 자료집 A. 글로벌 브랜드 지표 / &nbsp;B. 소프트파워 실증 분석</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>2</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>왜인가 — 철학 없는 콘텐츠 수출</span></p>
+			</div>
+		</div>
+		<div class="se-div card gold">
+			<p class="body-text"><span>K-팝, K-드라마, K-방산은 세계를 휩쓸고 있다. 그러나 이 화려한 성공들을 하나로 묶어 '대한민국의 가치'로 각인시키는&nbsp;</span><span style="font-weight: bold;">"뿌리 깊은 철학"</span><span>은 없다.</span></p>
+			<p class="body-text" style="margin-top: 12px;"><span>강대국들은&nbsp;</span><span style="font-weight: bold;">국가(State)</span><span>가 설계한 철학적 운영체제(OS) 위에서&nbsp;</span><span style="font-weight: bold;">산업(Industry)</span><span>이라는 애플리케이션을 구동한다. 철학이 산업의 방향을 결정하고, 산업은 그 철학을 상품화하여 전파한다. 하지만 한국은 철학적 정의가 내려지기도 전에 민간의 기획력과 정부의 육성책이 결합된 '상업적 콘텐츠'가 세계를 먼저 점령해버린 역전 현상 상태다.</span></p>
+			<div class="se-div highlight-text" style="margin: 20px 0px;">
+				<p style="margin: 0px;"><span style="font-weight: bold;">엔진은 과열되었으나 핸들이 없는 상황이다.</span></p>
+			</div>
+			<table class="compare-table" style="vertical-align: text-bottom;" data-template-id="0">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>
+							<p style="margin: 0px;"><span>국가</span></p>
+						</th>
+						<th>
+							<p style="margin: 0px;"><span>국가 철학 (OS)</span></p>
+						</th>
+						<th>
+							<p style="margin: 0px;"><span>전파 기제 (Channel)</span></p>
+						</th>
+						<th>
+							<p style="margin: 0px;"><span>주도 주체</span></p>
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇺🇸 미국</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>자유민주주의</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>달러·헐리우드·실리콘밸리</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">국가·엘리트·산업</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇬🇧 영국</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>전통과 현대의 공존</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>BBC·프리미어리그·클래식</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">국가·엘리트·산업</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇫🇷 프랑스</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>예술적 삶·관용</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>알리앙스 프랑세즈·럭셔리 산업</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">국가·지식인·산업</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇩🇪 독일</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>철학적 정밀성</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>학술 체계·마이스터(강소기업)</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">국가·학계·산업</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇯🇵 일본</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>장인정신(모노즈쿠리)</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>쿨재팬·애니메이션·게임</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">정부·엘리트·산업</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🇨🇳 중국</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>중화문명</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>공자학원·국가 자본</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag down">국가(당)·산업</span></p>
+						</td>
+					</tr>
+					<tr class="korea-row">
+						<td>
+							<p style="margin: 0px;"><span>🇰🇷&nbsp;</span><span style="font-weight: bold;">한국</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">부재 (Undefined)</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>K-콘텐츠·IT 인프라</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span class="tag">산업·정부 (민간 정서 가공)</span></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="body-text" style="margin-top: 16px;"><span>대한민국의 현주소는&nbsp;</span><span style="font-weight: bold;">'OS(국가 철학) 미등록 상태의 고성능 하드웨어'</span><span>다. 기업은 수익을 위해 요리하고, 정부는 성장 지표를 위해 판을 깔았다. 요리의 핵심 식재료는 한국인의 삶 속에 흐르는 원천 에너지(정·한·흥)였으나, 정작 이를 'K-문명'이라는 국가적 가치로 시스템화하지 못했다.</span></p>
+			<div class="se-div highlight-text">
+				<p style="margin: 0px;"><span style="font-size: 11pt;">우리는 상품을 파는 데는 성공했지만,&nbsp;</span><span style="font-weight: bold; font-size: 11pt;">가치를 파는 데는 부족했다.&nbsp;</span><span style="font-size: 11pt;">이것이 대한민국이 세계 인식조사 소프트파워 11위에 머물러 있는 진짜 이유다.</span><br><span style="font-size: 11pt;">이제는 산업적 성공을 국가 브랜드 OS로 승격시키는 철학적 설계가 필요하다.</span></p>
+			</div>
+			<p style="margin: 0px;"><span class="ppt-ref">→&nbsp;</span><span class="ppt-ref">&nbsp;자료집 C. 국가 철학(OS) 비교</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>3</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>역사 속에 새겨진 K-문명</span></p>
+			</div>
+		</div>
+		<div class="se-div card red">
+			<p class="body-text"><span>아무도 시키지 않았다. 아무도 설계하지 않았다. 그런데 수백만 명이 움직였다. 이것이&nbsp;</span><span style="font-weight: bold;">정(情)·한(恨)·흥(興)</span><span>이다. 청소년과 청년들이 계승해야 할 대한민국 최고의 역사적 유산이다.</span></p>
+			<div class="se-div" style="align-items: center; gap: 10px; margin-bottom: 20px; margin-left: 12px; display: flex;">
+				<div class="se-div" style="background: rgb(212, 175, 55); flex: 1 1 0%; height: 1px; opacity: 0.4;">
+					<p style="line-height: 1px; margin: 0px;"><br></p>
+				</div>
+				<p style="margin: 0px;"><span style="white-space: nowrap; font-weight: bold; font-size: 11px; color: rgb(212, 175, 55); letter-spacing: 2px;">역사적 뿌리</span></p>
+				<div class="se-div" style="background: rgb(212, 175, 55); flex: 1 1 0%; height: 1px; opacity: 0.4;">
+					<p style="line-height: 1px; margin: 0px;"><br></p>
+				</div>
+			</div>
+			<div class="se-div timeline">
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year" style="background: rgb(93, 64, 55); font-size: 11px;">
+							<p style="margin: 0px;"><span>1894</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content" style="border-top-color: rgb(141, 110, 99);">
+						<div class="se-div timeline-badge" style="background: rgb(239, 235, 233); color: rgb(78, 52, 46);">
+							<p style="margin: 0px;"><span>동학농민운동</span></p>
+						</div>
+						<h4>
+							<span>"사람이 곧 하늘이다" — 민중이 철학을 만들다</span>
+						</h4>
+						<p><span>자발적으로 봉기한 농민들이 총칼 앞에서 "인내천(人乃天)"을 외쳤다. 모든 인간이 존엄하다는 선언이 아래에서 올라왔다. 홍익인간의 씨앗이 민중의 피로 새겨진 순간이었다.&nbsp;</span><span style="font-weight: bold;">식민지를 경험한 글로벌 사우스 &nbsp;국가들 국민이 서사에 &nbsp;공명한다.</span></p>
+					</div>
+				</div>
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year" style="background: rgb(93, 64, 55); font-size: 11px;">
+							<p style="margin: 0px;"><span>1919</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content" style="border-top-color: rgb(141, 110, 99);">
+						<div class="se-div timeline-badge" style="background: rgb(239, 235, 233); color: rgb(78, 52, 46);">
+							<p style="margin: 0px;"><span>3·1운동</span></p>
+						</div>
+						<h4>
+							<span>200만 명 — 총칼 앞에 꽃을 들었다</span>
+						</h4>
+						<p><span>전국에서 200만 명이 "대한독립만세"를 외쳤다. 폭력 없이. 노래와 함께. 간디의 비폭력운동과 같은 시기, 같은 정신이다. 한(恨)을 저항으로, 저항을 비폭력으로 승화한 K-문명의 원형이다.&nbsp;</span><span style="font-weight: bold;">이 서사가 사우스폴 국가 국민들에게 자유/ 민주주의 정치이념보다 국민 정서 정</span><span style="font-weight: bold;">·</span><span style="font-weight: bold;">한</span><span style="font-weight: bold;">·</span><span style="font-weight: bold;">흥이 먼저 와닿는다.</span></p>
+					</div>
+				</div>
+			</div>
+			<div class="se-div" style="background: rgb(26, 26, 46); border-radius: 10px; padding: 24px; margin: 20px 0px;">
+				<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(212, 175, 55); margin-bottom: 14px; letter-spacing: 2px;">
+					<p style="margin: 0px;"><span>한(恨)의 가장 깊은 상처 — 민주화운동</span></p>
+				</div>
+				<p style="font-size: 13px; color: rgba(255, 255, 255, 0.85); line-height: 1.8; margin-bottom: 16px;"><span>한국의 민주주의는 주어진 것이 아니다. 우리 부모 세대 국민들의 숭고한 희생으로 쟁취했다. 이 역사적인 민주화 운동이 없었다면 촛불도, 계엄저지도 없었다.&nbsp;</span><span style="font-weight: bold; color: rgb(212, 175, 55);">한(恨)이 제도를 만든다</span><span>는 것을 세계사에 유래를 찾기 어려운 대한민국 국민들이 반복적으로 증명했다.</span></p>
+				<div class="se-div" style="flex-direction: column; gap: 10px; display: flex;">
+					<div class="se-div" style="background: rgba(255, 255, 255, 0.07); border-radius: 8px; padding: 12px 16px;">
+						<div class="se-div" style="font-weight: bold; font-size: 12px; color: rgb(212, 175, 55); margin-bottom: 4px;">
+							<p style="margin: 0px;"><span>1960 — 4·19혁명</span></p>
+						</div>
+						<p style="font-size: 12px; color: rgba(255, 255, 255, 0.75); line-height: 1.6;"><span>고등학생과 대학생이 독재 앞에 섰다. 총탄 앞에서도 물러서지 않았다. 한(恨)이 혁명이 된 첫 번째 순간.</span></p>
+					</div>
+					<div class="se-div" style="background: rgba(255, 255, 255, 0.07); border-radius: 8px; padding: 12px 16px;">
+						<div class="se-div" style="font-weight: bold; font-size: 12px; color: rgb(212, 175, 55); margin-bottom: 4px;">
+							<p style="margin: 0px;"><span>1980 — 5·18 광주민주화운동</span></p>
+						</div>
+						<p style="font-size: 12px; color: rgba(255, 255, 255, 0.75); line-height: 1.6;"><span>열흘간의 항쟁. 국가 폭력 앞에서 시민이 서로를 지켰다. 한강의&nbsp;</span><span style="font-style: italic;">소년이 온다</span><span>가 세계인의 심장을 건드린 바로 그 상처다.</span></p>
+					</div>
+					<div class="se-div" style="background: rgba(255, 255, 255, 0.07); border-radius: 8px; padding: 12px 16px;">
+						<div class="se-div" style="font-weight: bold; font-size: 12px; color: rgb(212, 175, 55); margin-bottom: 4px;">
+							<p style="margin: 0px;"><span>1987 — 6월 항쟁</span></p>
+						</div>
+						<p style="font-size: 12px; color: rgba(255, 255, 255, 0.75); line-height: 1.6;"><span>전국 100만 명이 거리로 나와 직선제를 쟁취했다. 국민이 자발적으로 민주주의를 쟁취한 순간이다.</span></p>
+					</div>
+				</div>
+			</div>
+			<div class="se-div" style="align-items: center; gap: 10px; margin: 20px 0px 20px 12px; display: flex;">
+				<div class="se-div" style="background: rgb(13, 27, 62); flex: 1 1 0%; height: 1px; opacity: 0.4;">
+					<p style="line-height: 1px; margin: 0px;"><br></p>
+				</div>
+				<p style="margin: 0px;"><span style="white-space: nowrap; font-weight: bold; font-size: 11px; color: rgb(13, 27, 62); letter-spacing: 2px;">현대적 발현</span></p>
+				<div class="se-div" style="background: rgb(13, 27, 62); flex: 1 1 0%; height: 1px; opacity: 0.4;">
+					<p style="line-height: 1px; margin: 0px;"><br></p>
+				</div>
+			</div>
+			<div class="se-div timeline">
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year">
+							<p style="margin: 0px;"><span>1997</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content">
+						<div class="se-div timeline-badge">
+							<p style="margin: 0px;"><span>금모으기 운동</span></p>
+						</div>
+						<h4>
+							<span>IMF 위기 — 350만 명의 금반지</span>
+						</h4>
+						<p><span>아무도 시키지 않았는데 전국에서 350만 명이 자발적으로 금반지를 들고 나왔다. 정(情) — 공동체 유대가 국가 위기를 이긴 순간이다.</span></p>
+					</div>
+				</div>
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year">
+							<p style="margin: 0px;"><span>2002</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content">
+						<div class="se-div timeline-badge blue">
+							<p style="margin: 0px;"><span>월드컵 응원</span></p>
+						</div>
+						<h4>
+							<span>붉은악마 — 600만 거리 응원</span>
+						</h4>
+						<p><span>서울광장을 시작으로 전국 600만 명이 자발적으로 거리로 나왔다. 폭력 사건 없이, 축제로. 세계가 "대한 민국" 응원 함성에 놀란 집단 흥(興)의 발현이었다.</span></p>
+					</div>
+				</div>
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year">
+							<p style="margin: 0px;"><span>2007</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content">
+						<div class="se-div timeline-badge green">
+							<p style="margin: 0px;"><span>태안 기름 유출</span></p>
+						</div>
+						<h4>
+							<span>UN 공식 기록 — 세계 최대 자원봉사</span>
+						</h4>
+						<p><span>아무도 조직하지 않았는데 123만 명이 태안으로 달려갔다. UN이 세계 최대 자발적 자원봉사로 공식 기록했다. 한(恨)을 연대로 승화한 정(情)이다.</span></p>
+					</div>
+				</div>
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year">
+							<p style="margin: 0px;"><span>2016</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content">
+						<div class="se-div timeline-badge">
+							<p style="margin: 0px;"><span>촛불혁명</span></p>
+						</div>
+						<h4>
+							<span>1,700만 명 — 폭력 없는, 빛의 민주화 혁명</span>
+						</h4>
+						<p><span>아무도 강요하지 않았는데 1,700만 명이 광장에 모였다. 폭력은 없었다. 노래가 있었다. 분노를 축제로 바꾼 흥(興)과 비폭력 정의(한·恨)의 결합이었다.</span></p>
+					</div>
+				</div>
+				<div class="se-div timeline-item">
+					<div class="se-div timeline-dot">
+						<div class="se-div timeline-year">
+							<p style="margin: 0px;"><span>2024</span></p>
+						</div>
+					</div>
+					<div class="se-div timeline-content" style="border-top-color: rgb(192, 57, 43);">
+						<div class="se-div timeline-badge red">
+							<p style="margin: 0px;"><span>계엄 저지</span></p>
+						</div>
+						<h4>
+							<span>국민이 헌법을 지켰다</span>
+						</h4>
+						<p><span>비상계엄 선포 직후 국민이 스스로 국회로 향했다. 총 앞에서도 물러서지 않았다. 홍익인간의 통치이념을 국민이 직접 수호한 사건이다. 청소년·청년들의 동참으로 즉각 확산 되었다.</span></p>
+					</div>
+				</div>
+			</div>
+			<p style="margin: 0px;"><span class="ppt-ref">→</span><span class="ppt-ref">&nbsp;자료집 D. 역사적 서사 데이터 (표요약)</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>4</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>K-문명은 지금 우리의 일상에도 살아있다</span></p>
+			</div>
+		</div>
+		<div class="se-div card" style="border-left-color: rgb(39, 174, 96);">
+			<p class="body-text"><span>역사 속 사건만이 아니다. 외국인들이 "이해 불가"라고 말하는 한국인의 일상이 전부 K-문명의 모체이다. 단순한 도덕적 우월함을 넘어&nbsp;</span><span style="font-weight: bold;">사회 감시·보안 비용을 0으로 만들게 하는 신뢰 기반의 문화 작동 시스템</span><span>이다. 부모 세대부터 핵가족 분열 시대에 태어난 MZ 세대까지, 우리 모두가 매일 함께 경험하고 공유하고 있지만 이름을 몰랐을 뿐이다.</span></p>
+			<table class="compare-table" style="vertical-align: text-bottom; margin-top: 16px;" data-template-id="0">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>
+							<p style="margin: 0px;"><span>한국인의 일상</span></p>
+						</th>
+						<th>
+							<p style="margin: 0px;"><span>외국인 반응</span></p>
+						</th>
+						<th>
+							<p style="margin: 0px;"><span>K-문명 연결</span></p>
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>☕ 카페에 지갑·노트북 두고 화장실 간다</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"이해 불가" — 미국·유럽 불가능</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">정(情)</span><span>&nbsp;— 우리는 서로를 믿는다</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🌙 새벽 2시 혼자 골목길 귀가</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"세계 최고 안전" — 여성 혼자 가능</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">정(情)+홍익</span><span>&nbsp;— 타인도 나처럼 귀하다</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🎤 공연장 떼창·거리 응원</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"세계 최강 팬덤" — 해외 가수들이 다시 찾는 이유</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">흥(興)</span><span>&nbsp;— 집단 에너지의 자발적 폭발</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>👁 눈치 문화 — 말 안 해도 안다</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"서구 EQ보다 정교한 사회 기술"</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">정(情)</span><span>&nbsp;— 비언어 공동체 감각</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🚀 빨리빨리 행정, 초고속 인터넷, 한강까지 음식 배달</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"세계 최상위 IT 인프라"</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">흥(興)</span><span>&nbsp;— 집단 생동감·속도 에너지</span></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p style="margin: 0px;"><span>🍽 반찬 기본,무료 리필 — 당연하다</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span>"손님=공동체 구성원" 개념 충격</span></p>
+						</td>
+						<td>
+							<p style="margin: 0px;"><span style="font-weight: bold;">정(情)</span><span>&nbsp;— 나눔이 일상인 문화</span></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="se-div highlight-text" style="margin-top: 20px;">
+				<p><span style="font-size: 10pt;">특히 우리 MZ세대에게 묻고 싶다.</span><br data-end="116" data-start="113"><span style="font-size: 10pt;">우리는 미래가 불안하고, 현실은 점점 더 버겁게 느껴진다.</span></p>
+				<p data-end="211" data-start="152"><span style="font-size: 10pt;">하지만 카페에서 자리를 맡아둘 때,</span><br data-end="174" data-start="171"><span style="font-size: 10pt;">새벽에 혼자 집으로 돌아올 때,</span><br data-end="194" data-start="191"><span style="font-size: 10pt;">아무 의심 없이 결제할 때—</span></p>
+				<p data-end="277" data-start="213"><span style="font-size: 10pt;">우리는 이미 알고 있다.</span></p>
+				<p data-end="277" data-start="213"><span style="font-size: 10pt;">이건 세계 어디에서도 쉽게 찾아볼 수 없는 K-문명,</span><span style="font-size: 10pt;" class="se-zws-run"><br></span></p>
+				<p data-end="277" data-start="213"><span style="font-size: 10pt;">바로 우리 자신이라는 걸.</span><span style="font-size: 10pt;" class="se-zws-run"><br></span></p>
+				<p data-end="277" data-start="213"><span style="font-size: 10pt;">새로운 문화를 만들자는 이야기가 아니다.</span><span style="font-size: 10pt;">이미 우리가 가진 것에, 이름을 붙이고</span><br data-end="328" data-start="325"><span style="font-size: 10pt;">제대로 불러주자는 것이다.</span></p>
+			</div>
+			<p style="margin: 0px;"><br></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>5</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>세계가 공명하는 한국 콘텐츠 — 정·한·흥의 세계어화</span></p>
+			</div>
+		</div>
+		<div class="se-div card" style="border-left-color: rgb(230, 126, 34);">
+			<p class="body-text"><span>K-문명은 이미 세계인의 마음을 건드리고 있다. 언어가 달라도 같은 보편적인 감정을 느낄 수 있기 때문이다</span></p>
+			<div class="se-div" style="border-radius: 10px; padding: 20px; margin: 16px 0px; border-top: 3px solid rgb(212, 175, 55); background: linear-gradient(135deg, rgb(255, 253, 231), rgb(255, 248, 225));">
+				<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(133, 100, 4); margin-bottom: 8px;">
+					<p style="margin: 0px;"><span>🏆 한강 노벨문학상 (2024) — 한(恨)이 세계의 언어가 됐다</span></p>
+				</div>
+				<p style="font-size: 13px; color: rgb(85, 85, 85); line-height: 1.8;"><span>번역된 언어인데 번역되지 않은 감정이 전달됐다.&nbsp;'</span><span style="font-style: italic;">소년이 온다'</span><span>의 광주,&nbsp;'</span><span style="font-style: italic;">채식주의자'</span><span>의 고통,&nbsp;'</span><span style="font-style: italic;">작별하지 않는다'</span><span>의 상실. 식민·전쟁·학살의 트라우마를 경험한 글로벌 사우스 국가들이 그 감정에 공명했다. 번역가 데보라 스미스는 "한(恨)"을 번역하지 않고 설명했다. 이것이 Jeong과 Han이 Zen(일본-마음챙김) 과 Karma(인도 -인과응보)처럼 세계어가 될 수 있다는 가장 강력한 증거다.</span></p>
+			</div>
+			<div class="se-div" style="grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0px; display: grid;">
+				<div class="se-div" style="background: rgb(248, 249, 255); border-radius: 10px; padding: 18px; border-top: 3px solid rgb(57, 73, 171);">
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(57, 73, 171); margin-bottom: 8px;">
+						<p style="margin: 0px;"><span>🎬 기생충 — 한(恨)을 흥(興)으로</span></p>
+					</div>
+					<p style="font-size: 12px; color: rgb(85, 85, 85); line-height: 1.7;"><span>봉준호의 기생충은 계급의 한(恨)을 블랙코미디의 흥(興)으로 풀었다. 언어가 장벽이 되지 않은 이유가 여기 있다.</span></p>
+				</div>
+				<div class="se-div" style="background: rgb(248, 249, 255); border-radius: 10px; padding: 18px; border-top: 3px solid rgb(57, 73, 171);">
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(57, 73, 171); margin-bottom: 8px;">
+						<p style="margin: 0px;"><span>🎵 BTS — 집단 정(情)의 폭발</span></p>
+					</div>
+					<p style="font-size: 12px; color: rgb(85, 85, 85); line-height: 1.7;"><span>BTS의 "We are bulletproof"는 글로벌 청년의 집단 정(情)을 건드렸다. 빌보드를 넘은 것은 음악이 아니라 감성이었다.</span></p>
+				</div>
+			</div>
+			<div class="se-div" style="background: rgb(232, 245, 233); border-radius: 10px; padding: 18px; margin-top: 16px; border-left: 4px solid rgb(39, 174, 96);">
+				<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(46, 125, 50); margin-bottom: 8px;">
+					<p style="margin: 0px;"><span>🌐 번역과 세종학당 — K-문명 확산의 실제 경로</span></p>
+				</div>
+				<p style="font-size: 13px; color: rgb(85, 85, 85); line-height: 1.8;"><span>한강을 세계에 전달한 것은 번역가였다. K-문명이 글로벌 사우스에서 스와힐리어·포르투갈어·힌디어로 전달되려면 전문 번역 체계가 필요하다. 87개국 252개소 세종학당이 단순 한국어 교육에서&nbsp;</span><span style="font-weight: bold;">K-문명 철학 교육·번역·확산 거점으로 전환</span><span>되어야 하는 이유다. K-드라마에 왜 우는지, K-팝이 왜 하나가 되는지 — 그 답이 Jeong이고 Han이다. 세종학당은 그 답을 찾는 곳으로 바뀐다.</span></p>
+			</div>
+			<p style="margin: 0px;"><br></p>
+			<p style="margin: 0px;"><span class="ppt-ref">→&nbsp;</span><span class="ppt-ref">&nbsp;자료집 J. 문화적 대전환</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>6</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>홍익인간 — 고대 건국이념에서 현대 통치 실천으로</span></p>
+			</div>
+		</div>
+		<div class="se-div card">
+			<div class="se-div concept-grid">
+				<div class="se-div concept-box">
+					<div class="se-div concept-char">
+						<p style="margin: 0px;"><span>弘益</span><br><span>人間</span></p>
+					</div>
+					<div class="se-div concept-name">
+						<p style="margin: 0px;"><span>홍익인간</span></p>
+					</div>
+					<div class="se-div concept-desc">
+						<p style="margin: 0px;"><span>임시정부 건국강령·</span><br><span>교육기본법 제2조 명문화</span><br><span>"널리 인간을 이롭게"</span></p>
+					</div>
+				</div>
+				<div class="se-div concept-box">
+					<div class="se-div concept-char" style="font-size: 36px;">
+						<p style="margin: 0px;"><span>情</span><br><span>恨·興</span></p>
+					</div>
+					<div class="se-div concept-name">
+						<p style="margin: 0px;"><span>정·한·흥</span></p>
+					</div>
+					<div class="se-div concept-desc">
+						<p style="margin: 0px;"><span>국민 주체 감성 철학</span><br><span>수천 년 집단 실천으로</span><br><span>형성된 생활 문명</span></p>
+					</div>
+				</div>
+				<div class="se-div concept-box">
+					<div class="se-div concept-char" style="font-size: 32px; color: rgb(212, 175, 55);">
+						<p style="margin: 0px;"><span>K</span><br><span>문명</span></p>
+					</div>
+					<div class="se-div concept-name">
+						<p style="margin: 0px;"><span>K-문명</span></p>
+					</div>
+					<div class="se-div concept-desc">
+						<p style="margin: 0px;"><span>홍익인간(통치이념)</span><br><span>+ 정·한·흥(국민정서)</span><br><span>= 대한민국 독창적 철학</span></p>
+					</div>
+				</div>
+			</div>
+			<p class="body-text" style="margin-top: 20px;"><span style="font-weight: bold;">왜 지금까지 이름을 붙이지 않았는가.</span><span>&nbsp;해방 후 국가 주도 경제 발전 과정에서 국민이 아래에서 먼저 만들어낸 "보이지 않는 거대한 힘"에 이름을 붙일 생각을 하지 못했다. 그 사이 K-콘텐츠는 세계로 뻗어나갔지만 그 뿌리는 이름을 얻지 못했다.</span></p>
+			<div class="se-div zen-quote">
+				<p style="margin: 0px;"><span class="accent">Zen</span><span>은 일본 불교에서,&nbsp;</span><span class="accent">Karma</span><span>는 인도 철학에서 왔다.</span><br><span>지금은 누구도 그것을 특정 국가의 것이라 생각하지 않는다.</span><br><span class="accent">Hongik</span><span>이 그 다음이다.</span></p>
+			</div>
+			<div class="se-div" style="grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0px; display: grid;">
+				<div class="se-div" style="background: rgb(243, 229, 245); border-radius: 10px; padding: 20px;">
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(106, 27, 154); margin-bottom: 10px;">
+						<p style="margin: 0px;"><span>🗳 K-민주주의</span></p>
+					</div>
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(26, 26, 46); margin-bottom: 8px;">
+						<p style="margin: 0px;"><span>국민이 직접 헌법을 지키는 세계 유일 민주주의</span></p>
+					</div>
+					<p style="font-size: 12px; color: rgb(85, 85, 85); line-height: 1.7;"><span>미국 민주주의는 제도가 지킨다. 한국 민주주의는&nbsp;</span><span style="font-weight: bold;">국민이 직접 지킨다.</span><span>&nbsp;4·19·5·18·6월항쟁·촛불·계엄저지. 홍익인간의 통치이념을 국민이 몸으로 수호해온 반복된 역사다.</span></p>
+				</div>
+				<div class="se-div" style="background: rgb(232, 244, 253); border-radius: 10px; padding: 20px;">
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(21, 101, 192); margin-bottom: 10px;">
+						<p style="margin: 0px;"><span>🌏 K-외교안보</span></p>
+					</div>
+					<div class="se-div" style="font-weight: bold; font-size: 13px; color: rgb(26, 26, 46); margin-bottom: 8px;">
+						<p style="margin: 0px;"><span>홍익인간 원칙의 외교적 언어</span></p>
+					</div>
+					<p style="font-size: 12px; color: rgb(85, 85, 85); line-height: 1.7;"><span>"내 생명이 귀하면 남의 생명도 귀하다. 존중해야 존중받는다." 일방적 패권이 아닌 상호 호혜와 공생. 공자학원은 "중국이 가르친다"로 실패했다. K-문명은&nbsp;</span><span style="font-weight: bold;">"함께 이롭게 되자"</span><span>&nbsp;— 지배가 아닌 기여다.</span></p>
+				</div>
+			</div>
+			<p style="margin: 0px;"><span class="ppt-ref">→&nbsp;</span><span class="ppt-ref">&nbsp;자료집 F. 전략적 차별성</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>7</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>5대 국가전략 — 새로 만드는 것이 하나도 없다</span></p>
+			</div>
+		</div>
+		<div class="se-div card gold">
+			<p class="body-text"><span>이것을&nbsp;</span><span style="font-weight: bold;">K-문명</span><span>으로 명명하고 5가지 국가전략으로 제도화하는 것을 제안한다.</span></p>
+			<div class="se-div tasks-grid">
+				<div class="se-div task-item">
+					<div class="se-div task-num">
+						<p style="margin: 0px;"><span>1</span></p>
+					</div>
+					<div class="se-div task-text">
+						<p style="margin: 0px;"><span style="font-weight: bold;">K-문명 기본법 제정</span><span>&nbsp;</span><span>초정파적 연속성 확보. 정권 교체와 무관하게 지속. 어떤 단체도 K-문명을 독점할 수 없다는 원칙을 법에 명시한다.</span></p>
+					</div>
+				</div>
+				<div class="se-div task-item">
+					<div class="se-div task-num">
+						<p style="margin: 0px;"><span>2</span></p>
+					</div>
+					<div class="se-div task-text">
+						<p style="margin: 0px;"><span style="font-weight: bold;">K-문명 지수(KCI) 개발·연간 발표</span><span>&nbsp;</span><span>가치 확산·디지털 리더십·문화 연결성·외교 호혜성 4개 영역. 관광객 재방문 의사, SNS 실시간 감성 분석 병행. 매년 갭을 추적한다.</span></p>
+					</div>
+				</div>
+				<div class="se-div task-item">
+					<div class="se-div task-num">
+						<p style="margin: 0px;"><span>3</span></p>
+					</div>
+					<div class="se-div task-text">
+						<p style="margin: 0px;"><span style="font-weight: bold;">K-문명 글로벌 통합 거점 전환</span><span>&nbsp;</span><span>부처별(외교부·문체부·교육부) 분산 기능을 K-문명이라는 단일 목표로 연계 통합. 프랑스 알리앙스 프랑세즈 이원화 모델 벤치마킹. 2026년 이미 시작된 문화원 중심 원스톱 협업 체계와 직접 연동.</span></p>
+					</div>
+				</div>
+				<div class="se-div task-item">
+					<div class="se-div task-num">
+						<p style="margin: 0px;"><span>4</span></p>
+					</div>
+					<div class="se-div task-text">
+						<p style="margin: 0px;"><span style="font-weight: bold;">K-문명 민간 생태계 육성</span><span>&nbsp;</span><span>홍익인간 가치를 사업화하는 민간이 자생하는 구조. ESG 가점·세제혜택·공공조달 &nbsp;삼중 인센티브&nbsp;</span><span>우선권</span><span>.&nbsp;</span><span>국민 참여 펀딩&nbsp;</span><span>&nbsp;정권 교체와 무관하게 민간이 굴린다.</span></p>
+					</div>
+				</div>
+				<div class="se-div task-item" style="grid-column: 1 / -1;">
+					<div class="se-div task-num">
+						<p style="margin: 0px;"><span>5</span></p>
+					</div>
+					<div class="se-div task-text">
+						<p style="margin: 0px;"><span style="font-weight: bold;">Hongik Civilization 글로벌 브랜딩</span><span>&nbsp;</span><span>국내: K-문명 / 글로벌: Hongik Civilization. 노스폴(서구·강대국)은 K-컬처·K-콘텐츠로 감성 침투 후 철학 학술화. 사우스폴(글로벌 사우스)은 동학·3·1운동·민주화운동·한강의 서사로 정·한·흥 감성 공명. 노스폴 K문화 확대 전략과 동시 진행</span></p>
+					</div>
+				</div>
+			</div>
+			<p class="body-text" style="font-weight: bold; color: rgb(13, 27, 62); margin-top: 16px;"><span>교육기본법에 이미 명문화 되어 있다. 세종학당은 87개국에서 이미 활동하고 있다. 우릿 선조, 부모세대, 지금 우리가 이미 살아내면서 만들어 온 역사가 있다.&nbsp;</span><span style="font-weight: bold;">대한민국이 가지고 있는 것에 이름을 붙이고 제도로 작동시키는 것이다.</span></p>
+			<p class="body-text" style="font-weight: bold; color: rgb(13, 27, 62); margin-top: 16px;"><br></p>
+			<p class="body-text" style="margin: 0px;"><span class="ppt-ref">→ 과제3</span><span class="ppt-ref">&nbsp;자료집 E.거버넌스 비효율 분석/ 자료집 F.전략적 차별성/ 자료집.G 선진 거버넌스 벤치 마킹</span></p>
+			<p class="body-text" style="margin: 0px;"><br></p>
+			<p style="margin: 0px;"><span class="ppt-ref">→ 과제5</span><span class="ppt-ref">&nbsp;자료집 H. 글로벌 타겟팅 전략</span></p>
+		</div>
+		<div class="se-div section-label">
+			<div class="se-div section-num">
+				<p style="margin: 0px;"><span>8</span></p>
+			</div>
+			<div class="se-div section-title">
+				<p style="margin: 0px;"><span>기대효과</span></p>
+			</div>
+		</div>
+		<div class="se-div result-bar">
+			<div class="se-div result-icon">
+				<p style="margin: 0px;"><span>🏆</span></p>
+			</div>
+			<div class="se-div">
+				<div class="se-div result-title">
+					<p style="margin: 0px;"><span>2030년 Brand Finance 소프트파워 5위</span></p>
+				</div>
+				<div class="se-div result-desc">
+					<p style="margin: 0px;"><span>현재 59.2점 → 독일 수준(67.7점). 경쟁국 미국(-4.6점)·영국(-3.2점)·독일(-2.4점) 2026년 동시 하락 — 지금이 진입 기회이다.</span></p>
+				</div>
+			</div>
+		</div>
+		<div class="se-div result-bar">
+			<div class="se-div result-icon">
+				<p style="margin: 0px;"><span>📈</span></p>
+			</div>
+			<div class="se-div">
+				<div class="se-div result-title">
+					<p style="margin: 0px;"><span>한류 수출 150조 달성</span></p>
+				</div>
+				<div class="se-div result-desc">
+					<p style="margin: 0px;"><span>현재 20.9조 → K-문명 브랜드 프리미엄 장착. IMF 논문 실증: 소프트파워 상승 → 관광·교역 증가.</span></p>
+				</div>
+			</div>
+		</div>
+		<div class="se-div result-bar">
+			<div class="se-div result-icon">
+				<p style="margin: 0px;"><span>🇰🇷</span></p>
+			</div>
+			<div class="se-div">
+				<div class="se-div result-title">
+					<p style="margin: 0px;"><span>국민 미래 안전망과 자긍심 회복 — 수치 밖의 가장 큰 효과</span></p>
+				</div>
+				<div class="se-div result-desc">
+					<p style="margin: 0px;"><span>세계 최저 출산율, OECD 최고 자살률, IMD 기준 인재 유출로 인한 국가 경쟁력 -36위. 여기에 연간 수십조 원에 이르는 사회 갈등 비용까지.</span><span>이 모든 문제의 공통된 뿌리는 미래에 대한 심리적 안전망의 부재, 그리고 팍팍한 현실이 만든 국민으로서의 자긍심 결핍이다.</span><br data-end="200" data-start="197"><span>지금은, 이미 우리 부모 세대가 먼저 살아낸 삶의 방식과 철학이 지금 우리 국민에게 그대로 되돌아오고 있다.</span></p>
+				</div>
+			</div>
+		</div>
+		<p style="margin: 0px;"><span class="ppt-ref">→&nbsp;</span><span class="ppt-ref">&nbsp;자료집 I. 경제적 부가가치(ROI)- 갈등비용 VS 소프트파워</span></p>
+		<div class="se-div closing">
+			<h3>
+				<span>이 아이디어의 고도화를 정부와 함께하고 싶다</span>
+			</h3>
+			<p><span>동학농민의 후손, 3·1운동의 후손, 광주의 후손,</span><br><span>빛의 민주화 혁명을 공유하는 세대가 말할 수 있다.</span><br><span style="font-weight: bold; color: rgb(212, 175, 55);">"나는 세계에서 가장 풍요로운 감성 문명의 주인공이다."</span><br><br><span>본 제안은 새로운 예산이나 조직 개편이 아닌,</span><br><span>이미 구축된 해외 공관·문화·교육 인프라를 중심으로</span><br><span>민간 산업과 국민의 자발적 참여를 연계하여</span><br><span>분산된 기능을 'K-문명'이라는 단일 목표로 재설계하는</span><br><span style="font-weight: bold; color: rgb(212, 175, 55);">즉시 실행 가능한 국가 소프트파워 전략</span><span>입니다.</span><br><br><span style="font-weight: bold; font-size: 16px; color: rgb(255, 255, 255);">Hongik — 널리 인간을 이롭게 하라</span></p>
+		</div>
+	</div>
+	<p style="text-align: center;"><span style="font-size: 10pt;">첨부: K-문명 국가전략 2026 _ 핵심 데이터 증빙자료집 (Data Fact Pack)</span></p>
+	<p style="text-align: center;"><span style="font-size: 10pt;" class="se-zws-run"><br></span></p>
+	<p style="text-align: center;"><a style="text-decoration: underline; color: rgb(22, 63, 199);" data-href="https://coaching.literstella.co.kr/k_idea/k_idea_data.html#strategy" data-hyperlink-id="se_f73ff998-a7a0-4941-8cb5-ee09b0025360" target="_blank" href="https://coaching.literstella.co.kr/k_idea/k_idea_data.html#strategy"><span style="font-size: 10pt;">🔗 자료집 인터렉티브 웹으로 편하게 보기&nbsp;</span></a></p>
+</div>
