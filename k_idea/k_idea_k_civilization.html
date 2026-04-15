@@ -2,368 +2,415 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>K-문명 국가전략 2026: 데이터 증빙 리포트</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-문명 국가전략 2026: 데이터 인터랙티브 리포트</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Pretendard:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Styles */
-body { font-family: 'Pretendard', sans-serif; background-color: #faf9f6; color: #1e293b; -webkit-font-smoothing: antialiased; }
-h1, h2, h3, h4, .serif-font { font-family: 'Noto Serif KR', serif; }
+body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; background-color: #faf9f6; color: #1e293b; }
 
-/* Chart Container */
-.chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 300px; max-height: 400px; }
-@media (min-width: 768px) { .chart-container { height: 380px; } }
+/* Chart Containers */
+.chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 280px; max-height: 280px; }
+@media (min-width: 768px) { .chart-container { height: 400px; max-height: 400px; } }
 
-/* Reading optimized styles */
-p { word-break: keep-all; }
-.section-divider { height: 1px; background: linear-gradient(90deg, transparent, #cbd5e1, transparent); margin: 4rem 0; }
+/* Desktop Tab Logic */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+.tab-btn.active { border-bottom: 2px solid #b45309; color: #b45309; font-weight: 700; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Mobile Linear Overrides */
+@media (max-width: 767px) {
+    /* 1. Force tabs to stack sequentially */
+    .mobile-linear-tabs .tab-btn-container { display: none; }
+    .mobile-linear-tabs .tab-content { display: block !important; opacity: 1; transform: none; margin-bottom: 2.5rem; }
+    .mobile-linear-tabs .tab-content:last-child { margin-bottom: 0; }
+    
+    /* 2. Show section titles inside the stacked tabs for context */
+    .mobile-section-title { display: block; font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+    
+    /* 3. Hide the separate desktop detail panel for timeline */
+    #timeline-detail { display: none !important; }
+}
+@media (min-width: 768px) {
+    .mobile-section-title { display: none; }
+}
+
+/* Timeline Interactive Styles */
+.timeline-item { cursor: pointer; transition: all 0.2s; }
+.timeline-item:hover, .timeline-item.active { background-color: #f1f5f9; border-left-color: #b45309; }
+@media (max-width: 767px) {
+    /* On mobile, remove the hover/active styling to feel like a static list */
+    .timeline-item { cursor: default; }
+    .timeline-item.active { background-color: transparent; border-left-color: #e2e8f0; }
+}
 </style>
 </head>
-<body class="relative">
+<body class="antialiased">
 
-<!-- Chosen Palette: Warm Neutrals (#faf9f6), Deep Navy (#0f172a), and Gold/Bronze accents (#b45309) -->
-<!-- Application Structure Plan: 
-     A linear, scrolling report optimized for continuous reading. All interactive "hiding" elements (tabs, clickable timelines) have been removed so the evaluator/user can simply scroll from top to bottom and read the entire document comfortably, like a well-formatted PDF or whitepaper. Responsive grids are maintained to ensure it looks perfect on both mobile phones and desktop monitors without breaking the reading flow.
--->
-<!-- Visualization & Content Choices: 
-     1. Brand Finance Data -> Bar Chart (Chart.js)
-     2. OS Comparison -> Grid Layout (All visible)
-     3. History -> Vertical Timeline List (All text visible)
-     4. ROI -> Doughnut Chart (Chart.js)
-     5. Han Kang -> Metric Cards
-     CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. 
--->
-
-<!-- Simple Navigation -->
-<nav class="fixed w-full bg-[#0f172a] text-white z-50 shadow-md border-b border-slate-700">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-center">
-        <span class="text-lg md:text-xl font-black tracking-widest text-[#fde68a] serif-font uppercase">K-Civilization 2026 Data Report</span>
+<nav class="fixed w-full bg-[#0f172a] text-white z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <span class="text-xl font-bold tracking-tight text-[#fde68a]">K-CIVILIZATION 2026</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8 overflow-x-auto">
+                <a href="#paradox" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">1. 역설의 데이터</a>
+                <a href="#os-gap" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">2. 국가 철학 비교</a>
+                <a href="#history" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">3. 역사적 증명</a>
+                <a href="#strategy" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">4. 거버넌스 전략</a>
+                <a href="#roi" class="hover:text-[#fde68a] transition-colors text-sm font-medium whitespace-nowrap">5. 경제적 부가가치</a>
+            </div>
+        </div>
     </div>
 </nav>
 
-<header class="pt-32 pb-12 px-4 text-center max-w-3xl mx-auto">
-    <div class="inline-block bg-[#fffbeb] text-[#b45309] border border-[#fde68a] px-4 py-1.5 rounded-full text-xs md:text-sm font-bold mb-6 tracking-widest shadow-sm">핵심 데이터 증빙자료집</div>
-    <h1 class="text-4xl md:text-5xl font-black text-[#0f172a] leading-tight mb-6 serif-font">K-문명 국가전략 2026</h1>
-    <p class="text-base md:text-xl text-[#475569] leading-relaxed">
-        역량 세계 1위가 왜 인식 11위인가.<br>
-        문화 강국의 정체성 공백을 극복하기 위한 '국가 철학(OS)' 구축 및 글로벌 소프트파워 5위 도약 데이터 백서.
-    </p>
+<header class="pt-24 md:pt-32 pb-12 md:pb-16 px-4 text-center max-w-4xl mx-auto">
+    <div class="inline-block bg-[#fef3c7] text-[#b45309] px-4 py-1 rounded-full text-xs md:text-sm font-bold mb-6 tracking-widest">DATA FACT PACK</div>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-[#0f172a] leading-tight mb-4 md:mb-6 break-keep">K-문명 국가전략 2026</h1>
+    <p class="text-lg md:text-xl text-[#475569] leading-relaxed break-keep">역량 세계 1위가 왜 인식 11위인가. 문화 강국의 정체성 공백과 지속 가능성 위기를 극복하기 위한 '국가 철학(OS)' 구축 및 글로벌 소프트파워 5위 도약 마스터플랜.</p>
 </header>
 
-<main class="max-w-4xl mx-auto px-4 sm:px-6 pb-24 space-y-16">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-20 md:space-y-24">
 
-    <!-- Section 1 -->
-    <section id="paradox">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">1. 역설의 데이터: 역량과 인식의 괴리</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                IMF 객관적 지표상 한국의 디지털/문화 도달력은 세계 최고(1.68점)이나, Brand Finance 인식 조사에서는 11위에 그칩니다. 이는 상업적 탁월성 대비 국가 가치관(거버넌스)에 대한 세계인의 인식이 지체되어 있음을 보여줍니다.
-            </p>
+    <section id="paradox" class="scroll-mt-20">
+        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">1. 역설의 데이터: 역량과 인식의 괴리</h2>
+            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">이 섹션은 대한민국이 직면한 소프트파워의 모순을 보여줍니다. 단순한 '콘텐츠 수출'을 넘어선 '국가 브랜드화'가 필요한 이유를 객관적 수치로 확인하십시오.</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                <div class="bg-[#f8fafc] p-6 rounded-xl text-center border border-slate-200">
-                    <div class="text-sm font-bold text-[#64748b] mb-2">IMF 객관적 지표 (WP/24/212)</div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center mb-8">
+                <div class="bg-[#f8fafc] p-5 md:p-6 rounded-xl text-center border border-slate-100">
+                    <div class="text-xs md:text-sm font-bold text-[#64748b] uppercase tracking-wider mb-2">IMF 객관적 지표 (WP/24/212)</div>
                     <div class="text-4xl md:text-5xl font-black text-[#0f172a] mb-2">세계 1위</div>
-                    <p class="text-sm text-[#475569]">디지털 및 문화적 도달력 (1.68점)</p>
+                    <p class="text-xs md:text-sm text-[#475569]">디지털 및 문화적 도달력 (1.68점)</p>
                 </div>
-                <div class="bg-[#fef2f2] p-6 rounded-xl text-center border border-red-100">
-                    <div class="text-sm font-bold text-[#ef4444] mb-2">Brand Finance 2026 인식 조사</div>
+                <div class="bg-[#fef2f2] p-5 md:p-6 rounded-xl text-center border border-red-100">
+                    <div class="text-xs md:text-sm font-bold text-[#ef4444] uppercase tracking-wider mb-2">Brand Finance 2026 인식 조사</div>
                     <div class="text-4xl md:text-5xl font-black text-[#b91c1c] mb-2">세계 11위</div>
-                    <p class="text-sm text-[#7f1d1d]">종합 59.2점 (목표: 독일 67.7점)</p>
+                    <p class="text-xs md:text-sm text-[#7f1d1d]">종합 59.2점 (목표: 독일 67.7점)</p>
                 </div>
             </div>
-
-            <h3 class="text-center font-bold text-slate-800 mb-4">주요 6개국 소프트파워 총점 비교 (2026)</h3>
             <div class="chart-container">
                 <canvas id="brandFinanceChart"></canvas>
             </div>
-            <p class="text-center text-xs text-[#64748b] mt-6">자료: Brand Finance Global Soft Power Index 2026</p>
+            <p class="text-center text-xs md:text-sm text-[#64748b] mt-4">출처: Brand Finance Global Soft Power Index 2026</p>
         </div>
     </section>
 
-    <!-- Section 2 -->
-    <section id="os-gap">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">2. 국가 철학(OS)의 공백과 차별성</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                선진국이 어떻게 '국가(State)' 주도의 철학(OS)을 바탕으로 산업을 구동하는지 비교합니다. 또한 일본 '쿨재팬'과 중국 '공자학원'의 실패 사례를 통해 한국만의 상향식(Bottom-up) 'K-문명' 전략의 당위성을 탐색합니다.
-            </p>
+    <section id="os-gap" class="scroll-mt-20">
+        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">2. 국가 철학(OS)의 공백과 차별성</h2>
+            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">세계 선진국들의 주도 방식과 실패 사례를 통해 한국만의 상향식(Bottom-up) 'K-문명' 전략이 왜 독보적인지 비교 분석합니다.</p>
         </div>
 
-        <h3 class="text-xl font-bold text-[#b45309] mb-4">📌 7개국 국가 철학(OS) 및 전파 기제 비교</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12" id="os-cards-container">
-            <!-- Populated by JS -->
-        </div>
-
-        <h3 class="text-xl font-bold text-[#ef4444] mb-4">📌 경쟁국 실패 사례 및 K-문명 차별성</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                <div class="text-3xl mb-3">🇯🇵</div>
-                <h4 class="text-lg font-bold text-[#0f172a] mb-2 pb-2 border-b">일본: 쿨재팬 전략</h4>
-                <ul class="text-sm text-[#475569] space-y-2 mt-3">
-                    <li><strong class="text-[#0f172a]">주체:</strong> 관 주도 (대규모 정부 펀드)</li>
-                    <li><strong class="text-[#0f172a]">목적:</strong> 상업적 콘텐츠 수출 및 수익 창출</li>
-                    <li class="pt-2"><strong class="text-[#ef4444] block mb-1">실패 요인:</strong> 공급자 중심의 일방적 국수주의 주입 (갈라파고스화) 및 막대한 펀드 손실.</li>
-                </ul>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                <div class="text-3xl mb-3">🇨🇳</div>
-                <h4 class="text-lg font-bold text-[#0f172a] mb-2 pb-2 border-b">중국: 공자학원</h4>
-                <ul class="text-sm text-[#475569] space-y-2 mt-3">
-                    <li><strong class="text-[#0f172a]">주체:</strong> 당/국가 주도</li>
-                    <li><strong class="text-[#0f172a]">목적:</strong> 체제 선전, 이데올로기 주입</li>
-                    <li class="pt-2"><strong class="text-[#ef4444] block mb-1">실패 요인:</strong> 학문의 자유 침해 논란. 서구권의 거센 반발 및 연쇄 퇴출.</li>
-                </ul>
-            </div>
-            <div class="bg-[#fffbeb] border-2 border-[#fde68a] rounded-xl p-6 shadow-sm">
-                <div class="text-3xl mb-3">🇰🇷</div>
-                <h4 class="text-lg font-bold text-[#b45309] mb-2 pb-2 border-b border-orange-200">한국: K-문명 전략</h4>
-                <ul class="text-sm text-[#475569] space-y-2 mt-3">
-                    <li><strong class="text-[#0f172a]">주체:</strong> 민간 생태계 자생 + 제도적 토대</li>
-                    <li><strong class="text-[#0f172a]">목적:</strong> 인류 보편적 가치(홍익인간) 공명</li>
-                    <li class="pt-2 bg-white p-3 rounded mt-2 border border-orange-100"><strong class="text-[#059669] block mb-1">성공 전략 (차별점):</strong> "존중해야 존중받는다"는 <strong>상호 호혜성(Reciprocity)</strong>. 일방적 주입이 아닌 보편적 연대.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 3 -->
-    <section id="history">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">3. 역사적 실천: 정(情)·한(恨)·흥(興)</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                K-문명의 근간인 '정, 한, 흥'은 단순한 감정적 기질이 아닌, 수백만 명이 자발적으로 결집하여 비폭력적/창조적으로 사회를 진보시킨 역사적 실천(Historical Praxis)입니다. 아래는 보편적 가치(비폭력, 공생)로 발현된 주요 사건들의 기록입니다.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-10">
-            <div class="border-l-2 border-slate-200 pl-6 ml-2 md:ml-4 space-y-10" id="timeline-container">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 4 -->
-    <section id="strategy">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">4. 전략 및 거버넌스 통합</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                재외 기관의 파편화된 현황을 진단하고, 영국(브리티시 카운슬)과 프랑스(알리앙스 프랑세즈)를 벤치마킹한 독립적 '단일 철학(One-OS)' 컨트롤타워 구축 전략을 제시합니다.
-            </p>
-        </div>
-
-        <div class="space-y-8">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-                <h3 class="text-xl font-bold text-[#0f172a] mb-6 flex items-center gap-2"><span class="text-2xl">🏛️</span> 부처별 재외 기관 파편화 현황</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                        <div class="font-bold text-[#0f172a] mb-1">외교부 <span class="text-xs text-slate-500 font-normal">(162개국 공관)</span></div>
-                        <div class="text-sm text-slate-600">공공외교 주도. 현지 문화/교육 콘텐츠 전문성 및 자체 예산 부족.</div>
-                    </div>
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                        <div class="font-bold text-[#0f172a] mb-1">문체부 <span class="text-xs text-slate-500 font-normal">(87개국 252개소)</span></div>
-                        <div class="text-sm text-slate-600">인프라 최대 규모. 단, '한국어/K팝' 중심의 일차원적 보급에 편중.</div>
-                    </div>
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                        <div class="font-bold text-[#0f172a] mb-1">교육부 <span class="text-xs text-slate-500 font-normal">(19개국 43개소)</span></div>
-                        <div class="text-sm text-slate-600">한국교육원. 재외동포 중심 교육으로 글로벌 철학 확산 기능 미비.</div>
-                    </div>
-                </div>
-                <div class="p-4 bg-[#fef3c7] border border-[#fde68a] rounded-lg text-sm text-[#b45309] font-bold text-center">
-                    해결책: 'K-문명 기본법' 기반 단일 철학(One-OS) 원스톱 거점 통합 시급
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-                <h3 class="text-xl font-bold text-[#0f172a] mb-6 flex items-center gap-2"><span class="text-2xl">🌍</span> 국가별 이원화 진입 전략</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="border-l-4 border-[#0f172a] pl-4 bg-slate-50 p-4 rounded-r-lg">
-                        <h4 class="font-bold text-[#0f172a] text-lg mb-1">노스폴 (Global North)</h4>
-                        <p class="text-sm font-semibold text-slate-500 mb-3">미·영·프·독 등 서구 선진국</p>
-                        <p class="text-sm text-[#475569] leading-relaxed"><strong>감성 침투 후 학술화:</strong> 익숙한 K-컬처를 고차원 아시아 인문학(정·한·흥)으로 격상시켜 지식인 사회 포섭. (예: 글로벌 서밋 개최, 대학 연구소 설립)</p>
-                    </div>
-                    <div class="border-l-4 border-[#b45309] pl-4 bg-orange-50 p-4 rounded-r-lg">
-                        <h4 class="font-bold text-[#b45309] text-lg mb-1">사우스폴 (Global South)</h4>
-                        <p class="text-sm font-semibold text-orange-700 mb-3">아세안, 중동, 아프리카, 중남미</p>
-                        <p class="text-sm text-[#475569] leading-relaxed"><strong>역사 서사 및 정서 공명:</strong> 식민지 극복, 경제 기적의 경험 공유. 홍익인간적 호혜성을 ODA 및 K-City 수출에 연동하여 진정성 있는 연대 구축.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5 -->
-    <section id="roi">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">5. 실물 경제 자산 (ROI)</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                K-문명 신뢰 시스템 정착 시 절감할 수 있는 막대한 '갈등 비용(GDP 10%)'과 메가 IP(BTS 사례)가 견인하는 한류 수출 프리미엄의 경제적 타당성을 분석합니다.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                <div>
-                    <h3 class="font-bold text-center text-[#0f172a] mb-4 text-lg">연간 사회 갈등 비용 손실 구조</h3>
-                    <div class="chart-container">
-                        <canvas id="roiChart"></canvas>
-                    </div>
-                    <p class="text-center text-xs text-[#64748b] mt-6">자료: KDI / 삼성경제연구소 갈등비용 추산 종합</p>
-                </div>
-                
-                <div class="space-y-6">
-                    <div class="bg-red-50 p-5 rounded-xl border border-red-100">
-                        <h4 class="font-bold text-red-800 text-lg mb-3 flex items-center gap-2"><span class="text-xl">🚨</span> 한국의 경제적 손실 (Distrust Tax)</h4>
-                        <ul class="text-sm text-red-900 space-y-2 list-disc pl-5">
-                            <li>한국의 사회갈등 지수는 OECD 3위이나, 이를 관리하는 사회적 결속 지수는 최하위권입니다.</li>
-                            <li>불필요한 갈등, 보안/소송 등 신뢰 구조 붕괴로 인해 연간 <strong>최대 246조원 (명목 GDP의 10.4%)</strong>이 매년 허공으로 증발하고 있습니다.</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="bg-[#f0f9ff] p-5 rounded-xl border border-[#bae6fd]">
-                        <h4 class="font-bold text-[#0369a1] text-lg mb-3 flex items-center gap-2"><span class="text-xl">📈</span> K-브랜드 프리미엄 실증 (BTS 사례)</h4>
-                        <ul class="text-sm text-[#0c4a6e] space-y-2 list-disc pl-5">
-                            <li><strong>생산 유발 효과:</strong> 연평균 약 4.1조 원 (국내 중견기업 26개 매출 합계 규모).</li>
-                            <li><strong>부가가치 유발:</strong> 약 1.4조 원 / 관련 소비재(의류·화장품) 수출 견인 효과 탁월.</li>
-                            <li><strong>150조 수출 달성 경로:</strong> IMF 모델상 소프트파워 지수 상승 시 교역량은 즉각 증가합니다. 상업 콘텐츠를 '국가 문명 브랜드'로 격상 시켜 제품 수출에 프리미엄을 부여하는 것이 핵심 레버리지입니다.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 6 -->
-    <section id="culture">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 serif-font border-b-2 border-[#0f172a] pb-3 inline-block">6. 문화적 대전환: 'Han'의 세계화</h2>
-            <p class="text-[#475569] text-base leading-relaxed mt-2">
-                2024년 한강 작가의 노벨문학상 수상은 한국의 소프트파워가 '상업적 유행(Pop)'을 넘어 '인류 보편적 성찰(Literature)'의 단계로 진화했음을 객관적 데이터로 입증합니다.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-10">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-                <div class="bg-[#fffbeb] border border-[#fde68a] p-6 rounded-xl text-center shadow-sm">
-                    <div class="text-xs font-bold text-[#b45309] mb-2 uppercase tracking-wide">해외 판매 부수 (23→24년)</div>
-                    <div class="text-4xl font-black text-[#0f172a] my-2">+130%</div>
-                    <div class="text-sm text-slate-600">52만 부 → 120만 부 폭증</div>
-                </div>
-                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl text-center shadow-sm">
-                    <div class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">해외 번역 지원 종수</div>
-                    <div class="text-4xl font-black text-[#0f172a] my-2">+27%</div>
-                    <div class="text-sm text-slate-600">165종 → 210종 확대</div>
-                </div>
-                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl text-center shadow-sm">
-                    <div class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">종당 평균 판매량</div>
-                    <div class="text-4xl font-black text-[#059669] my-2">1,271부</div>
-                    <div class="text-sm text-slate-600">역대 사상 최고치 기록</div>
-                </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mobile-linear-tabs">
+            <div class="flex border-b border-slate-200 overflow-x-auto tab-btn-container">
+                <button class="tab-btn active px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-os">7개국 OS 및 전파 구조</button>
+                <button class="tab-btn px-6 py-4 text-sm font-medium text-slate-600 whitespace-nowrap" data-target="tab-fail">경쟁국 실패 사례 분석</button>
             </div>
             
-            <div class="bg-slate-800 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-700">
-                <h3 class="font-bold text-xl text-white mb-4 flex items-center gap-2">
-                    <span class="text-2xl text-[#fde68a]">🖋️</span> 'Han(한)'의 인문학적 표준화 현상
-                </h3>
-                <p class="text-base text-slate-300 leading-relaxed mb-4">
-                    과거 번역가들은 '한(Han)'을 'Resentment(원한)'나 'Sorrow(슬픔)'로 의역했으나, 최근 전문 번역가(데보라 스미스 등)들은 이를 <strong>고유명사 "Han"</strong>으로 직접 표기하며 한국만의 특수성과 인류 보편적 슬픔을 결합하여 설명합니다.
-                </p>
-                <p class="text-base text-slate-300 leading-relaxed">
-                    이는 일본의 'Zen(선)', 인도의 'Karma(업)'처럼 글로벌 지식인 사회에서 'Han'이 인간의 트라우마와 회복을 상징하는 <strong>독자적 인문학 표준 용어</strong>로 안착했음을 입증하며, 향후 K-문명 전략을 전개하는 데 있어 가장 강력한 무형 자산이 될 것입니다.
-                </p>
-                <p class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-700">자료: 한국문학번역원 2024-2025 실적 보고서 / 스웨덴 한림원</p>
+            <div class="p-5 md:p-8">
+                <div id="tab-os" class="tab-content active">
+                    <div class="mobile-section-title">7개국 OS 및 전파 구조</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="os-cards-container">
+                        </div>
+                </div>
+
+                <div id="tab-fail" class="tab-content">
+                    <div class="mobile-section-title">경쟁국 실패 사례 분석</div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-5 md:p-6">
+                            <div class="text-2xl md:text-3xl mb-3">🇯🇵</div>
+                            <h3 class="text-base md:text-lg font-bold text-[#0f172a] mb-2">일본: 쿨재팬 (Cool Japan)</h3>
+                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 관 주도 (관료 기획, 펀드)</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 상업적 콘텐츠 수출 보조</li>
+                                <li><strong class="text-[#ef4444]">결과:</strong> 국수주의적 주입 및 갈라파고스화, 펀드 손실.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#f8fafc] border border-slate-200 rounded-xl p-5 md:p-6">
+                            <div class="text-2xl md:text-3xl mb-3">🇨🇳</div>
+                            <h3 class="text-base md:text-lg font-bold text-[#0f172a] mb-2">중국: 공자학원</h3>
+                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 당/국가 주도</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 체제 선전, 이데올로기 주입</li>
+                                <li><strong class="text-[#ef4444]">결과:</strong> 서구권 반발 및 연쇄 퇴출. 소프트파워의 하드파워화.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#fffbeb] border border-[#fde68a] rounded-xl p-5 md:p-6 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-[#b45309]"></div>
+                            <div class="text-2xl md:text-3xl mb-3">🇰🇷</div>
+                            <h3 class="text-base md:text-lg font-bold text-[#b45309] mb-2">한국: K-문명 (제안)</h3>
+                            <ul class="text-xs md:text-sm text-[#475569] space-y-2">
+                                <li><strong class="text-[#0f172a]">주체:</strong> 민간 자생 + 법적 토대</li>
+                                <li><strong class="text-[#0f172a]">목적:</strong> 인류 보편의 가치(홍익인간) 공유</li>
+                                <li><strong class="text-[#059669]">전략:</strong> 일방적 주입이 아닌 보편적 연대와 호혜성 확보.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="history" class="scroll-mt-20">
+        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">3. 역사적 실천: 정(情)·한(恨)·흥(興)의 증명</h2>
+            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">수백만 명의 자발적 결집으로 증명된 객관적 사실들입니다. 아래 역사적 순간들이 어떻게 인류 보편적 가치로 발현되었는지 확인하십시오.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-8">
+            <div class="flex flex-col md:flex-row gap-0 md:gap-8">
+                <div class="md:w-1/3 md:border-r border-slate-200 md:pr-4" id="timeline-container">
+                    </div>
+                <div class="hidden md:flex md:w-2/3 pl-4 flex-col justify-center min-h-[300px]" id="timeline-detail">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="strategy" class="scroll-mt-20">
+        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">4. 전략 및 거버넌스 재설계</h2>
+            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">부처 이기주의를 혁파하기 위한 거버넌스 통합 모델과 타겟 국가별 차별화된 진입 전략입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
+                <div class="flex items-center gap-3 mb-5 md:mb-6">
+                    <span class="text-xl md:text-2xl">🏛️</span>
+                    <h3 class="text-lg md:text-xl font-bold text-[#0f172a]">재외 기관 파편화 현황</h3>
+                </div>
+                <div class="space-y-3 md:space-y-4">
+                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm md:text-base text-[#0f172a]">외교부 (국제교류재단)</div>
+                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">162개국 공관. 예산/콘텐츠 한계</div>
+                        </div>
+                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">거점 분산</span>
+                    </div>
+                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm md:text-base text-[#0f172a]">문체부 (세종학당/문화원)</div>
+                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">87개국 252개소. 인프라 최대, 언어 편중</div>
+                        </div>
+                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">기능 제한</span>
+                    </div>
+                    <div class="p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm md:text-base text-[#0f172a]">교육부 (한국교육원)</div>
+                            <div class="text-[11px] md:text-xs text-slate-500 mt-1 break-keep">19개국 43개소. 동포 중심, 확산 미비</div>
+                        </div>
+                        <span class="px-2 md:px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold shrink-0 ml-2">대상 한정</span>
+                    </div>
+                    <div class="mt-4 p-3 md:p-4 bg-[#fef3c7] border border-[#fde68a] rounded-lg text-xs md:text-sm text-[#b45309] font-bold text-center break-keep">
+                        해결책: 'K-문명 기본법' 기반 One-OS 원스톱 거점 통합
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
+                <div class="flex items-center gap-3 mb-5 md:mb-6">
+                    <span class="text-xl md:text-2xl">🌍</span>
+                    <h3 class="text-lg md:text-xl font-bold text-[#0f172a]">국가별 진입 전략</h3>
+                </div>
+                <div class="space-y-5 md:space-y-6">
+                    <div class="border-l-4 border-[#0f172a] pl-3 md:pl-4">
+                        <h4 class="font-bold text-[#0f172a] text-base md:text-lg">노스폴 (Global North)</h4>
+                        <p class="text-[11px] md:text-sm text-slate-500 mb-1 md:mb-2">서구 선진국 중심</p>
+                        <p class="text-xs md:text-sm text-[#475569] break-keep"><strong>감성 침투 후 학술화 전략:</strong> 익숙한 K-컬처를 고차원적 인문학(정·한·흥)으로 격상시켜 지식인 사회 포섭. 글로벌 서밋 및 연구소 설립.</p>
+                    </div>
+                    <div class="border-l-4 border-[#b45309] pl-3 md:pl-4">
+                        <h4 class="font-bold text-[#b45309] text-base md:text-lg">사우스폴 (Global South)</h4>
+                        <p class="text-[11px] md:text-sm text-slate-500 mb-1 md:mb-2">아세안, 중동, 중남미, 아프리카</p>
+                        <p class="text-xs md:text-sm text-[#475569] break-keep"><strong>역사적 서사 공명 전략:</strong> 식민지, 민주화, 경제 기적의 경험 공유. ODA 및 K-City 수출에 홍익인간적 호혜성 연동.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roi" class="scroll-mt-20">
+        <div class="mb-8 md:mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a] mb-4 break-keep">5. 거시경제적 부가가치 (ROI)</h2>
+            <p class="text-[#475569] leading-relaxed text-sm md:text-base break-keep">K-문명 신뢰 시스템 정착 시 절감할 수 있는 '사회적 갈등 비용'의 회수 규모를 직관적으로 분석합니다.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div>
+                    <div class="relative w-full mx-auto" style="height: 240px;">
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                    <p class="text-center text-[10px] md:text-xs text-[#64748b] mt-4 break-keep">출처: KDI / 삼성경제연구소 등 사회 갈등비용 추산치</p>
+                </div>
+                
+                <div class="space-y-4 md:space-y-6">
+                    <div class="bg-[#f8fafc] p-4 md:p-5 rounded-xl border border-slate-200">
+                        <div class="flex items-center gap-2 md:gap-3 mb-2">
+                            <span class="text-lg md:text-xl">📉</span>
+                            <h4 class="font-bold text-sm md:text-base text-[#0f172a]">현재의 경제적 손실</h4>
+                        </div>
+                        <p class="text-xs md:text-sm text-[#475569] break-keep">한국의 사회갈등 지수 OECD 3위. 경제적 손실 연간 <strong>최대 246조 원 (명목 GDP의 10%)</strong> 증발. 불필요한 보안 및 신뢰 비용 증가.</p>
+                    </div>
+                    
+                    <div class="bg-[#fffbeb] p-4 md:p-5 rounded-xl border border-[#fde68a]">
+                        <div class="flex items-center gap-2 md:gap-3 mb-2">
+                            <span class="text-lg md:text-xl">📈</span>
+                            <h4 class="font-bold text-sm md:text-base text-[#b45309]">K-문명 투자 자본 수익률</h4>
+                        </div>
+                        <p class="text-xs md:text-sm text-[#475569] break-keep">카페에 지갑을 두는 '정' 문화는 연간 수조 원의 물리적 보안 비용을 없애는 고효율 시스템. 시민 연대 회복 시 <strong>연간 수십조 원의 경제 효과 달성.</strong></p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
 </main>
 
-<footer class="bg-[#0f172a] text-white py-12 text-center mt-12">
+<footer class="bg-[#0f172a] text-white py-10 md:py-12 text-center">
     <div class="max-w-3xl mx-auto px-4">
-        <h2 class="text-2xl font-bold text-[#fde68a] mb-4 serif-font">Hongik — 널리 인간을 이롭게 하라</h2>
-        <p class="text-slate-400 text-sm mb-6">본 리포트는 K-문명 국가전략 2026 핵심 데이터 증빙자료집을 바탕으로 작성되었습니다.</p>
-        <p class="text-xs text-slate-600">&copy; 2026 K-Civilization Strategy Group. All rights reserved.</p>
+        <h2 class="text-lg md:text-2xl font-bold text-[#fde68a] mb-3 md:mb-4">Hongik — 널리 인간을 이롭게 하라</h2>
+        <p class="text-slate-400 text-xs md:text-sm mb-6 md:mb-8 break-keep">본 리포트는 K-문명 국가전략 2026 핵심 데이터 증빙자료집을 기반으로 제작되었습니다.</p>
+        <p class="text-[10px] md:text-xs text-slate-500">&copy; 2026 K-Civilization, Bae sun won. All rights reserved.</p>
     </div>
 </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Data Sources ---
+    // --- Data Storage ---
+    const appState = {
+        currentTimelineIndex: 7 // default desktop selected item
+    };
+
     const osData = [
-        { flag: '🇺🇸', name: '미국', os: '자유민주주의, 실용주의', core: '개인의 자유와 성취', type: '국가·엘리트 (Top)', mechanism: '달러, 군사력, 헐리우드, 실리콘밸리' },
-        { flag: '🇬🇧', name: '영국', os: '전통과 팝아트 공존', core: '귀족적 품격과 파격', type: '국가·엘리트 (Top)', mechanism: 'BBC, 브리티시 카운슬' },
-        { flag: '🇫🇷', name: '프랑스', os: '똘레랑스, 삶의 예술', core: '지적 향유와 다양성', type: '국가·지식인 (Top)', mechanism: '알리앙스 프랑세즈, 럭셔리' },
-        { flag: '🇩🇪', name: '독일', os: '정밀성, 게뮈틀리히카이트', core: '소집단의 온기와 철학', type: '국가·학계 (Top)', mechanism: '괴테 인스티투트, 마이스터' },
-        { flag: '🇯🇵', name: '일본', os: '모노노아와레, 오모테나시', core: '감수성과 장인정신', type: '정부·엘리트 (Top)', mechanism: '쿨재팬, 애니메이션, 게임' },
-        { flag: '🇨🇳', name: '중국', os: '중화사상, 꽌시', core: '국가 중심 위계 질서', type: '국가/당 (Top)', mechanism: '공자학원, 거대 국가 자본' },
-        { flag: '🇰🇷', name: '한국', os: '정(情)·한(恨)·흥(興)', core: '수백만 자발적 연대의 에너지', type: '국민 주체 (Bottom-Up)', mechanism: 'K-콘텐츠, 디지털 인프라, 시민 행동' }
+        { flag: '🇺🇸', name: '미국', os: '자유민주주의, 실용주의', type: '국가·엘리트 (Top-Down)', mechanism: '달러, 군사력, 헐리우드' },
+        { flag: '🇬🇧', name: '영국', os: '전통과 팝아트의 공존', type: '국가·엘리트 (Top-Down)', mechanism: '브리티시 카운슬, 영어' },
+        { flag: '🇫🇷', name: '프랑스', os: '똘레랑스, 삶의 예술', type: '국가·지식인 (Top-Down)', mechanism: '알리앙스 프랑세즈, 럭셔리' },
+        { flag: '🇩🇪', name: '독일', os: '정밀성, 게뮈틀리히카이트', type: '국가·학계 (Top-Down)', mechanism: '괴테 인스티투트, 마이스터' },
+        { flag: '🇯🇵', name: '일본', os: '모노노아와레, 오모테나시', type: '정부·엘리트 (Top-Down)', mechanism: '쿨재팬, 애니메이션' },
+        { flag: '🇨🇳', name: '중국', os: '중화사상, 꽌시', type: '국가/당 (Top-Down)', mechanism: '공자학원, 일대일로' },
+        { flag: '🇰🇷', name: '한국', os: '정(情)·한(恨)·흥(興)', type: '국민 주체 (Bottom-Up)', mechanism: 'K-콘텐츠, 시민 행동' }
     ];
 
     const timelineData = [
         { year: '1894', title: '동학농민운동', participants: '약 30만 명', detail: '인내천(人乃天) 사상 제창. 민중 주도의 보편적 인권 선언으로 글로벌 사우스의 서사와 공명.' },
-        { year: '1919', title: '3·1 운동', participants: '약 200만 명', detail: '한(恨)을 비폭력 저항으로 승화. 제국주의에 맞선 글로벌 사우스의 롤모델.' },
+        { year: '1919', title: '3·1 운동', participants: '약 200만 명', detail: '한(恨)을 비폭력 저항으로 승화. 제국주의에 맞선 롤모델.' },
         { year: '1960', title: '4·19 혁명', participants: '전국적 학생/시민', detail: '부당한 권력에 대한 정의(한). 아시아 민주주의의 이정표.' },
         { year: '1980', title: '5·18 광주민주화', participants: '광주 시민 전체', detail: '국가 폭력 앞 공동체 수호(정/한). 한강 소설을 통한 글로벌 트라우마 공명.' },
         { year: '1987', title: '6월 항쟁', participants: '약 100만 명', detail: '국민이 직접 헌법(직선제) 설계. 쟁취하는 민주주의 표본.' },
-        { year: '1997', title: '금모으기 운동', participants: '약 350만 명', detail: '국가 위기를 공동체 유대(정)로 극복. 전무후무한 자발적 경제 주권 수호.' },
-        { year: '2002', title: '월드컵 거리응원', participants: '약 2,400만 명', detail: '집단 생동감과 비폭력 축제(흥). 세계 최고 수준의 질서 있는 군중 문화.' },
-        { year: '2007', title: '태안 기름 유출', participants: '약 123만 명', detail: '한(恨)을 연대(정)로 극복. UN 공인 세계 최대 환경 자원봉사 (UNESCO 기록유산 등재).' },
-        { year: '2016', title: '촛불 혁명', participants: '누적 1,700만 명', detail: '분노를 축제(흥)로 바꾼 비폭력 저항. 세계 민주주의 역사상 가장 평화로운 혁명.' },
-        { year: '2024', title: '계엄 저지', participants: '전 국민적', detail: '제도가 아닌 국민이 직접 헌법 수호. 총칼 앞에서도 물러서지 않는 K-민주주의 입증.' }
+        { year: '1997', title: '금모으기 운동', participants: '약 350만 명', detail: '국가 위기를 공동체 유대(정)로 극복. 전무후무한 경제 주권 수호.' },
+        { year: '2002', title: '월드컵 거리응원', participants: '연인원 2,400만 명', detail: '집단 생동감과 비폭력 축제(흥). 세계 최고 수준의 질서 있는 군중 문화.' },
+        { year: '2007', title: '태안 기름 유출', participants: '약 123만 명', detail: '한(恨)을 연대(정)로 극복. UN 공인 세계 최대 자발적 환경 자원봉사.' },
+        { year: '2016', title: '촛불 혁명', participants: '누적 1,700만 명', detail: '분노를 축제(흥)로 바꾼 비폭력 저항. 평화로운 혁명의 아이콘.' },
+        { year: '2024', title: '계엄 저지', participants: '전 국민적', detail: '국민이 직접 헌법 수호. 총칼 앞에서도 물러서지 않는 K-민주주의 입증.' }
     ];
 
-    // --- Render OS Cards (Linear Grid) ---
+    // --- Desktop Tab Handling ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if(window.innerWidth < 768) return; // Disable tab clicks on mobile
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            const targetId = e.target.getAttribute('data-target');
+            e.target.classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // --- Render OS Cards ---
     const osContainer = document.getElementById('os-cards-container');
-    osData.forEach((item) => {
+    osData.forEach(item => {
         const isKorea = item.name === '한국';
-        const cardClass = isKorea ? 'bg-[#fffbeb] border-[#fde68a] border-2 shadow-md' : 'bg-slate-50 border-slate-200 border';
+        const cardClass = isKorea ? 'bg-[#fffbeb] border-[#fde68a] border-2 shadow-md relative' : 'bg-[#f8fafc] border-slate-200 border';
         const titleClass = isKorea ? 'text-[#b45309]' : 'text-[#0f172a]';
         
-        osContainer.innerHTML += `
-            <div class="rounded-xl p-5 ${cardClass} relative">
-                ${isKorea ? '<div class="absolute -top-3 -right-2 bg-[#b45309] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">K-문명 제안</div>' : ''}
-                <div class="text-3xl mb-2">${item.flag}</div>
-                <h4 class="text-lg font-bold ${titleClass} mb-2">${item.name}</h4>
-                <div class="text-xs font-bold text-slate-500 mb-0.5">OS 및 본질</div>
-                <div class="text-sm font-semibold text-[#b45309] mb-1">${item.os}</div>
-                <div class="text-xs text-slate-700 mb-3">${item.core}</div>
-                <div class="text-xs font-bold text-slate-500 mb-0.5">전파 기제 (${item.type})</div>
-                <div class="text-xs text-slate-700 leading-snug">${item.mechanism}</div>
+        let cardHTML = `
+            <div class="rounded-xl p-4 md:p-5 ${cardClass}">
+                ${isKorea ? '<div class="absolute -top-3 -right-2 md:-right-3 bg-[#b45309] text-white text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 rounded-full shadow-sm">K-문명 제안</div>' : ''}
+                <div class="text-2xl md:text-3xl mb-2">${item.flag}</div>
+                <h3 class="text-base md:text-lg font-bold ${titleClass} mb-2">${item.name}</h3>
+                <div class="text-xs md:text-sm font-bold text-slate-700 mb-1">OS: <span class="font-normal text-[#475569]">${item.os}</span></div>
+                <div class="text-xs md:text-sm font-bold text-slate-700 mb-1">주도: <span class="font-normal ${isKorea ? 'text-[#b45309] font-bold' : 'text-[#475569]'}">${item.type}</span></div>
+                <div class="text-xs md:text-sm font-bold text-slate-700">기제: <span class="font-normal text-[#475569] truncate block" title="${item.mechanism}">${item.mechanism}</span></div>
             </div>
         `;
+        osContainer.innerHTML += cardHTML;
     });
 
-    // --- Render Timeline (Vertical List) ---
+    // --- Render Timeline (Responsive Logic) ---
     const tlContainer = document.getElementById('timeline-container');
-    timelineData.forEach((item) => {
-        tlContainer.innerHTML += `
-            <div class="relative group">
-                <div class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-[#b45309] ring-4 ring-white"></div>
-                <div class="text-[#b45309] font-bold text-lg leading-none mb-1">${item.year}</div>
-                <h4 class="text-xl font-bold text-[#0f172a] mb-2 flex flex-col sm:flex-row sm:items-center gap-2">
-                    ${item.title}
-                    <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-normal w-max">참여: ${item.participants}</span>
-                </h4>
-                <p class="text-slate-700 text-sm md:text-base leading-relaxed">${item.detail}</p>
+    const tlDetail = document.getElementById('timeline-detail');
+
+    function renderDesktopDetail(index) {
+        const data = timelineData[index];
+        tlDetail.innerHTML = `
+            <div class="animate-[fadeIn_0.3s_ease-out]">
+                <div class="text-[#b45309] font-bold text-lg md:text-xl mb-2">${data.year}</div>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-[#0f172a] mb-4">${data.title}</h3>
+                <div class="inline-block px-3 py-1 md:px-4 md:py-2 bg-slate-100 rounded-lg text-xs md:text-sm font-bold text-[#475569] mb-5 md:mb-6">
+                    참여 규모: ${data.participants}
+                </div>
+                <p class="text-base md:text-lg text-slate-700 leading-relaxed border-l-4 border-[#b45309] pl-4 md:pl-5 py-2 bg-slate-50 break-keep">
+                    ${data.detail}
+                </p>
             </div>
         `;
-    });
+    }
 
-    // --- Chart.js ---
+    timelineData.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `timeline-item border-l-2 md:border-l-4 border-slate-200 pl-3 md:pl-4 py-3 mb-3 md:mb-2 rounded-r-lg ${index === appState.currentTimelineIndex ? 'md:active md:border-l-[#b45309] md:bg-[#f1f5f9]' : ''}`;
+        
+        // HTML Injection: Clean list header + Mobile-only inline detail
+        div.innerHTML = `
+            <div class="flex items-center">
+                <span class="font-bold text-[#0f172a] md:text-base">${item.year}</span>
+                <span class="text-sm text-slate-700 ml-2 md:ml-3 font-semibold md:font-normal md:text-slate-500">${item.title}</span>
+            </div>
+            <div class="md:hidden mt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border-l-2 border-[#b45309]">
+                <div class="font-bold text-[11px] mb-1 text-slate-500">규모: ${item.participants}</div>
+                <div class="break-keep">${item.detail}</div>
+            </div>
+        `;
+        
+        div.addEventListener('click', () => {
+            if(window.innerWidth < 768) return; // Disable hover/click state change on mobile
+            document.querySelectorAll('.timeline-item').forEach(el => {
+                el.classList.remove('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]', 'md:active', 'md:border-l-[#b45309]', 'md:bg-[#f1f5f9]');
+                el.classList.add('border-slate-200');
+            });
+            div.classList.remove('border-slate-200');
+            div.classList.add('active', 'border-l-[#b45309]', 'bg-[#f1f5f9]');
+            appState.currentTimelineIndex = index;
+            renderDesktopDetail(index);
+        });
+        tlContainer.appendChild(div);
+    });
+    
+    // Initialize desktop detail pane
+    renderDesktopDetail(appState.currentTimelineIndex);
+
+
+    // --- Chart.js Implementations ---
     Chart.defaults.font.family = "'Pretendard', sans-serif";
 
-    // Chart 1: Brand Finance (Bar)
+    // Chart 1: Brand Finance Comparison
     const ctxBrand = document.getElementById('brandFinanceChart').getContext('2d');
     new Chart(ctxBrand, {
         type: 'bar',
         data: {
-            labels: ['미국', '영국', '일본', '독일(목표)', '프랑스', '한국(현재)'],
+            labels: ['미국', '영국', '일본', '독일(목표)', '프랑스', '한국'],
             datasets: [{
+                label: '2026 예상 총점',
                 data: [74.2, 70.5, 69.8, 67.7, 66.8, 59.2],
                 backgroundColor: ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#b45309', '#e2e8f0', '#0f172a'],
                 borderRadius: 4
@@ -372,34 +419,26 @@ document.addEventListener('DOMContentLoaded', () => {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            indexAxis: 'y',
             plugins: {
                 legend: { display: false },
-                tooltip: {
-                    padding: 10,
-                    titleFont: { size: 13 },
-                    bodyFont: { size: 13 },
-                    callbacks: {
-                        label: function(ctx) {
-                            return ` 총점: ${ctx.raw}점`;
-                        }
-                    }
-                }
+                tooltip: { padding: 10, titleFont: { size: 12 }, bodyFont: { size: 12 } }
             },
             scales: {
-                y: { min: 40, max: 80, grid: { color: '#f1f5f9' }, ticks: { font: { size: 12 } } },
-                x: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 12 } } }
+                x: { min: 40, max: 80, grid: { color: '#f1f5f9' }, ticks: { font: {size: 10} } },
+                y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 12 } } }
             }
         }
     });
 
-    // Chart 2: Conflict Cost (Doughnut)
+    // Chart 2: Economic ROI
     const ctxRoi = document.getElementById('roiChart').getContext('2d');
     new Chart(ctxRoi, {
         type: 'doughnut',
         data: {
-            labels: ['정상 경제 성장 가능성', '사회 갈등 비용 증발량'],
+            labels: ['생산적 가치', '갈등 비용 증발'],
             datasets: [{
-                data: [89.6, 10.4],
+                data: [90, 10], 
                 backgroundColor: ['#0f172a', '#ef4444'],
                 borderWidth: 0,
                 cutout: '75%'
@@ -409,15 +448,8 @@ document.addEventListener('DOMContentLoaded', () => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) {
-                            if(ctx.dataIndex === 1) return ' 최대 246조원 (GDP 10.4%)';
-                            return ' 잠재적 경제 성장 동력';
-                        }
-                    }
-                }
+                legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 11} } },
+                tooltip: { callbacks: { label: function(c) { return c.dataIndex === 1 ? ' 최대 246조원' : ' 경제성장분'; } } }
             }
         },
         plugins: [{
@@ -426,24 +458,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 var width = chart.width, height = chart.height, ctx = chart.ctx;
                 ctx.restore();
                 
-                var fontSizeMain = width < 400 ? "24px" : "32px";
-                var fontSizeSub = width < 400 ? "12px" : "14px";
-                var offset = width < 400 ? 10 : 15;
-
+                // Adjust font size dynamically for mobile/desktop
+                var isMobile = width < 300;
+                var fontSizeTitle = isMobile ? "1.2em" : "1.8em";
+                var fontSizeSub = isMobile ? "0.8em" : "1em";
+                
                 ctx.textBaseline = "middle";
-                ctx.textAlign = "center";
+                ctx.font = "bold " + fontSizeTitle + " sans-serif";
+                ctx.fillStyle = "#0f172a";
+                var text = "GDP 10%",
+                    textX = Math.round((width - ctx.measureText(text).width) / 2),
+                    textY = height / 2 - (isMobile ? 10 : 15);
+                ctx.fillText(text, textX, textY);
                 
-                ctx.font = "bold " + fontSizeMain + " 'Pretendard'";
+                ctx.font = "normal " + fontSizeSub + " sans-serif";
                 ctx.fillStyle = "#ef4444";
-                ctx.fillText("GDP 10%", width / 2, height / 2 - offset);
-                
-                ctx.font = "normal " + fontSizeSub + " 'Pretendard'";
-                ctx.fillStyle = "#64748b";
-                ctx.fillText("비용 증발", width / 2, height / 2 + offset);
+                var text2 = "비용 증발",
+                    text2X = Math.round((width - ctx.measureText(text2).width) / 2),
+                    text2Y = height / 2 + (isMobile ? 15 : 20);
+                ctx.fillText(text2, text2X, text2Y);
                 ctx.save();
             }
         }]
     });
+
 });
 </script>
 </body>
